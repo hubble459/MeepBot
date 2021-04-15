@@ -1,14 +1,14 @@
+const database = require('../utils/database');
 const {MessageEmbed} = require('discord.js');
-const {prefix} = require('../utils/config');
 const {regex, getRandomHentai, getHentaiData} = require('../utils/nhentai');
 const sessions = [];
 
 async function meep(msg, args) {
     const arg = args[0];
     if (!arg) {
-        msg.channel.send(await getRandomHentai());
+        await msg.channel.send(await getRandomHentai());
     } else if (arg === 'english') {
-        msg.channel.send(await getRandomHentai(true));
+        await msg.channel.send(await getRandomHentai(true));
     } else if (arg === 'page') {
         await gotoPage(msg, args[1]);
     } else if (arg === 'read') {
@@ -20,6 +20,7 @@ async function meep(msg, args) {
         const page = args[2] || 1;
         await readHentai(msg.channel, validUrl ? url : await getRandomHentai(url === 'english'), validUrl ? page : 1);
     } else {
+        const prefix = database.get(msg.guild.id, 'settings.prefix')
         await msg.channel.send(`See \`${prefix}help meep\` for help`)
     }
 }
@@ -54,8 +55,8 @@ async function readHentai(channel, url, page = 1) {
         }
 
         if (images.length > 1) {
-            if (data.page != 1) await data.msg.react('⬅️');
-            if (data.page != images.length) await data.msg.react('➡️');
+            if (data.page !== 1) await data.msg.react('⬅️');
+            if (data.page !== images.length) await data.msg.react('➡️');
             try {
                 const collected = await data.msg.awaitReactions(filter, {max: 1, time: 300000, errors: ['time']});
                 const reaction = collected.first();
@@ -95,16 +96,16 @@ async function gotoPage(msg, page) {
                 data.page = page;
                 await data.msg.reactions.removeAll();
                 data.msg.edit(embedRead(page, data.url, data.images, data.title));
-                if (data.page != 1) await data.msg.react('⬅️');
-                if (data.page != data.images.length) await data.msg.react('➡️');
+                if (data.page !== 1) await data.msg.react('⬅️');
+                if (data.page !== data.images.length) await data.msg.react('➡️');
             } else {
-                msg.channel.send('Invalid page');
+                await msg.channel.send('Invalid page');
             }
         } else {
             msg.channel.send('You aren\'t reading a hentai');
         }
     } else {
-        msg.channel.send('Missing page number');
+        await msg.channel.send('Missing page number');
     }
 }
 
@@ -130,11 +131,11 @@ function help(prefix) {
         '\tpage [page number]\n' +
         '\t\tChange page of latest reader in channel\n' +
         '\nexamples:\n' +
-        '\t$meep english\n' +
-        '\t$meep read english\n' +
-        '\t$meep read https://nhentai.net/g/295383/\n' +
-        '\t$meep read 226730 21\n' +
-        '\t$meep page 1\n' +
+        `\t${prefix}meep english\n` +
+        `\t${prefix}meep read english\n` +
+        `\t${prefix}meep read https://nhentai.net/g/295383/\n` +
+        `\t${prefix}meep read 226730 21\n` +
+        `\t${prefix}meep page 1\n` +
         '```';
 }
 

@@ -1,9 +1,23 @@
+// const fs = require('fs');
+//
+// module.exports = [];
+//
+// const files = fs.readdirSync('./src/commands');
+// for (let file of files) {
+//     console.log(file)
+//     module.exports.push(require('./' + file));
+// }
+//
+// console.log(module.exports)
+
 const {meep} = require('./meep');
 const {ping} = require('./ping');
 const {echo} = require('./echo');
-const {alias, getAliasses} = require('./alias');
-const {play, stop, skip, pause, resume, queue, remove, now, repeat} = require('./music');
+const {alias} = require('./alias');
+const {prefix} = require('./prefix');
+const {play, stop, skip, pause, resume, queue, remove, now, repeat, shuffle} = require('./music');
 const {help} = require('./help');
+const {space} = require('./space');
 
 module.exports = {
     'meep': meep,
@@ -20,8 +34,10 @@ module.exports = {
     'clear': (msg) => remove(msg, ['all']),
     'now': now,
     'repeat': repeat,
+    'shuffle': shuffle,
     'help': help,
-    getAliasses
+    'prefix': prefix,
+    'space': space,
 }
 
 async function aliasExists(msg, args) {

@@ -5,17 +5,17 @@ const sfdl = require('../utils/sfdl');
 const scdl = require('soundcloud-downloader').default;
 const client = require('../utils/client');
 const {MessageEmbed} = require('discord.js');
-const allQueues = {};
+const database = require('../utils/database');
+const connections = {};
 
 client.on('voiceStateUpdate', (oldMember, newMember) => {
     if (oldMember.channel && !newMember.channel) {
-        const queue = allQueues[oldMember.guild.id];
         if (oldMember.id === client.user.id) {
-            console.log('[VC] Left');
-            if (queue && queue.connection) {
-                queue.connection.disconnect();
-                queue.connection = undefined;
+            const connection = connections[oldMember.guild.id];
+            if (connection) {
+                connection.disconnect();
             }
+            console.log('[VC] Left');
         }
     } else if (!oldMember.channel && newMember.channel) {
         if (newMember.id === client.user.id) {
@@ -28,21 +28,15 @@ async function play(msg, args) {
     if (!msg.member.voice.channel) {
         await msg.channel.send('Join a voice channel first');
     } else {
-        let queue = allQueues[msg.guild.id];
-        if (!queue) {
-            queue = allQueues[msg.guild.id] = {
-                connection: undefined,
-                songs: [],
-                repeat: 0
-            };
-        }
+        // Get queue
+        const queue = database.get(msg.guild.id, 'queue');
 
         // Join if not already joined
-        let connection = msg.guild.voice ? msg.guild.connection : undefined;
+        let connection = connections[msg.guild.id] || msg.guild.voice ? msg.guild.connection : undefined;
         if (!connection) {
             connection = await msg.member.voice.channel.join();
-            queue.connection = connection;
         }
+        connections[msg.guild.id] = connection;
 
         // Play song
         const url = args[0];
@@ -50,23 +44,24 @@ async function play(msg, args) {
             if (url.startsWith('https://open.spotify.com/')) {
                 try {
                     const {songs, song} = await sfdl.get(msg, url);
-                    const notPlaying = queue.songs.length === 0;
+                    const sp = shouldPlay(connection);
 
                     if (songs) {
                         queue.songs.push(...songs);
                         await msg.channel.send(`Added **${songs.length}** items to the queue`);
                     } else if (song) {
                         queue.songs.push(song);
-                        if (!notPlaying) {
+                        if (!sp) {
                             await msg.channel.send(`Added \`${song.title}\` to the queue`)
                         }
                     }
 
-                    if (notPlaying) {
-                        await nextSong(queue);
+                    if (sp) {
+                        await nextSong(msg.guild.id, queue);
                         await msg.channel.send(`Now playing \`${(song || songs[0]).title}\``);
                     }
                 } catch (err) {
+                    console.log(err)
                     await msg.channel.send(err.message);
                 }
             } else if (url.startsWith('https://soundcloud.com')) {
@@ -81,8 +76,8 @@ async function play(msg, args) {
                     };
                     queue.songs.push(song);
 
-                    if (queue.songs.length === 1) {
-                        await nextSong(queue);
+                    if (shouldPlay(connection)) {
+                        await nextSong(msg.guild.id, queue);
                         await msg.channel.send(`Now playing \`${song.title}\``);
                     } else {
                         await msg.channel.send(`Added \`${song.title}\` to the queue`)
@@ -92,7 +87,6 @@ async function play(msg, args) {
                 }
             } else if (url.startsWith('https://www.youtube.com/playlist?list=')) {
                 const playlist = await ytpl(url);
-                const notPlaying = queue.songs.length === 0;
                 const songs = playlist.items.map(({title, url, isLive, duration, bestThumbnail}) => {
                     return {
                         title,
@@ -105,8 +99,8 @@ async function play(msg, args) {
                 });
                 queue.songs.push(...songs);
                 await msg.channel.send(`Added **${songs.length}** items to the queue`);
-                if (notPlaying) {
-                    await nextSong(queue);
+                if (shouldPlay(connection)) {
+                    await nextSong(msg.guild.id, queue);
                     await msg.channel.send(`Now playing \`${songs[0].title}\``);
                 }
             } else if (url.startsWith('https://www.youtube.com/watch?v=')) {
@@ -124,8 +118,8 @@ async function play(msg, args) {
                     thumbnail: info.videoDetails.thumbnails[0].url
                 };
                 queue.songs.push(song);
-                if (queue.songs.length === 1) {
-                    await nextSong(queue);
+                if (shouldPlay(connection)) {
+                    await nextSong(msg.guild.id, queue);
                     await msg.channel.send(`Now playing \`${song.title}\``);
                 } else {
                     await msg.channel.send(`Added \`${song.title}\` to the queue`)
@@ -136,8 +130,8 @@ async function play(msg, args) {
                 const song = await sfdl.searchYT(args.join(' '));
                 if (song) {
                     queue.songs.push(song);
-                    if (queue.songs.length === 1) {
-                        await nextSong(queue);
+                    if (shouldPlay(connection)) {
+                        await nextSong(msg.guild.id, queue);
                         await msg.channel.send(`Now playing \`${song.title}\``);
                     } else {
                         await msg.channel.send(`Added \`${song.title}\` to the queue`);
@@ -148,21 +142,27 @@ async function play(msg, args) {
                 return;
             }
         } else if (queue.songs.length !== 0) {
-            await nextSong(queue);
+            await nextSong(msg.guild.id, queue);
         } else {
             await msg.channel.send(new MessageEmbed().setDescription('The queue is `empty`'));
         }
 
         if (/^https?:\/\/(www)?.*/.test(url)) {
-            console.log(args)
             args.shift();
             const next = args[0];
-            console.log(next);
             if (/^https?:\/\/(www)?.*/.test(next)) {
                 await play(msg, args);
             }
         }
     }
+}
+
+function shouldPlay(connection) {
+    return !connection.dispatcher;
+}
+
+function updateDatabase(queue, guildId) {
+    database.set(guildId, queue, 'queue');
 }
 
 function secondsToTime(seconds) {
@@ -176,17 +176,17 @@ function msToSeconds(ms) {
     return Math.floor(Math.max(0, ms / 1000));
 }
 
-async function nextSong(queue) {
+async function nextSong(guildId, queue) {
+    const connection = connections[guildId];
     if (queue.songs.length !== 0) {
-        let dispatcher;
-        if (queue.songs[0].url.startsWith('https://soundcloud.com')) {
-            dispatcher = queue.connection.play(await scdl.download(queue.songs[0].url, scClientID));
+        const song = queue.songs[0];
+        if (song.url.startsWith('https://soundcloud.com')) {
+            connection.play(await scdl.download(song.url, scClientID));
         } else {
-            dispatcher = queue.connection.play(ytdl(queue.songs[0].url));
+            connection.play(ytdl(song.url));
         }
-        queue.songs[0].dispatcher = dispatcher;
-        queue.songs[0].pauseTime = 0;
-        dispatcher.on('finish', () => {
+        song.pauseTime = 0;
+        connection.dispatcher.on('finish', () => {
             switch (queue.repeat) {
                 case 0:
                     queue.songs.shift();
@@ -195,16 +195,17 @@ async function nextSong(queue) {
                     queue.songs.push(queue.songs.shift());
                     break;
             }
-            nextSong(queue);
+            nextSong(guildId, queue);
         });
-        dispatcher.on('error', console.log);
+        connection.dispatcher.on('error', console.log);
+        updateDatabase(queue, guildId);
     }
 }
 
 async function stop(msg) {
-    const queue = allQueues[msg.guild.id];
-    if (queue && queue.connection) {
-        queue.connection.disconnect();
+    const connection = connections[msg.guild.id];
+    if (connection) {
+        connection.disconnect();
         await msg.channel.send('Disconnected');
     } else {
         await msg.channel.send('I\'m not in a voice channel :/');
@@ -231,26 +232,29 @@ function timeToSeconds(time) {
 }
 
 async function skip(msg, args) {
-    const queue = allQueues[msg.guild.id];
-    if (queue && queue.connection && queue.connection.dispatcher) {
-        queue.connection.dispatcher.destroy();
+    const queue = database.get(msg.guild.id, 'queue');
+    const connection = connections[msg.guild.id];
+
+    if (connection && connection.dispatcher) {
+        connection.dispatcher.destroy();
         const to = args ? +args[0] - 1 || 1 : 1;
         queue.songs = queue.songs.slice(to);
-        await nextSong(queue);
+        await nextSong(msg.guild.id, queue);
     } else {
         await msg.channel.send('Nothing to skip');
     }
 }
 
 async function pause(msg) {
-    const queue = allQueues[msg.guild.id];
-    if (queue && queue.songs.length !== 0) {
-        if (queue.connection && queue.connection.dispatcher) {
-            if (!queue.connection.dispatcher.paused) {
-                queue.connection.dispatcher.pause(true);
-                await msg.channel.send('Paused')
+    const connection = connections[msg.guild.id];
+    const queue = database.get(msg.guild.id, 'queue');
+    if (queue.songs.length !== 0) {
+        if (connection && connection.dispatcher) {
+            if (!connection.dispatcher.paused) {
+                connection.dispatcher.pause(true);
+                await msg.channel.send('Paused');
             } else {
-                await msg.channel.send('Already paused!')
+                await msg.channel.send('Already paused!');
             }
         } else {
             await msg.channel.send('Not playing any songs');
@@ -261,15 +265,15 @@ async function pause(msg) {
 }
 
 async function resume(msg) {
-    const queue = allQueues[msg.guild.id];
-    if (queue && queue.songs.length !== 0) {
-        if (!queue.connection || !queue.connection.dispatcher) {
+    const connection = connections[msg.guild.id];
+    const queue = database.get(msg.guild.id, 'queue');
+    if (queue.songs.length !== 0) {
+        if (!connection || !connection.dispatcher) {
             await play(msg, []);
-        } else if (queue.connection.dispatcher.paused) {
+        } else if (connection.dispatcher.paused) {
             const song = queue.songs[0];
-            song.pauseTime += Math.abs(Date.now() - song.dispatcher.pausedSince);
-            console.log(song.pauseTime);
-            queue.connection.dispatcher.resume();
+            song.pauseTime += Math.abs(Date.now() - connection.dispatcher.pausedSince);
+            connection.dispatcher.resume();
             await msg.channel.send('Resuming...');
         } else {
             await msg.channel.send('Not paused');
@@ -280,8 +284,8 @@ async function resume(msg) {
 }
 
 async function queue(msg) {
-    const queue = allQueues[msg.guild.id];
-    if (queue && queue.songs.length !== 0) {
+    const queue = database.get(msg.guild.id, 'queue');
+    if (queue.songs.length !== 0) {
         const pages = queue.songs.length / 30;
         let page = 0;
 
@@ -291,7 +295,7 @@ async function queue(msg) {
             let prettyQueue = '```haskell\n';
             let i = 0;
             for (const song of queue.songs.slice(page * 30, (page + 1) * 30)) {
-                prettyQueue += `${i++ + 1}) ${song.title.substring(0, 70)} ${song.duration}\n`;
+                prettyQueue += `${(i++ + 1) + (page * 30)}) ${song.title.substring(0, 70)} ${song.duration}\n`;
             }
             prettyQueue += '```';
 
@@ -328,12 +332,14 @@ function filter(reaction, user) {
 
 async function remove(msg, [item]) {
     if (item) {
-        const queue = allQueues[msg.guild.id];
-        if (queue && queue.songs.length > 0) {
+        const connection = connections[msg.guild.id];
+        const queue = database.get(msg.guild.id, 'queue');
+        if (queue.songs.length > 0) {
             if (item === 'all') {
                 queue.songs = [];
-                if (queue.connection && queue.connection.dispatcher) {
-                    queue.connection.dispatcher.destroy();
+                if (connection && connection.dispatcher) {
+                    connection.dispatcher.destroy();
+                    updateDatabase(queue, msg.guild.id);
                 }
                 await msg.channel.send('Cleared queue!');
             } else if (!isNaN(+item)) {
@@ -347,13 +353,14 @@ async function remove(msg, [item]) {
                         if (queue.songs.length > 1) {
                             await skip(msg);
                         } else {
-                            queue.connection.dispatcher.destroy();
+                            connection.dispatcher.destroy();
                             queue.songs = [];
                         }
                     } else {
                         deleted = queue.songs.splice(item, 1);
                     }
                     await msg.channel.send(`Removed \`${deleted[0].title}\` from the queue`);
+                    updateDatabase(msg.guild.id);
                 }
             } else {
                 await msg.channel.send('Invalid item id');
@@ -367,12 +374,13 @@ async function remove(msg, [item]) {
 }
 
 async function now(msg) {
-    const queue = allQueues[msg.guild.id];
-    if (queue && queue.connection && queue.connection.dispatcher) {
+    const connection = connections[msg.guild.id];
+    const queue = database.get(msg.guild.id, 'queue');
+    if (connection && connection.dispatcher) {
         const song = queue.songs[0];
 
-        const pauseTime = song.dispatcher.paused ? Date.now() - song.dispatcher.pausedSince + song.pauseTime : song.pauseTime;
-        const playSeconds = msToSeconds(Date.now() - song.dispatcher.startTime - pauseTime);
+        const pauseTime = connection.dispatcher.paused ? Date.now() - connection.dispatcher.pausedSince + song.pauseTime : song.pauseTime;
+        const playSeconds = msToSeconds(Date.now() - connection.dispatcher.startTime - pauseTime);
         const playTime = secondsToTime(playSeconds || 0);
         const length = 20;
         const progress = Math.round(length / 100 * (100 / song.durationSeconds * playSeconds));
@@ -388,24 +396,35 @@ async function now(msg) {
 }
 
 async function repeat(msg) {
-    const queue = allQueues[msg.guild.id];
-    if (queue) {
-        queue.repeat = (queue.repeat + 1) % 3;
-        switch (queue.repeat) {
-            case 0:
-                return msg.channel.send(new MessageEmbed().setDescription('Looping is `disabled`'));
-            case 1:
-                return msg.channel.send(new MessageEmbed().setDescription('Looping `the queue`'));
-            case 2:
-                return msg.channel.send(new MessageEmbed().setDescription('Looping `song`'));
-        }
-    } else {
-        await msg.channel.send('There is no queue for this server');
+    const queue = database.get(msg.guild.id, 'queue');
+    queue.repeat = (queue.repeat + 1) % 3;
+    switch (queue.repeat) {
+        case 0:
+            return msg.channel.send(new MessageEmbed().setDescription('Looping is `disabled`'));
+        case 1:
+            return msg.channel.send(new MessageEmbed().setDescription('Looping `the queue`'));
+        case 2:
+            return msg.channel.send(new MessageEmbed().setDescription('Looping `song`'));
     }
 }
 
 function replaceAt(string, index, replacement) {
     return string.substr(0, index) + replacement + string.substr(index + replacement.length);
+}
+
+async function shuffle(msg, args) {
+    const queue = database.get(msg.guild.id, 'queue');
+    const first = queue.songs.shift();
+    const songs = queue.songs;
+    for (let i = 0; i < 1000; i++) {
+        const rand1 = Math.floor(Math.random() * songs.length);
+        const rand2 = Math.floor(Math.random() * songs.length);
+        const tmp = songs[rand1];
+        songs[rand1] = songs[rand2];
+        songs[rand2] = tmp;
+    }
+    queue.songs.unshift(first);
+    await msg.channel.send('Queue shuffled!');
 }
 
 const play_ = {
@@ -461,6 +480,12 @@ const repeat_ = {
     help: (prefix) => `eg: \`${prefix}repeat\``
 }
 
+const shuffle_ = {
+    description: () => 'Shuffle the queue',
+    help: (prefix) => `eg: \`${prefix}shuffle\``
+}
+
+
 module.exports = {
     play,
     stop,
@@ -471,6 +496,7 @@ module.exports = {
     remove,
     now,
     repeat,
+    shuffle,
     play_,
     stop_,
     skip_,
@@ -480,4 +506,19 @@ module.exports = {
     remove_,
     now_,
     repeat_,
+    shuffle_,
 }
+
+process.on('exit', (code) => {
+    if (code === 0) {
+        for (let connection of Object.values(connections)) {
+            connection.disconnect()
+        }
+    }
+
+    return console.log(`Exiting with code ${code}`)
+})
+
+process.on('SIGINT', () => {
+    process.exit();
+});

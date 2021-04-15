@@ -1,13 +1,16 @@
 const ytsr = require('ytsr');
 const fetch = require('node-fetch');
-let headers;
-
-fetch('https://open.spotify.com/get_access_token?reason=transport&productType=web_player')
-    .then(res => res.json())
-    .then(json => {
-        headers = {'Authorization': 'Bearer ' + json['accessToken']};
-    })
-    .catch(console.log);
+const database = require('./database');
+let headers = database.get('spotify_headers');
+if (!headers) {
+    fetch('https://open.spotify.com/get_access_token?reason=transport&productType=web_player')
+        .then(res => res.json())
+        .then(json => {
+            headers = {'Authorization': 'Bearer ' + json['accessToken']};
+            database.set('spotify_headers', headers);
+        })
+        .catch(console.log);
+}
 
 /**
  *
@@ -30,21 +33,24 @@ async function get(msg, url) {
         const song_id = url.split('/track/')[1];
         if (playlist_id) {
             const offset = 0;
-            const limit = 30;
+            const limit = 100;
 
             // get 'limit' tracks and parse it
             const result = await (await fetch(`https://api.spotify.com/v1/playlists/${playlist_id}/tracks?offset=${offset}&limit=${limit}`,
                 {headers},
             )).json();
 
-            const songs = await Promise.all(result.tracks.items.map(async ({track}) => {
+            const tracks = (result.tracks || result).items;
+            const songs = [];
+            for (let i = 0; i < tracks.length; i++) {
+                const track = tracks[i].track;
                 const song = await searchYT(track.artists[0].name + ' ' + track.name);
                 if (!song) {
                     await msg.channel.send('Could not find a youtube equivalent of ' + track.name);
-                    return undefined;
+                } else {
+                    songs.push(song);
                 }
-                return song;
-            }).filter(m => m !== undefined));
+            }
             return {songs};
         } else if (song_id) {
             const track = await (await fetch(`https://api.spotify.com/v1/tracks/${song_id}/`,

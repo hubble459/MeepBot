@@ -1,31 +1,22 @@
-const {prefix} = require('../utils/config');
-const servers = {};
+const database = require('../utils/database');
 
 async function alias(msg, msgArgs) {
     const newCommand = msgArgs[0];
     if (msgArgs.length > 1) {
-        if (newCommand.startsWith(prefix)) {
+        if (newCommand.startsWith(database.get(msg.guild.id, 'settings.prefix'))) {
             await msg.channel.send('Command should not start with a prefix');
         } else {
-            let server = servers[msg.guild.id];
-            if (!server) {
-                server = servers[msg.guild.id] = {};
-            }
             const command = msgArgs[1];
             const args = msgArgs.slice(2);
-            server[newCommand] = {
+            database.set(msg.guild.id, {
                 command,
                 args
-            };
+            }, `aliases.${newCommand}`);
             await msg.channel.send(`Command '${newCommand}' added!`);
         }
     } else {
         await msg.channel.send('Alias needs at least 2 commands');
     }
-}
-
-function getAliasses(guildId) {
-    return servers[guildId] || {};
 }
 
 function help(prefix) {
@@ -38,12 +29,11 @@ function help(prefix) {
 }
 
 function description() {
-    return `Use ${prefix}alias [command_name] [command]`;
+    return `Add a new name for a command`;
 }
 
 module.exports = {
     alias,
-    getAliasses,
     help,
     description
 };

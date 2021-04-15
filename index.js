@@ -1,10 +1,10 @@
 const commands = require('./src/commands');
 const client = require('./src/utils/client');
-const {prefix} = require('./src/utils/config');
+const database = require('./src/utils/database');
 
 client.on('ready', async () => {
     console.log(`Logged in as ${client.user.tag}!`);
-    await client.user.setActivity(prefix, {
+    await client.user.setActivity('uwu\'s', {
         type: 'LISTENING'
     });
 });
@@ -12,18 +12,32 @@ client.on('ready', async () => {
 client.on('message', async msg => {
     if (msg.author.bot) return;
 
+    const db = database.ensure(msg.guild.id, {
+        aliases: {},
+        queue: {
+            songs: [],
+            repeat: 0
+        },
+        settings: {
+            prefix: '$',
+            space: false
+        }
+    });
+
     const content = msg.content;
-    if (content.startsWith(prefix) && content.length > 1) {
-        const command = content.split(' ')[0].substr(1);
+    const space = db.settings.space;
+    const prefix = db.settings.prefix;
+    if (content.startsWith(db.settings.prefix + (space ? ' ' : '')) && content.length > (space + prefix.length)) {
+        const command = (space ? content.split(' ')[1] : content.split(' ').substr(prefix.length)).toLowerCase();
         let args = content
             .split(/[\n ]/g)
-            .slice(1)
+            .slice(1 + space)
             .filter(a => a && a !== '')
             .map(a => a.replace(/\n/g, ''));
         let fun = commands[command];
 
         if (!fun) {
-            const aliasCommand = (commands.getAliasses(msg.guild.id) || {})[command];
+            const aliasCommand = db.aliases[command];
             if (aliasCommand) {
                 fun = commands[aliasCommand.command];
                 args = [...aliasCommand.args, ...args];
@@ -41,17 +55,4 @@ client.on('message', async msg => {
             }
         }
     }
-});
-
-process.on('exit', (code) => {
-    if (code === 0) {
-        // const voiceChannels = client.channels.cache.filter(ch => ch.type === 'voice');
-        // console.log();
-    }
-
-    return console.log(`Exiting with code ${code}`)
-})
-
-process.on('SIGINT', () => {
-    process.exit();
 });

@@ -1,5 +1,10 @@
 async function echo(msg, args) {
-    await msg.channel.send(args.join(' '));
+    const message = args.join(' ');
+    if (message.length === 0) {
+        await msg.channel.send('Can\'t echo an empty message');
+    } else {
+        await msg.channel.send(message);
+    }
 }
 
 function description() {
