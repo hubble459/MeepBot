@@ -1,6 +1,7 @@
 const database = require('../utils/database');
 const getCommands = require('../utils/commands');
 const commands = getCommands(__filename, 'help');
+const {MessageEmbed} = require('discord.js');
 
 async function alias(msg, msgArgs) {
     const newCommand = msgArgs[0];
@@ -12,13 +13,13 @@ async function alias(msg, msgArgs) {
         } else {
             let command = msgArgs[1];
             let s = 2;
-            if (!commands[command] && command !== 'help') {
+            if (!commands[command] && !database.has(msg.guild.id, `aliases.${command}`) && command !== 'help') {
                 command = 'echo';
                 s = 1;
             }
             const args = msgArgs.slice(s);
 
-            const existed = database.has(msg.guild.id, `aliases.${newCommand}`)
+            const existed = database.has(msg.guild.id, `aliases.${newCommand}`);
             database.set(msg.guild.id, {
                 command,
                 args
@@ -46,7 +47,7 @@ function description() {
 const aliasrm = {
     'function': async (msg, [alias]) => {
         if (alias) {
-            const exists = database.has(msg.guild.id, `aliases.${alias}`)
+            const exists = database.has(msg.guild.id, `aliases.${alias}`);
             if (exists) {
                 database.delete(msg.guild.id, `aliases.${alias}`);
                 await msg.channel.send(`Removed \`${alias}\` from alias list`);
@@ -58,7 +59,7 @@ const aliasrm = {
         }
     },
     'description': () => {
-        return 'Remove an alias'
+        return 'Remove an alias';
     },
     'help': (prefix) => {
         return '```apache\n' +
@@ -69,7 +70,40 @@ const aliasrm = {
             '```';
     },
     'group': 'misc'
-}
+};
+
+const aliases = {
+    'function': async (msg) => {
+        const aliases = database.get(msg.guild.id, 'aliases');
+        const values = [];
+
+        const entries = Object.entries(aliases);
+        const size = entries.length;
+        entries
+            .slice(0, 20)
+            .forEach(([alias, {args, command}]) => {
+                args = args.join(' ');
+                args = args.slice(0, 20) + (args.length > 20 ? '...' : '');
+                values.push(`${alias} -> ${command} ${args}`);
+            });
+
+        const embed = new MessageEmbed()
+            .addField(`${size} alias${size !== 0 ? 'es' : ''}`, '```apache\n' + values.join('\n') + '```');
+        await msg.channel.send(embed);
+    },
+    'description': () => {
+        return 'Remove an alias';
+    },
+    'help': (prefix) => {
+        return '```apache\n' +
+            `${prefix}aliasrm [alias]\n` +
+            `Examples:\n` +
+            `\t${prefix}aliasrm owo\n` +
+            `\t${prefix}aliasrm nice\n` +
+            '```';
+    },
+    'group': 'misc'
+};
 
 module.exports = {
     'alias': {
@@ -78,5 +112,6 @@ module.exports = {
         'help': help,
         'group': 'misc'
     },
-    aliasrm
+    aliasrm,
+    aliases,
 };

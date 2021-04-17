@@ -6,6 +6,7 @@ const regex = /^https?:\/\/nhentai.net\/g\/\d+\/?$/;
  * Return a random (english) hentai url from nhentai.net
  *
  * @param {boolean} english true if only english hentai
+ * @param count
  * @returns a random nhentai url
  */
 async function getRandomHentai(english = false, count = 1) {

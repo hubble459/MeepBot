@@ -17,7 +17,6 @@
     "enmap": "^5.8.4",
     "ffmpeg": "^0.0.4",
     "ffmpeg-static": "^4.3.0",
-    "fluent-ffmpeg": "^2.1.2",
     "jsdom": "^16.5.2",
     "node-fetch": "^2.6.1",
     "soundcloud-downloader": "^1.0.0",

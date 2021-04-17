@@ -12,7 +12,7 @@ function description() {
 }
 
 function help(prefix) {
-    return `Use \`${prefix}echo <words>\` eg. \`${prefix}echo I'm so adowable uwu\``;
+    return `Use \`${prefix}echo <words>\`\neg. \`${prefix}echo I'm so adowable uwu\``;
 }
 
 module.exports = {

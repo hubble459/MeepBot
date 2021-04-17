@@ -1,6 +1,5 @@
 // noinspection JSUnusedGlobalSymbols
 
-const {scClientID} = require('../utils/config');
 const ytdl = require('ytdl-core');
 const ytpl = require('ytpl');
 const sfdl = require('../utils/sfdl');
@@ -73,15 +72,23 @@ function replaceAt(string, index, replacement) {
 }
 
 async function nextSong(guildId, queue) {
-    const connection = connections[guildId];
     if (queue.songs.length !== 0) {
+        const connection = connections[guildId];
+        const volume = database.ensure(guildId, 100, 'music.volume') / 100;
+
         const song = queue.songs[0];
+        const options = {
+            seek: song.seek,
+            volume: volume
+        };
         if (song.url.startsWith('https://soundcloud.com')) {
-            connection.play(await scdl.download(song.url, scClientID), {seek: song.seek});
+            connection.play(await scdl.download(song.url), options);
         } else {
-            connection.play(ytdl(song.url), {seek: song.seek});
+            const readable = ytdl(song.url);
+            connection.play(readable, options);
         }
         song.pauseTime = -((song.seek * 1000) || 0);
+
         connection.dispatcher.on('finish', () => {
             switch (queue.repeat) {
                 case 0:
@@ -91,6 +98,7 @@ async function nextSong(guildId, queue) {
                     queue.songs.push(queue.songs.shift());
                     break;
             }
+            updateDatabase(queue, guildId);
             nextSong(guildId, queue);
         });
         connection.dispatcher.on('error', console.log);
@@ -118,21 +126,49 @@ const play = {
             if (url) {
                 if (url.startsWith('https://open.spotify.com/')) {
                     try {
-                        const onTrackNotFound = (track) => {
-                            msg.channel.send('Could not find a youtube equivalent of ' + track.name);
-                        };
-
+                        const errors = [];
                         let progress;
+                        let last = Date.now();
+                        let avg = 0;
                         const onProgress = async (at, from) => {
+                            let songAvg = 1;
+                            if (at !== 0) {
+                                const time = Date.now() - last;
+                                avg += time;
+                                songAvg = 1000 / (avg / at);
+                            }
+                            last = Date.now();
+                            let eta = (from - at) / songAvg;
+                            let type = 'second';
+                            if (eta >= 60) {
+                                eta /= 60;
+                                type = 'minute';
+                            }
+
                             const embed = new MessageEmbed()
                                 .setTitle('progress')
                                 .setColor('#bfff00')
-                                .setDescription(`${at} / ${from} \`${100 / from * at}%\``);
+                                .setDescription(
+                                    `${at} / ${from} \`${(100 / from * at).toFixed(2)}%\`\n` +
+                                    `**avg**: ${songAvg.toFixed(2)} song${songAvg !== 1 ? 's' : ''} per second\n` +
+                                    `**eta**: ${eta.toFixed(2)} ${type}${eta !== 1 ? 's' : ''}`
+                                );
+                            if (errors.length > 0) {
+                                embed.addField(`not found (${errors.length})`, '```haskell\n' + errors.join('\n') + '```');
+                            }
                             if (!progress) {
                                 progress = await msg.channel.send(embed);
                             } else {
                                 await progress.edit(embed);
                             }
+                        };
+
+                        const onTrackNotFound = (track) => {
+                            errors.push(track.name);
+                            if (errors.length > 10) {
+                                errors.shift();
+                            }
+                            // msg.channel.send('Could not find a youtube equivalent of ' + track.name);
                         };
 
                         const {songs, song} = await sfdl.get(url, onTrackNotFound, onProgress);
@@ -161,7 +197,7 @@ const play = {
                     }
                 } else if (url.startsWith('https://soundcloud.com')) {
                     try {
-                        const info = await scdl.getInfo(url, scClientID);
+                        const info = await scdl.getInfo(url);
                         const song = {
                             title: info.title,
                             url: info.permalink_url,
@@ -264,7 +300,6 @@ const stop = {
             if (connection.dispatcher && !connection.dispatcher.paused && song) {
                 const pauseTime = connection.dispatcher.paused ? Date.now() - connection.dispatcher.pausedSince + song.pauseTime : song.pauseTime;
                 song.seek = msToSeconds(Date.now() - connection.dispatcher.startTime - pauseTime);
-                console.log(song.seek);
                 updateDatabase(queue, msg.guild.id);
             }
             connection.disconnect();
@@ -307,7 +342,6 @@ const pause = {
                         const pauseTime = connection.dispatcher.paused ? Date.now() - connection.dispatcher.pausedSince + song.pauseTime : song.pauseTime;
                         song.seek = msToSeconds(Date.now() - connection.dispatcher.startTime - pauseTime);
                         updateDatabase(queue, msg.guild.id);
-                        console.log(song.seek);
                     }
 
                     connection.dispatcher.pause(true);
@@ -400,7 +434,7 @@ const queue = {
 };
 
 const remove = {
-    'function': async (msg, [item]) => {
+    'function': async (msg, [item], log = true) => {
         if (item) {
             const connection = connections[msg.guild.id];
             const queue = database.get(msg.guild.id, 'music.queue');
@@ -411,7 +445,9 @@ const remove = {
                         connection.dispatcher.destroy();
                         updateDatabase(queue, msg.guild.id);
                     }
-                    await msg.channel.send('Cleared queue!');
+                    if (log) {
+                        await msg.channel.send('Cleared queue!');
+                    }
                 } else if (!isNaN(+item)) {
                     item = +item - 1;
                     if (item < 0 || item > queue.songs.length) {
@@ -435,7 +471,7 @@ const remove = {
                 } else {
                     await msg.channel.send('Invalid item id');
                 }
-            } else {
+            } else if (log) {
                 await msg.channel.send(new MessageEmbed().setDescription('The queue is `empty`'));
             }
         } else {
@@ -485,9 +521,17 @@ const now = {
 };
 
 const repeat = {
-    'function': async (msg) => {
+    'function': async (msg, [what]) => {
         const queue = database.get(msg.guild.id, 'music.queue');
-        queue.repeat = (queue.repeat + 1) % 3;
+        const options = {
+            'disable': 0,
+            'queue': 1,
+            'song': 2,
+        }
+        if (what !== '?') {
+            queue.repeat = options[what] || (queue.repeat + 1) % 3;
+            updateDatabase(queue, msg.guild.id);
+        }
         switch (queue.repeat) {
             case 0:
                 return msg.channel.send(new MessageEmbed().setDescription('Looping is `disabled`'));
@@ -521,16 +565,18 @@ const shuffle = {
 };
 
 const playlist = {
-    'function': async (msg, [command, name]) => {
+    'function': async (msg, [command, ...name]) => {
         const music = database.get(msg.guild.id, 'music');
-        if (command && name) {
+        if (command && name.length !== 0) {
+            name = name.join(' ');
             const playlist = music.playlists[name];
             switch (command) {
                 case 'load':
                 case 'l':
                     if (playlist) {
-                        await clear.function(msg);
+                        await remove.function(msg, ['all'], false);
                         database.set(msg.guild.id, playlist, 'music.queue');
+                        await msg.channel.send(`Playing **${playlist.songs.length}** songs from '${name}'`);
                         await play.function(msg, []);
                     } else {
                         await msg.channel.send(`Playlist with the name ${name} does not exists`);
@@ -553,9 +599,8 @@ const playlist = {
                 case 'rm':
                 case 'remove':
                     if (playlist) {
-                        await clear.function(msg);
-                        database.set(msg.guild.id, playlist, 'music.queue');
-                        await play.function(msg, []);
+                        database.delete(msg.guild.id, `music.playlists.${name}`);
+                        await msg.channel.send(`Removed '${name}' from playlists`);
                     } else {
                         await msg.channel.send(`Playlist with the name ${name} does not exists`);
                     }
@@ -576,8 +621,43 @@ const playlist = {
             await msg.channel.send(embed);
         }
     },
-    description: () => 'Music playlist management',
-    help: (prefix) => `eg: \`${prefix}playlist\``
+    description: () => 'playlist management',
+    help: (prefix) => '```apache\n' +
+        `${prefix}playlist [arguments]\n\n` +
+        `Examples:\n` +
+        `\t${prefix}playlist <- list all playlists\n` +
+        `\t${prefix}playlist save [playlist_name]\n` +
+        `\t${prefix}playlist load [playlist_name]\n` +
+        `\t${prefix}playlist remove [playlist_name]` +
+        '```'
+};
+
+const volume = {
+    'function': async (msg, [percentage]) => {
+        if (percentage) {
+            if (!isNaN(percentage) && percentage >= 0 && percentage <= 500) {
+                const connection = connections[msg.guild.id];
+                database.set(msg.guild.id, percentage, 'music.volume');
+                if (connection && connection.dispatcher) {
+                    connection.dispatcher.setVolume(percentage / 100);
+                }
+                await msg.channel.send(`Changed volume to **${percentage}**%`);
+            } else {
+                await msg.channel.send('That\'s too fucky a volume');
+            }
+        } else {
+            const volume = database.get(msg.guild.id, 'music.volume');
+            await msg.channel.send(`Volume is at **${volume}**%`);
+        }
+    },
+    description: () => 'Change the volume [0 - 500]',
+    help: (prefix) => '```apache\n' +
+        'default: 100\n\n' +
+        'Examples:\n' +
+        `\t${prefix}volume 100\n` +
+        `\t${prefix}volume 0\n` +
+        `\t${prefix}volume` +
+        '```'
 };
 
 module.exports = {
@@ -627,6 +707,10 @@ module.exports = {
     },
     'playlist': {
         ...playlist,
+        'group': 'music',
+    },
+    'volume': {
+        ...volume,
         'group': 'music',
     },
 };

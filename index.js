@@ -47,6 +47,7 @@ client.on('message', async msg => {
                 songs: [],
                 repeat: 0
             },
+            volume: 100,
             playlists: {}
         },
         settings: {
@@ -59,7 +60,7 @@ client.on('message', async msg => {
     const space = db.settings.space;
     const prefix = db.settings.prefix;
     if (content.startsWith(db.settings.prefix + (space ? ' ' : '')) && content.length > (space + prefix.length)) {
-        const command = (space ? content.split(' ')[1] : content.split(' ')[0].substr(prefix.length)).toLowerCase();
+        let command = (space ? content.split(' ')[1] : content.split(' ')[0].substr(prefix.length)).toLowerCase();
         let args = content
             .split(/[\n ]/g)
             .slice(1 + space)
@@ -72,6 +73,7 @@ client.on('message', async msg => {
             if (aliasCommand) {
                 fun = commands[aliasCommand.command];
                 args.unshift(...aliasCommand.args);
+                command = aliasCommand.command;
             } else {
                 break;
             }

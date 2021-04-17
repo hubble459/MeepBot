@@ -27,29 +27,37 @@ async function get(url, onNotFound, onProgress) {
             const offset = 0;
             const limit = 100;
 
-            const result = await (await fetch(`https://api.spotify.com/v1/playlists/${playlist_id}/tracks?offset=${offset}&limit=${limit}`,
-                {headers},
-            )).json();
+            const trackList = [];
+            let next = `https://api.spotify.com/v1/playlists/${playlist_id}/tracks?offset=${offset}&limit=${limit}`;
+            while (next) {
+                const result = (await (await fetch(next,
+                    {headers},
+                )).json());
 
-            const tracks = (result.tracks || result).items;
+                const tracks = (result.tracks || result);
+                next = tracks.next;
+
+                trackList.push(...tracks.items);
+            }
+
+
             const songs = [];
-            onProgress(0, tracks.length);
-            for (let i = 0; i < tracks.length; i++) {
-                const track = tracks[i].track;
+            onProgress(0, trackList.length);
+            for (let i = 0; i < trackList.length; i++) {
+                const track = trackList[i].track;
                 const song = await searchYT(track.artists[0].name + ' ' + track.name, track.duration_ms);
                 if (!song) {
                     onNotFound(track);
                 } else {
                     songs.push(song);
                 }
-                onProgress(i, tracks.length);
+                onProgress(i, trackList.length);
             }
             return {songs};
         } else if (song_id) {
             const track = await (await fetch(`https://api.spotify.com/v1/tracks/${song_id}/`,
                 {headers},
             )).json();
-            console.log(track);
             const song = await searchYT(track.artists[0].name + ' ' + track.name, track.duration_ms);
             return {song};
         } else {
@@ -61,7 +69,6 @@ async function get(url, onNotFound, onProgress) {
 }
 
 async function searchYT(query, expectedDurationMs) {
-    console.log(expectedDurationMs);
     const filters1 = await ytsr.getFilters(query);
     const filter1 = filters1.get('Type').get('Video');
     if (filter1.url) {

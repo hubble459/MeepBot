@@ -115,8 +115,7 @@ function description() {
 
 function help(prefix) {
     return '```apache\n' +
-        `${prefix}meep [arguments]\n` +
-        'nhentai :3\n\n' +
+        `${prefix}meep [arguments]\n\n` +
         'arguments:\n' +
         '\t[none]\n' +
         '\t\tGet a random hentai\n' +
