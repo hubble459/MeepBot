@@ -1,7 +1,7 @@
 {
-  "name": "fetch-test",
+  "name": "meep-bot",
   "version": "1.0.0",
-  "description": "",
+  "description": "discord bot",
   "main": "index.js",
   "type": "commonjs",
   "scripts": {

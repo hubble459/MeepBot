@@ -1,21 +1,28 @@
 const database = require('../utils/database');
 
-async function space(msg, args) {
+async function space(msg) {
     const spaceOn = database.get(msg.guild.id, 'settings.space')
     database.set(msg.guild.id, !spaceOn, 'settings.space')
     await msg.channel.send(`Space after command ${spaceOn ? 'disabled' : 'enabled'}`)
 }
 
 function help(prefix) {
-    return 'owo';
+    return '```apache\n' +
+        `${prefix}space\n` +
+        'Example:\n' +
+        `\t${prefix}space` +
+        '```';
 }
 
 function description() {
-    return `Add a new name for a command`;
+    return 'Toggle the space after the prefix on or off';
 }
 
 module.exports = {
-    space,
-    help,
-    description
+    'space': {
+        'function': space,
+        'description': description,
+        'help': help,
+        'group': 'settings',
+    }
 };

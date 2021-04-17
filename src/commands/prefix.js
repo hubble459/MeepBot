@@ -15,11 +15,18 @@ function description() {
 }
 
 function help(prefix) {
-    return 'cba to write help for this command';
+    return '```apache\n' +
+        `${prefix}prefix [prefix]\n` +
+        'Example:\n' +
+        `\t${prefix}prefix !` +
+        '```';
 }
 
 module.exports = {
-    prefix,
-    description,
-    help
-}
+    'prefix': {
+        'function': prefix,
+        'description': description,
+        'help': help,
+        'group': 'settings'
+    }
+};

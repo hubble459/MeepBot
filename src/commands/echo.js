@@ -16,7 +16,10 @@ function help(prefix) {
 }
 
 module.exports = {
-    echo,
-    description,
-    help
-}
+    'echo': {
+        'function': echo,
+        'description': description,
+        'help': help,
+        'group': 'misc',
+    }
+};

@@ -1,54 +1,65 @@
+const {MessageEmbed} = require('discord.js');
 const database = require('../utils/database');
-const meep = require('./meep');
-const ping = require('./ping');
-const echo = require('./echo');
-const alias = require('./alias');
-const prefix = require('./prefix');
-const {play_, stop_, skip_, pause_, resume_, queue_, remove_, now_, repeat_, shuffle_} = require('./music');
+const getCommands = require('../utils/commands');
+const commands = getCommands(__filename);
 
-const commands = {
-    '_Use $help <command> for more information\n': {},
-    '_Basic:': {},
-    'help': {description, help: info},
-    'meep': {description: meep.description, help: meep.help},
-    'ping': {description: ping.description, help: ping.help},
-    'echo': {description: echo.description, help: echo.help},
-    '_\nMusic:': {},
-    'play': {description: play_.description, help: play_.help},
-    'stop': {description: stop_.description, help: stop_.help},
-    'skip': {description: skip_.description, help: skip_.help},
-    'pause': {description: pause_.description, help: pause_.help},
-    'resume': {description: resume_.description, help: resume_.help},
-    'queue': {description: queue_.description, help: queue_.help},
-    'remove': {description: remove_.description, help: remove_.help},
-    'clear': {description: () => 'Clear the queue', help: (prefix) => `eg: \`${prefix}clear\``},
-    'now': {description: now_.description, help: now_.help},
-    'repeat': {description: repeat_.description, help: repeat_.help},
-    'shuffle': {description: shuffle_.description, help: shuffle_.help},
-    '_\nMisc:': {},
-    'alias': {description: alias.description, help: alias.help},
-    'prefix': {description: prefix.description, help: prefix.help},
+const groups = {};
+for (const [name, cmd] of Object.entries(commands)) {
+    cmd.name = name;
+    if (!groups[cmd.group || 'misc']) {
+        groups[cmd.group || 'misc'] = [];
+    }
+    groups[cmd.group || 'misc'].push(cmd);
 }
 
-async function help(msg, args) {
-    const prefix = database.get(msg.guild.id, 'settings.prefix');
-    if (args[0]) {
-        const command = args[0];
-        const funs = commands[command];
-        if (funs) {
-            await msg.channel.send(funs.help(prefix));
+async function help(msg, [command]) {
+    const prefix = database.get(msg.guild.id, 'settings.prefix') + (database.get(msg.guild.id, 'settings.space') ? ' ' : '');
+    if (command) {
+        const cmd = commands[command];
+        if (cmd) {
+            const embed = new MessageEmbed()
+                .setTitle(command)
+                .addField(cmd.description(), cmd.help(prefix));
+
+            await msg.channel.send(embed);
         } else {
             await msg.channel.send(`Command \`${command}\` not found`);
         }
     } else {
-        await msg.channel.send(
-            '```apache\n' +
-            Object
-                .entries(commands)
-                .map(([command, value]) => command.startsWith('_') ? command.substr(1) : `${prefix}${command} ${value.description()}`)
-                .join('\n') +
-            '```'
-        );
+        const groupsCopy = {...groups};
+        const aliases = database.get(msg.guild.id, 'aliases');
+        for (const aliasKey of Object.keys(aliases)) {
+            if (!groupsCopy['aliases']) {
+                groupsCopy['aliases'] = [];
+            }
+            const alias = aliases[aliasKey];
+            let args = alias.args.join(' ');
+            if (args.length > 15) {
+                args = args.slice(0, 15) + '...';
+            }
+
+            groupsCopy['aliases'].push({name: `${aliasKey} -> ${prefix}${alias.command} ${args}`});
+        }
+
+        const fields = [];
+        for (const [group, commands] of Object.entries(groupsCopy)) {
+            const body =
+                '```apache\n' +
+                commands
+                    .map(command => `${prefix}${command.name}`)
+                    .join('\n') +
+                '```';
+
+            fields.push({name: group, value: body, inline: true});
+        }
+
+        const embed = new MessageEmbed()
+            .setTitle('help')
+            .addFields(...fields)
+            .setDescription(`use \`${prefix}help [command]\` for more info`)
+            .setTimestamp();
+
+        await msg.channel.send(embed);
     }
 }
 
@@ -60,4 +71,11 @@ function info() {
     return 'Use `help <command>` to get more information about a command\nOr just `help` to show the help menu';
 }
 
-module.exports = {help};
+module.exports = {
+    'help': {
+        'function': help,
+        'description': description,
+        'help': info,
+        'group': 'misc',
+    }
+};

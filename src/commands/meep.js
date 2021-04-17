@@ -140,7 +140,10 @@ function help(prefix) {
 }
 
 module.exports = {
-    meep,
-    description,
-    help
-}
+    'meep': {
+        'function': meep,
+        'description': description,
+        'help': help,
+        'group': 'misc',
+    }
+};

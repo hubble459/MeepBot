@@ -18,7 +18,10 @@ function help(prefix) {
 }
 
 module.exports = {
-    ping,
-    description,
-    help
-}
+    'ping': {
+        'function': ping,
+        'description': description,
+        'help': help,
+        'group': 'misc'
+    }
+};
