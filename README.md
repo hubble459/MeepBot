@@ -28,5 +28,5 @@ npm install
 npm start
 ```
 
-## Libraries
+## Dependencies
 See [package.json](./package.json) to see all dependencies.
