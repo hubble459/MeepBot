@@ -56,16 +56,16 @@ client.on('message', async msg => {
         }
     });
 
+    const canTalk = (msg.guild.me.permissions & 2048) === 2048;
     const content = msg.content;
     const space = db.settings.space;
     const prefix = db.settings.prefix;
-    if (content.startsWith(db.settings.prefix + (space ? ' ' : '')) && content.length > (space + prefix.length)) {
+    if (canTalk && content.startsWith(db.settings.prefix + (space ? ' ' : '')) && content.length > (space + prefix.length)) {
         let command = (space ? content.split(' ')[1] : content.split(' ')[0].substr(prefix.length)).toLowerCase();
         let args = content
-            .split(/[\n ]/g)
+            .split(' ')
             .slice(1 + space)
-            .filter(a => a && a !== '')
-            .map(a => a.replace(/\n/g, ''));
+            .filter(a => a && a !== '');
         let fun = commands[command];
 
         while (!fun) {
@@ -80,12 +80,16 @@ client.on('message', async msg => {
         }
 
         if (fun) {
-            fun = fun.function;
             console.log('cmd: ', command);
             console.log('args: ', args);
             console.log();
+
+            if (fun.permissions && ((msg.guild.me.permissions & fun.permissions) !== fun.permissions)) {
+                return msg.channel.send('Bot has insufficient permissions for this command');
+            }
+
             try {
-                await fun(msg, args);
+                await fun.function(msg, args);
             } catch (err) {
                 console.error(err);
             }

@@ -106,8 +106,22 @@ async function nextSong(guildId, queue) {
     }
 }
 
+async function addSong(msg, queue, connection, song) {
+    if (queue.songs.length !== 0) {
+        await msg.channel.send(`Added \`${song.title}\` to the queue`);
+    }
+    queue.songs.push(song);
+
+    if (shouldPlay(connection)) {
+        await nextSong(msg.guild.id, queue);
+        await msg.channel.send(`Now playing \`${queue.songs[0].title}\``);
+    }
+}
+
 const play = {
     'function': async function play(msg, args) {
+        args = args.map(a => a.replace(/\n/g, ''));
+
         if (!msg.member.voice.channel) {
             await msg.channel.send('Join a voice channel first');
         } else {
@@ -127,6 +141,7 @@ const play = {
                 if (url.startsWith('https://open.spotify.com/')) {
                     try {
                         const errors = [];
+                        let errCount = 0;
                         let progress;
                         let last = Date.now();
                         let avg = 0;
@@ -154,7 +169,7 @@ const play = {
                                     `**eta**: ${eta.toFixed(2)} ${type}${eta !== 1 ? 's' : ''}`
                                 );
                             if (errors.length > 0) {
-                                embed.addField(`not found (${errors.length})`, '```haskell\n' + errors.join('\n') + '```');
+                                embed.addField(`not found (${errCount})`, '```haskell\n' + errors.join('\n') + '```');
                             }
                             if (!progress) {
                                 progress = await msg.channel.send(embed);
@@ -165,10 +180,10 @@ const play = {
 
                         const onTrackNotFound = (track) => {
                             errors.push(track.name);
+                            errCount++;
                             if (errors.length > 10) {
                                 errors.shift();
                             }
-                            // msg.channel.send('Could not find a youtube equivalent of ' + track.name);
                         };
 
                         const {songs, song} = await sfdl.get(url, onTrackNotFound, onProgress);
@@ -181,10 +196,10 @@ const play = {
                             queue.songs.push(...songs);
                             await msg.channel.send(`Added **${songs.length}** items to the queue`);
                         } else if (song) {
-                            queue.songs.push(song);
-                            if (!sp) {
+                            if (queue.songs.length !== 0) {
                                 await msg.channel.send(`Added \`${song.title}\` to the queue`);
                             }
+                            queue.songs.push(song);
                         }
 
                         if (sp) {
@@ -205,14 +220,8 @@ const play = {
                             durationSeconds: Math.round(info.full_duration / 1000),
                             thumbnail: info.artwork_url
                         };
-                        queue.songs.push(song);
 
-                        if (shouldPlay(connection)) {
-                            await nextSong(msg.guild.id, queue);
-                            await msg.channel.send(`Now playing \`${queue.songs[0].title}\``);
-                        } else {
-                            await msg.channel.send(`Added \`${song.title}\` to the queue`);
-                        }
+                        await addSong(msg, queue, connection, song);
                     } catch (err) {
                         await msg.channel.send(err.message);
                     }
@@ -248,25 +257,24 @@ const play = {
                         durationSeconds: info.videoDetails.lengthSeconds,
                         thumbnail: info.videoDetails.thumbnails[0].url
                     };
+
+                    if (queue.songs.length !== 0) {
+                        await msg.channel.send(`Added \`${song.title}\` to the queue`);
+                    }
+
                     queue.songs.push(song);
+
                     if (shouldPlay(connection)) {
                         await nextSong(msg.guild.id, queue);
                         await msg.channel.send(`Now playing \`${queue.songs[0].title}\``);
                     } else {
-                        await msg.channel.send(`Added \`${song.title}\` to the queue`);
                     }
                 } else if (/^https?:\/\/(www)?.*/.test(url)) {
                     return msg.channel.send(`This platform isn't supported (yet)`);
                 } else {
                     const song = await sfdl.searchYT(args.join(' '));
                     if (song) {
-                        queue.songs.push(song);
-                        if (shouldPlay(connection)) {
-                            await nextSong(msg.guild.id, queue);
-                            await msg.channel.send(`Now playing \`${queue.songs[0].title}\``);
-                        } else {
-                            await msg.channel.send(`Added \`${song.title}\` to the queue`);
-                        }
+                        await addSong(msg, queue, connection, song);
                     } else {
                         await msg.channel.send('No search results');
                     }
@@ -443,8 +451,8 @@ const remove = {
                     queue.songs = [];
                     if (connection && connection.dispatcher) {
                         connection.dispatcher.destroy();
-                        updateDatabase(queue, msg.guild.id);
                     }
+                    updateDatabase(queue, msg.guild.id);
                     if (log) {
                         await msg.channel.send('Cleared queue!');
                     }
@@ -527,7 +535,7 @@ const repeat = {
             'disable': 0,
             'queue': 1,
             'song': 2,
-        }
+        };
         if (what !== '?') {
             queue.repeat = options[what] || (queue.repeat + 1) % 3;
             updateDatabase(queue, msg.guild.id);
@@ -664,26 +672,32 @@ module.exports = {
     'play': {
         ...play,
         'group': 'music',
+        'permissions': 36700160
     },
     'stop': {
         ...stop,
         'group': 'music',
+        'permissions': 36700160
     },
     'skip': {
         ...skip,
         'group': 'music',
+        'permissions': 36700160
     },
     'pause': {
         ...pause,
         'group': 'music',
+        'permissions': 36700160
     },
     'resume': {
         ...resume,
         'group': 'music',
+        'permissions': 36700160
     },
     'queue': {
         ...queue,
         'group': 'music',
+        'permissions': 59456
     },
     'clear': {
         ...clear,

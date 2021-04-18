@@ -102,7 +102,7 @@ async function gotoPage(msg, page) {
                 await msg.channel.send('Invalid page');
             }
         } else {
-            msg.channel.send('You aren\'t reading a hentai');
+            await msg.channel.send('You aren\'t reading a hentai');
         }
     } else {
         await msg.channel.send('Missing page number');
@@ -144,5 +144,6 @@ module.exports = {
         'description': description,
         'help': help,
         'group': 'misc',
+        'permissions': 59456,
     }
 };
