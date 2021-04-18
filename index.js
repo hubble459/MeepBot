@@ -2,33 +2,7 @@ const getCommands = require('./src/utils/commands');
 const client = require('./src/utils/client');
 const database = require('./src/utils/database');
 const commands = getCommands(__filename);
-
-const aliases = {
-    'np': {
-        command: 'now',
-        args: []
-    },
-    'playing': {
-        command: 'now',
-        args: []
-    },
-    'p': {
-        command: 'play',
-        args: []
-    },
-    'disconnect': {
-        command: 'stop',
-        args: []
-    },
-    'quit': {
-        command: 'stop',
-        args: []
-    },
-    'playlists': {
-        command: 'playlist',
-        args: []
-    }
-};
+const defaultAliases = require('./src/utils/default_aliases');
 
 client.on('ready', async () => {
     console.log(`Logged in as ${client.user.tag}!`);
@@ -41,7 +15,7 @@ client.on('message', async msg => {
     if (msg.author.bot) return;
 
     const db = database.ensure(msg.guild.id, {
-        aliases: aliases,
+        aliases: defaultAliases,
         music: {
             queue: {
                 songs: [],
@@ -52,11 +26,13 @@ client.on('message', async msg => {
         },
         settings: {
             prefix: '$',
-            space: false
+            space: false,
+            randomRetard: true
         }
     });
 
     const canTalk = (msg.guild.me.permissions & 2048) === 2048;
+    const randomRetard = db.settings.randomRetard;
     const content = msg.content;
     const space = db.settings.space;
     const prefix = db.settings.prefix;
@@ -94,5 +70,8 @@ client.on('message', async msg => {
                 console.error(err);
             }
         }
+    } else if (canTalk && randomRetard && Math.floor(Math.random() * 100) === 0) {
+        const ret = commands['retard'];
+        ret.function(msg, content.split(' '));
     }
 });

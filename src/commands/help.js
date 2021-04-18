@@ -73,6 +73,5 @@ module.exports = {
         'description': description,
         'help': info,
         'group': 'misc',
-        'permissions': 59456,
     }
 };

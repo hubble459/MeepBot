@@ -1,3 +1,4 @@
+const database = require('../utils/database');
 const {'echo': {'function': echo}} = require('./echo');
 
 function randomBool() {
@@ -27,6 +28,34 @@ module.exports = {
         'function': retard,
         'description': description,
         'help': help,
+        'group': 'funni'
+    },
+    'ridicule': {
+        'function': async (msg, [on]) => {
+            if (on) {
+                if (on === 'on') {
+                    database.set(msg.guild.id, true, 'settings.randomRetard');
+                    await msg.channel.send('Ridicule turned **on**');
+                } else if (on === 'off') {
+                    database.set(msg.guild.id, false, 'settings.randomRetard');
+                    await msg.channel.send('Ridicule turned **off**');
+                } else {
+                    await msg.channel.send('Bad argument');
+                }
+            } else {
+                const on = database.get(msg.guild.id, 'settings.randomRetard');
+                await msg.channel.send('Ridicule is **' + (on ? 'on' : 'off') + '**');
+            }
+        },
+        'description': () => '1 in 100 chance to get ridiculed',
+        'help': (prefix) => {
+            return '```apache\n' +
+                `${prefix}ridicule [on|off]\n` +
+                `Examples:\n` +
+                `\t${prefix}ridicule on\n` +
+                `\t${prefix}ridicule off\n` +
+                '```';
+        },
         'group': 'funni'
     },
 };

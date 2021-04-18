@@ -36,10 +36,10 @@ async function getHentaiData(url) {
         const doc = new JSDOM(await response.text()).window.document;
         return {
             title: doc.title.split(' »')[0],
-            images: [...doc.querySelectorAll('div.thumbs img')]
+            images: ([...doc.querySelectorAll('div.thumbs img')]
                 .map(el => el.src)
                 .filter(src => !src.startsWith('data'))
-                .map(src => src.replace('t.', 'i.').replace('t.', '.'))
+                .map(src => src.replace('t.', 'i.').replace('t.', '.')))
         }
     }
     throw {message: 'Not a valid url!'};

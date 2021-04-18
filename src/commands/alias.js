@@ -1,5 +1,6 @@
 const database = require('../utils/database');
 const getCommands = require('../utils/commands');
+const defaultAliases = require('../utils/default_aliases');
 const commands = getCommands(__filename, 'help');
 const {MessageEmbed} = require('discord.js');
 
@@ -73,33 +74,38 @@ const aliasrm = {
 };
 
 const aliases = {
-    'function': async (msg) => {
-        const aliases = database.get(msg.guild.id, 'aliases');
-        const values = [];
+    'function': async (msg, [arg1]) => {
+        if (arg1 === 'reset') {
+            database.set(msg.guild.id, defaultAliases, 'aliases');
+            await msg.channel.send('Aliases reset!');
+        } else {
+            const aliases = database.get(msg.guild.id, 'aliases');
+            const values = [];
 
-        const entries = Object.entries(aliases);
-        const size = entries.length;
-        entries
-            .slice(0, 20)
-            .forEach(([alias, {args, command}]) => {
-                args = args.join(' ');
-                args = args.slice(0, 20) + (args.length > 20 ? '...' : '');
-                values.push(`${alias} -> ${command} ${args}`);
-            });
+            const entries = Object.entries(aliases);
+            const size = entries.length;
+            entries
+                .slice(0, 20)
+                .forEach(([alias, {args, command}]) => {
+                    args = args.join(' ');
+                    args = args.slice(0, 20) + (args.length > 20 ? '...' : '');
+                    values.push(`${alias} -> ${command} ${args}`);
+                });
 
-        const embed = new MessageEmbed()
-            .addField(`${size} alias${size !== 0 ? 'es' : ''}`, '```apache\n' + values.join('\n') + '```');
-        await msg.channel.send(embed);
+            const embed = new MessageEmbed()
+                .addField(`${size} alias${size !== 0 ? 'es' : ''}`, '```apache\n' + values.join('\n') + '```');
+            await msg.channel.send(embed);
+        }
     },
     'description': () => {
-        return 'Remove an alias';
+        return 'List all aliases';
     },
     'help': (prefix) => {
         return '```apache\n' +
-            `${prefix}aliasrm [alias]\n` +
+            `${prefix}aliases [option]\n` +
             `Examples:\n` +
-            `\t${prefix}aliasrm owo\n` +
-            `\t${prefix}aliasrm nice\n` +
+            `\t${prefix}aliases\n` +
+            `\t${prefix}aliases reset\n` +
             '```';
     },
     'group': 'misc'

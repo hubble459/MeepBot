@@ -1,5 +1,13 @@
-async function test(msg, [wanted]) {
-    await msg.channel.send('perms: \n' + ((msg.guild.me.permissions & +wanted) === +wanted));
+const {MessageAttachment} = require('discord.js');
+
+async function test(msg) {
+    if (msg.author.id === '316594280678293506') {
+        await msg.channel.send('hewo!');
+    } else {
+        const image = './src/assets/images/dont_touch.jpg';
+        const attachment = new MessageAttachment(image, 'image.jpg');
+        await msg.channel.send(attachment);
+    }
 }
 
 function description() {
@@ -16,6 +24,5 @@ module.exports = {
         'description': description,
         'help': help,
         'group': 'misc',
-        'permissions': 8
     }
 };

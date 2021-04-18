@@ -536,17 +536,21 @@ const repeat = {
             'queue': 1,
             'song': 2,
         };
-        if (what !== '?') {
-            queue.repeat = options[what] || (queue.repeat + 1) % 3;
+        let help = '';
+        if (what) {
+            queue.repeat = options[what] || 0;
             updateDatabase(queue, msg.guild.id);
+        } else {
+            help = 'Options: ( **disable** | **queue** | **song** )\n';
         }
+
         switch (queue.repeat) {
             case 0:
-                return msg.channel.send(new MessageEmbed().setDescription('Looping is `disabled`'));
+                return msg.channel.send(new MessageEmbed().setDescription(help + '\nLooping is `disabled`'));
             case 1:
-                return msg.channel.send(new MessageEmbed().setDescription('Looping `the queue`'));
+                return msg.channel.send(new MessageEmbed().setDescription(help + '\nLooping `the queue`'));
             case 2:
-                return msg.channel.send(new MessageEmbed().setDescription('Looping `song`'));
+                return msg.channel.send(new MessageEmbed().setDescription(help + '\nLooping `song`'));
         }
     },
     description: () => 'Repeat the song or queue',

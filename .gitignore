@@ -8,8 +8,8 @@ yarn-error.log*
 lerna-debug.log*
 
 # db
-src/assets/enmap*
-src/assets_dev/enmap*
+src/assets/enmap*/enmap*
+src/assets_dev/enmap*/enmap*
 
 # Diagnostic reports (https://nodejs.org/api/report.html)
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
