@@ -27,16 +27,24 @@ client.on('message', async msg => {
         settings: {
             prefix: '$',
             space: false,
-            randomRetard: true
+            randomRetard: true,
+            language: 'en'
         }
     });
+
+    const mention = msg.mentions.users.first();
+    let space = db.settings.space;
+    let call;
+    if (mention) {
+        call = mention.id === msg.guild.me.id;
+        space = true;
+    }
 
     const canTalk = (msg.guild.me.permissions & 2048) === 2048;
     const randomRetard = db.settings.randomRetard;
     const content = msg.content;
-    const space = db.settings.space;
     const prefix = db.settings.prefix;
-    if (canTalk && content.startsWith(db.settings.prefix + (space ? ' ' : '')) && content.length > (space + prefix.length)) {
+    if (canTalk && (content.startsWith(db.settings.prefix + (space ? ' ' : '')) || call) && content.length > (space + prefix.length)) {
         let command = (space ? content.split(' ')[1] : content.split(' ')[0].substr(prefix.length)).toLowerCase();
         let args = content
             .split(' ')
@@ -75,3 +83,12 @@ client.on('message', async msg => {
         ret.function(msg, content.split(' '));
     }
 });
+
+if (!String.prototype.format) {
+    String.prototype.format = function () {
+        const args = arguments;
+        return this.replace(/{(\d+)}/g, function (match, number) {
+            return typeof args[number] != 'undefined' ? args[number] : match;
+        });
+    };
+}

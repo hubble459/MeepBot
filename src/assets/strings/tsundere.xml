@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Echo -->
+    <string name="echo_empty">B-baka! I can't send empty messages</string>
+    <string name="echo_description">B-baka! I can't send empty messages</string>
+    <string name="echo_help">B-baka! I can't send empty messages</string>
+
+    <!-- Language -->
+    <string name="language_current">Language is {0}! Can't you tell?! &gt;~&lt;</string>
+    <string name="language_changed">it's not like I'm happy you changed the language to {0}... *bloosh*</string>
+    <string name="language_not_found">**{0}** isn't even a language *huff*</string>
+</resources>

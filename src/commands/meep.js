@@ -143,7 +143,7 @@ module.exports = {
         'function': meep,
         'description': description,
         'help': help,
-        'group': 'misc',
+        'group': 'nsfw',
         'permissions': 59456,
     }
 };

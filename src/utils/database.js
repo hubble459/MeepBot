@@ -1,4 +1,5 @@
 const Enmap = require('enmap');
+
 const database = new Enmap({
     name: 'database',
     autoFetch: true,

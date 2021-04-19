@@ -7,6 +7,10 @@ module.exports = {
         command: 'now',
         args: []
     },
+    'list': {
+        command: 'queue',
+        args: []
+    },
     'p': {
         command: 'play',
         args: []

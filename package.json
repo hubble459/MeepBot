@@ -20,6 +20,7 @@
     "jsdom": "^16.5.2",
     "node-fetch": "^2.6.1",
     "soundcloud-downloader": "^1.0.0",
+    "xml2json": "^0.12.0",
     "ytdl-core": "^4.5.0",
     "ytpl": "^2.1.1",
     "ytsr": "^3.4.1"

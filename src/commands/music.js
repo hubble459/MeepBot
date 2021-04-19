@@ -119,8 +119,10 @@ async function addSong(msg, queue, connection, song) {
 }
 
 const play = {
-    'function': async function play(msg, args) {
-        args = args.map(a => a.replace(/\n/g, ''));
+    'function': async function play(msg, args = ['']) {
+        const tmp = [];
+        args.forEach(a => tmp.push(...a.split('\n')));
+        args = tmp;
 
         if (!msg.member.voice.channel) {
             await msg.channel.send('Join a voice channel first');
