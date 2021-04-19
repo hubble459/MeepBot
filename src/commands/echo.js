@@ -10,19 +10,11 @@ async function echo(msg, args) {
     }
 }
 
-function description() {
-    return 'Make me say lewd stuff :3';
-}
-
-function help(prefix) {
-    return `Use \`${prefix}echo [words]\`\neg. \`${prefix}echo I'm so adowable uwu\``;
-}
-
 module.exports = {
     'echo': {
         'function': echo,
-        'description': description,
-        'help': help,
+        'description': 'echo_description',
+        'help': 'echo_help',
         'group': 'misc',
     }
 };

@@ -1,5 +1,6 @@
 const {MessageEmbed} = require('discord.js');
 const database = require('../utils/database');
+const strings = require('../utils/strings');
 const getCommands = require('../utils/commands');
 const commands = getCommands(__filename);
 
@@ -28,9 +29,12 @@ async function help(msg, [command]) {
         }
 
         if (cmd) {
+
             const embed = new MessageEmbed()
                 .setTitle(command)
-                .addField(cmd.description(), cmd.help(prefix));
+                .addField(
+                    strings.getString(msg.guild.id, cmd.description),
+                    strings.getString(msg.guild.id, cmd.help).format(prefix));
 
             await msg.channel.send(embed);
         } else {

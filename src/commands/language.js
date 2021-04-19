@@ -19,19 +19,11 @@ async function language(msg, [lang]) {
     }
 }
 
-function description() {
-    return 'Change the bot language for this server';
-}
-
-function help() {
-    return `empty uwu`;
-}
-
 module.exports = {
     'language': {
         'function': language,
-        'description': description,
-        'help': help,
+        'description': 'language_description',
+        'help': 'language_help',
         'group': 'misc',
     }
 };
