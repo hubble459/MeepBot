@@ -66,21 +66,23 @@ const strings = function (stringPath) {
         console.error(missing);
     }
 
+    function getString(guildId, stringName) {
+        const locale = database.get(guildId, 'settings.language');
+        let strings = locales[locale];
+        if (!strings) {
+            database.set(guildId, 'english', 'settings.language');
+            strings = locales['english'];
+        }
+        return strings[stringName];
+    }
+
     return {
         find(locale) {
             return Object.keys(locales).find(loc => loc.startsWith(locale));
         },
-        getString(guildId, stringName) {
-            const locale = database.get(guildId, 'settings.language');
-            let strings = locales[locale];
-            if (!strings) {
-                database.set(guildId, 'english', 'settings.language');
-                strings = locales['english'];
-            }
-            return strings[stringName];
-        },
+        getString,
         getGetString(guildId) {
-            return (key) => this.getString(guildId, key);
+            return (key) => getString(guildId, key);
         }
     };
 };
