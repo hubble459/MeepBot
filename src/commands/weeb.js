@@ -16,19 +16,9 @@ async function weeb(msg) {
     await msg.channel.send(new MessageAttachment(link));
 }
 
-function description() {
-    return 'Nyaa~~';
-}
-
-function help() {
-    return `you know how it goes`;
-}
-
 module.exports = {
     'weeb': {
         'function': weeb,
-        'description': description,
-        'help': help,
         'group': 'misc',
     }
 };

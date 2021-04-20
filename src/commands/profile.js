@@ -8,19 +8,9 @@ async function profile(msg) {
     await msg.channel.send(embed);
 }
 
-function description() {
-    return 'Profile';
-}
-
-function help(prefix) {
-    return `${prefix}mine`;
-}
-
 module.exports = {
     'profile': {
         'function': profile,
-        'description': description,
-        'help': help,
         'group': 'misc',
     }
 };

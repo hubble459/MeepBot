@@ -74,7 +74,7 @@ async function searchYT(query, expectedDurationMs) {
         });
         if (result) {
             return {
-                title: result.title,
+                title: result.title.replace(/”/g, '"'),
                 url: result.url,
                 isLive: result.isLive,
                 duration: result.duration || '',

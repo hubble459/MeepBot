@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Echo -->
+    <!--<editor-fold desc="echo">-->
     <string name="echo_empty">b-baka! I can't send empty messages</string>
     <string name="echo_description">don't make me say i love you! o//o</string>
     <string name="echo_help">
@@ -10,9 +10,34 @@
             {0}echo i should step on you
             {0}echo why don't you just die already, baka
     </string>
+    <!--</editor-fold>-->
 
-    <!-- Language -->
+    <!--<editor-fold desc="language">-->
     <string name="language_current">language is {0}! Can't you tell?! &gt;~&lt;</string>
     <string name="language_changed">it's not like I'm happy you changed the language to {0}... *bloosh*</string>
     <string name="language_not_found">**{0}** isn't even a language *huff*</string>
+    <!--</editor-fold>-->
+
+    <!--<editor-fold desc="play">-->
+    <string name="play_join_vc">You're not even in a vc, why would I sing for you</string>
+    <string name="play_second">second</string>
+    <string name="play_minute">minute</string>
+    <string name="play_progress">i-i'm not loading them for you</string>
+    <string name="play_progress_desc">
+        {0} / {1} `{2}%`
+        **avg**: {3} stupid song{4} per second
+        **eta**: {5} {6}{7}
+    </string>
+    <string name="play_progress_not_found_name">{0} quirky song(s)</string>
+    <string name="play_progress_not_found_value">
+        ```haskell
+        {0}
+        ```
+    </string>
+    <!--</editor-fold>-->
+
+    <!--<editor-fold desc="stop">-->
+    <string name="stop_disconnected">i guess i'll leave.. not because you asked, though</string>
+    <string name="stop_not_connected">i'm not even in a vc **huff**</string>
+    <!--</editor-fold>-->
 </resources>

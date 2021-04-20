@@ -11,9 +11,9 @@ module.exports = async (channel, allItems, itemsPerPage, onNewPage, ...listeners
         }
     }
 
-    let msg = await channel.send(new MessageEmbed().setTitle('loading...'));
+    const msg = await channel.send(new MessageEmbed().setTitle('loading...'));
 
-    const pages = Math.ceil(allItems / itemsPerPage);
+    const pages = Math.ceil(allItems.length / itemsPerPage);
     let page = 0;
     while (true) {
         const items = allItems.slice(page * itemsPerPage, (page + 1) * itemsPerPage);
@@ -33,7 +33,7 @@ module.exports = async (channel, allItems, itemsPerPage, onNewPage, ...listeners
             })).first();
             const listener = listeners.find(({emoji}) => emoji === reaction.emoji.name);
             if (listener) {
-                msg = await listener.callback(msg, items, page);
+                await listener.callback(msg, items, page);
             } else {
                 if (reaction.emoji.name === '❌') {
                     await msg.reactions.removeAll();

@@ -1,28 +1,16 @@
 const database = require('../utils/database');
+const {getGetString} = require('../utils/strings');
 
 async function space(msg) {
-    const spaceOn = database.get(msg.guild.id, 'settings.space')
-    database.set(msg.guild.id, !spaceOn, 'settings.space')
-    await msg.channel.send(`Space after command ${spaceOn ? 'disabled' : 'enabled'}`)
-}
-
-function help(prefix) {
-    return '```apache\n' +
-        `${prefix}space\n` +
-        'Example:\n' +
-        `\t${prefix}space` +
-        '```';
-}
-
-function description() {
-    return 'Toggle the space after the prefix on or off';
+    const getString = getGetString(msg.guild.id);
+    const spaceOn = database.get(msg.guild.id, 'settings.space');
+    database.set(msg.guild.id, !spaceOn, 'settings.space');
+    await msg.channel.send(getString('space_on').format(spaceOn ? getString('space_disabled') : getString('space_enabled')));
 }
 
 module.exports = {
     'space': {
         'function': space,
-        'description': description,
-        'help': help,
-        'group': 'settings',
+        'group': 'settings'
     }
 };

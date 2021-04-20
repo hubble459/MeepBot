@@ -1,4 +1,5 @@
 const database = require('../utils/database');
+const {getString} = require('../utils/strings');
 const {MessageEmbed} = require('discord.js');
 const {regex, getRandomHentai, getHentaiData} = require('../utils/nhentai');
 const sessions = [];
@@ -18,18 +19,17 @@ async function meep(msg, args) {
         }
         const validUrl = !!url && regex.test(url);
         const page = args[2] || 1;
-        await readHentai(msg.channel, validUrl ? url : await getRandomHentai(url === 'english'), validUrl ? page : 1);
+        await readHentai(msg, validUrl ? url : await getRandomHentai(url === 'english'), validUrl ? page : 1);
     } else {
-        const prefix = database.get(msg.guild.id, 'settings.prefix')
-        await msg.channel.send(`See \`${prefix}help meep\` for help`)
+        const prefix = database.get(msg.guild.id, 'settings.prefix');
+        await msg.channel.send(getString(msg.guild.id, 'meep_see_help').format(prefix));
     }
 }
 
-async function readHentai(channel, url, page = 1) {
+async function readHentai(msg, url, page = 1) {
     const {title, images} = await getHentaiData(url);
     if (images.length === 0) {
-        channel.send('There are no images for this hentai');
-        return;
+        return msg.channel.send(getString(msg.guild.id, 'meep_no_images'));
     }
 
     let reading = true;
@@ -40,9 +40,9 @@ async function readHentai(channel, url, page = 1) {
         url,
         images,
         title,
-        msg: await channel.send(embedRead(page, url, images, title)),
-        channel
-    }
+        msg: await msg.channel.send(embedRead(page, url, images, title)),
+        channel: msg.channel
+    };
 
     sessions.push(data);
 
@@ -99,13 +99,13 @@ async function gotoPage(msg, page) {
                 if (data.page !== 1) await data.msg.react('⬅️');
                 if (data.page !== data.images.length) await data.msg.react('➡️');
             } else {
-                await msg.channel.send('Invalid page');
+                await msg.channel.send(getString(msg.guild.id, 'meep_invalid_page'));
             }
         } else {
-            await msg.channel.send('You aren\'t reading a hentai');
+            await msg.channel.send(getString(msg.guild.id, 'meep_not_reading'));
         }
     } else {
-        await msg.channel.send('Missing page number');
+        await msg.channel.send(getString(msg.guild.id, 'meep_missing_page'));
     }
 }
 

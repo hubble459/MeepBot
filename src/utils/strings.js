@@ -79,6 +79,9 @@ const strings = function (stringPath) {
             }
             return strings[stringName];
         },
+        getGetString(guildId) {
+            return (key) => this.getString(guildId, key);
+        }
     };
 };
 

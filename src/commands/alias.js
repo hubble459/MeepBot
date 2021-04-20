@@ -26,7 +26,7 @@ async function alias(msg, msgArgs) {
                 command,
                 args
             }, `aliases.${newCommand}`);
-            await msg.channel.send(strings.getString(msg.guild.id, 'alias_prefix').format(newCommand, existed ? 'changed' : 'added'));
+            await msg.channel.send(strings.getString(msg.guild.id, 'alias_changed').format(newCommand, existed ? 'changed' : 'added'));
         }
     } else {
         await msg.channel.send(strings.getString(msg.guild.id, 'alias_arguments'));
