@@ -47,7 +47,9 @@ const strings = function (stringPath) {
         const strings = {};
         if (Array.isArray(resources.string)) {
             for (const str of resources.string) {
-                strings[str.name] = str['$t'];
+                // (?=[ \W])(?<!\w)|\n(?=\n)
+                // |\n(?=\n)
+                strings[str.name] = str['$t'].replace(/ {7,8}/g, '');
             }
         } else {
             strings[resources.string.name] = resources.string['$t'];
@@ -55,6 +57,8 @@ const strings = function (stringPath) {
 
         locales[locale.replace('.xml', '')] = strings;
     }
+
+    console.log(locales['english']['echo_help']);
 
     // Check for missing
     const missing = missingNames(locales);

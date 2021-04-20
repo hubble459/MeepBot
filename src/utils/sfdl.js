@@ -24,11 +24,8 @@ async function get(url, onNotFound, onProgress) {
             await refreshHeaders();
         }
         if (playlist_id) {
-            const offset = 0;
-            const limit = 100;
-
             const trackList = [];
-            let next = `https://api.spotify.com/v1/playlists/${playlist_id}/tracks?offset=${offset}&limit=${limit}`;
+            let next = `https://api.spotify.com/v1/playlists/${playlist_id}/tracks?offset=0&limit=100`;
             while (next) {
                 const result = (await (await fetch(next,
                     {headers},
@@ -39,7 +36,6 @@ async function get(url, onNotFound, onProgress) {
 
                 trackList.push(...tracks.items);
             }
-
 
             const songs = [];
             onProgress(0, trackList.length);

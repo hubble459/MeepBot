@@ -109,40 +109,9 @@ async function gotoPage(msg, page) {
     }
 }
 
-function description() {
-    return 'Hentai';
-}
-
-function help(prefix) {
-    return '```apache\n' +
-        `${prefix}meep [arguments]\n\n` +
-        'arguments:\n' +
-        '\t[none]\n' +
-        '\t\tGet a random hentai\n' +
-        '\tenglish\n' +
-        '\t\tGet a random english hentai\n' +
-        '\tread\n' +
-        '\t\tRead a random hentai\n' +
-        '\tread english\n' +
-        '\t\tRead a random english hentai\n' +
-        '\tread [url] [page number]\n' +
-        '\t\tRead hentai from url with optional page number\n' +
-        '\tpage [page number]\n' +
-        '\t\tChange page of latest reader in channel\n' +
-        '\nexamples:\n' +
-        `\t${prefix}meep english\n` +
-        `\t${prefix}meep read english\n` +
-        `\t${prefix}meep read https://nhentai.net/g/295383/\n` +
-        `\t${prefix}meep read 226730 21\n` +
-        `\t${prefix}meep page 1\n` +
-        '```';
-}
-
 module.exports = {
     'meep': {
         'function': meep,
-        'description': description,
-        'help': help,
         'group': 'nsfw',
         'permissions': 59456,
     }

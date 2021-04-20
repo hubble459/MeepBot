@@ -8,19 +8,9 @@ async function magic(msg, args) {
     `);
 }
 
-function description() {
-    return 'Magical echo';
-}
-
-function help(prefix) {
-    return `see ${prefix}help echo`;
-}
-
 module.exports = {
     'magic': {
         'function': magic,
-        'description': description,
-        'help': help,
-        'group': 'misc',
+        'group': 'funni',
     }
 };

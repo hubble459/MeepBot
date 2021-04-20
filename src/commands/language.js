@@ -22,8 +22,6 @@ async function language(msg, [lang]) {
 module.exports = {
     'language': {
         'function': language,
-        'description': 'language_description',
-        'help': 'language_help',
-        'group': 'misc',
+        'group': 'settings',
     }
 };

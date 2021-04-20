@@ -1,14 +1,109 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Echo -->
+    <!-- echo -->
     <string name="echo_empty">I can't echo an empty message</string>
     <string name="echo_description">Make me say words</string>
-    <string name="echo_help">```apache&#xA;{0}echo [words]&#xA;Example&#xA;&#009;{0}echo I'm so adorable uwu```</string>
+    <string name="echo_help">
+        {0}echo [words]
 
-    <!-- Language -->
+        examples:
+            {0}echo I'm so adorable uwu
+            {0}echo I'm so adorable uwu
+    </string>
+
+    <!-- language -->
     <string name="language_current">Current language is {0}</string>
     <string name="language_changed">Changed the language to {0}</string>
     <string name="language_not_found">Language with name '{0}' could not be found</string>
-    <string name="language_help">Change the bot language for this server</string>
-    <string name="language_description">Language with name '{0}' could not be found</string>
+    <string name="language_description">Change the bot language for this server</string>
+    <string name="language_help">
+        {0}language [lang]
+
+        examples:
+            {0}language
+            {0}language english
+            {0}language tsundere
+    </string>
+
+    <!-- alias -->
+    <string name="alias_override">You can not override a default command</string>
+    <string name="alias_prefix">Command should not start with a prefix</string>
+    <string name="alias_changed">`Alias '{0}' {1}!</string>
+    <string name="alias_description">Add an alias for a command</string>
+    <string name="alias_arguments">Alias needs at least 2 arguments</string>
+    <string name="alias_help">
+        {0}alias [command_name] [command]
+
+        examples:
+            {0}alias owo echo fuck my ass
+            {0}alias nice play https://www.youtube.com/watch?v=myax0WsTSWA
+    </string>
+
+    <!-- aliasrm -->
+    <string name="aliasrm_reset">Aliases reset!</string>
+    <string name="aliasrm_removed">Removed `{0}` from alias list</string>
+    <string name="aliasrm_find">Could not find alias with name `{0}`</string>
+    <string name="aliasrm_arguments">Second argument should contain an alias name</string>
+    <string name="aliasrm_description">Remove an alias</string>
+    <string name="aliasrm_help">
+        {0}aliasrm [alias]
+
+        examples:
+            {0}aliasrm owo
+            {0}aliasrm nice
+    </string>
+
+    <!-- aliases -->
+    <string name="aliases_reset">Aliases reset!</string>
+    <string name="aliases_description">List all aliases</string>
+    <string name="aliases_help">
+        {0}aliases [option]
+        
+        examples:
+            {0}aliases
+            {0}aliases reset
+    </string>
+
+    <!-- help -->
+    <string name="help_description">This menu</string>
+    <string name="help_help">
+        {0}help [command]
+
+        examples:
+            {0}help
+            {0}help meep
+    </string>
+
+    <!-- magic -->
+    <string name="magic_description">Magical echo</string>
+    <string name="magic_help">
+        {0}magic [words]
+
+        examples:
+        {0}magic owo
+        {0}magic swoooosh
+    </string>
+
+    <!-- meep -->
+    <string name="meep_description">Hentai</string>
+    <string name="meep_help">
+        {0}meep [arguments]
+
+        examples:
+            # random url
+            {0}meep
+            {0}meep english
+
+            # read random
+            {0}meep read
+            {0}meep read english
+
+            # read from url or numbers
+            {0}meep read https://nhentai.net/g/203620/
+            {0}meep read 203620
+            {0}meep read 203620 9
+
+            # navigate reader to page
+            {0}meep page 10
+    </string>
 </resources>

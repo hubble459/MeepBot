@@ -13,8 +13,6 @@ async function echo(msg, args) {
 module.exports = {
     'echo': {
         'function': echo,
-        'description': 'echo_description',
-        'help': 'echo_help',
-        'group': 'misc',
+        'description': 'echo_description'
     }
 };

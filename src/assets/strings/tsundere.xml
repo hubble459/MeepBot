@@ -3,7 +3,13 @@
     <!-- Echo -->
     <string name="echo_empty">b-baka! I can't send empty messages</string>
     <string name="echo_description">don't make me say i love you! o//o</string>
-    <string name="echo_help">```apache&#xA;{0}echo [words]&#xA;Example&#xA;&#009;{0}echo i should step on you```</string>
+    <string name="echo_help">
+        {0}echo [words]
+
+        examples:
+            {0}echo i should step on you
+            {0}echo why don't you just die already, baka
+    </string>
 
     <!-- Language -->
     <string name="language_current">language is {0}! Can't you tell?! &gt;~&lt;</string>

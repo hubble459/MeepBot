@@ -64,9 +64,11 @@ client.on('message', async msg => {
         }
 
         if (fun) {
-            console.log('cmd: ', command);
-            console.log('args: ', args);
-            console.log();
+            console.log({
+                server: msg.guild.name,
+                command: command,
+                args: args
+            });
 
             if (fun.permissions && ((msg.guild.me.permissions & fun.permissions) !== fun.permissions)) {
                 return msg.channel.send('Bot has insufficient permissions for this command');

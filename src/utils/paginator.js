@@ -1,6 +1,6 @@
 const {MessageEmbed} = require('discord.js');
 
-module.exports = async function (channel, allItems, itemsPerPage, onNewPage, ...listeners) {
+module.exports = async (channel, allItems, itemsPerPage, onNewPage, ...listeners) => {
     if (!channel || !Array.isArray(allItems) || isNaN(itemsPerPage) || itemsPerPage < 1 || !onNewPage) return;
     const emojis = ['⬅️', '➡️', '❌'];
     for (const listener of listeners) {

@@ -16,7 +16,7 @@ for (const [name, cmd] of Object.entries(commands)) {
 async function help(msg, [command]) {
     const prefix = database.get(msg.guild.id, 'settings.prefix') + (database.get(msg.guild.id, 'settings.space') ? ' ' : '');
     if (command) {
-        let cmd = commands[command];
+        let cmd = commands[command] || command === 'help';
 
         while (!cmd) {
             const aliasCommand = database.get(msg.guild.id, `aliases.${command}`);
@@ -29,12 +29,13 @@ async function help(msg, [command]) {
         }
 
         if (cmd) {
-
             const embed = new MessageEmbed()
                 .setTitle(command)
                 .addField(
-                    strings.getString(msg.guild.id, cmd.description),
-                    strings.getString(msg.guild.id, cmd.help).format(prefix));
+                    strings.getString(msg.guild.id, `${command}_description`),
+                    '```apache\n' +
+                    strings.getString(msg.guild.id, `${command}_help`).format(prefix) +
+                    '```');
 
             await msg.channel.send(embed);
         } else {
@@ -63,19 +64,9 @@ async function help(msg, [command]) {
     }
 }
 
-function description() {
-    return 'This menu';
-}
-
-function info() {
-    return 'Use `help <command>` to get more information about a command\nOr just `help` to show the help menu';
-}
-
 module.exports = {
     'help': {
         'function': help,
-        'description': description,
-        'help': info,
         'group': 'misc',
     }
 };
