@@ -72,12 +72,12 @@ const strings = function (stringPath) {
         },
         getString(guildId, stringName) {
             const locale = database.get(guildId, 'settings.language');
-            const strings = locales[locale];
-            if (strings) {
-                return strings[stringName];
-            } else {
-                throw new Error(`Locale '${locale}' not found`);
+            let strings = locales[locale];
+            if (!strings) {
+                database.set(guildId, 'english', 'settings.language');
+                strings = locales['english'];
             }
+            return strings[stringName];
         },
     };
 };
