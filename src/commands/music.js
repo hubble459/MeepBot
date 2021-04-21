@@ -1,6 +1,6 @@
 // noinspection JSUnusedGlobalSymbols
 
-const strings = require('../utils/strings');
+const {getGetString} = require('../utils/strings');
 const ytdl = require('ytdl-core');
 const ytpl = require('ytpl');
 const sfdl = require('../utils/sfdl');
@@ -69,7 +69,7 @@ function filter(reaction, user) {
 }
 
 function replaceAt(string, index, replacement) {
-    return string.substr(0, index) + replacement + string.substr(index + replacement.length);
+    return string.slice(0, index) + replacement + string.slice(index + replacement.length);
 }
 
 async function nextSong(guildId, queue) {
@@ -108,19 +108,21 @@ async function nextSong(guildId, queue) {
 }
 
 async function addSong(msg, queue, connection, song) {
+    const getString = getGetString(msg.guild.id);
+
     if (queue.songs.length !== 0) {
-        await msg.channel.send(strings.getString('music_added_to_queue').format(song.title));
+        await msg.channel.send(getString('music_added_to_queue').format(song.title));
     }
     queue.songs.push(song);
 
     if (shouldPlay(connection)) {
         await nextSong(msg.guild.id, queue);
-        await msg.channel.send(strings.getString('music_now_playing').format(queue.songs[0].title));
+        await msg.channel.send(getString('music_now_playing').format(queue.songs[0].title));
     }
 }
 
 async function play(msg, args = ['']) {
-    const getString = (key) => strings.getString(key);
+    const getString = getGetString(msg.guild.id);
 
     const tmp = [];
     args.forEach(a => tmp.push(...a.split('\n')));
@@ -214,7 +216,7 @@ async function play(msg, args = ['']) {
                         await msg.channel.send(getString('play_added_items_to_queue').format(songs.length));
                     } else if (song) {
                         if (queue.songs.length !== 0) {
-                            await msg.channel.send(getString('play_added_song_to_queue').format(song.title));
+                            await msg.channel.send(getString('music_added_to_queue').format(song.title));
                         }
                         queue.songs.push(song);
                     }
@@ -276,7 +278,7 @@ async function play(msg, args = ['']) {
                 };
 
                 if (queue.songs.length !== 0) {
-                    await msg.channel.send(getString('play_added_song_to_queue').format(song.title));
+                    await msg.channel.send(getString('music_added_to_queue').format(song.title));
                 }
 
                 queue.songs.push(song);
@@ -317,6 +319,7 @@ async function play(msg, args = ['']) {
 }
 
 async function stop(msg) {
+    const getString = getGetString(msg.guild.id);
     const connection = connections[msg.guild.id];
     if (connection) {
         const queue = database.get(msg.guild.id, 'music.queue');
@@ -327,13 +330,15 @@ async function stop(msg) {
             updateDatabase(queue, msg.guild.id);
         }
         connection.disconnect();
-        await msg.channel.send(strings.getString(msg.guild.id, 'stop_disconnected'));
+        delete connections[msg.guild.id];
+        await msg.channel.send(getString('stop_disconnected'));
     } else {
-        await msg.channel.send(strings.getString(msg.guild.id, 'stop_not_connected'));
+        await msg.channel.send(getString('stop_not_connected'));
     }
 }
 
 async function skip(msg, args) {
+    const getString = getGetString(msg.guild.id);
     const queue = database.get(msg.guild.id, 'music.queue');
     const connection = connections[msg.guild.id];
 
@@ -343,12 +348,12 @@ async function skip(msg, args) {
         queue.songs = queue.songs.slice(to);
         await nextSong(msg.guild.id, queue);
     } else {
-        await msg.channel.send(strings.getString(msg.guild.id, 'skip_nothing'));
+        await msg.channel.send(getString('skip_nothing'));
     }
 }
 
 async function pause(msg) {
-    const getString = (key) => strings.getString(msg.guild.id, key);
+    const getString = getGetString(msg.guild.id);
     const connection = connections[msg.guild.id];
     const queue = database.get(msg.guild.id, 'music.queue');
     if (queue.songs.length !== 0 && connection && connection.dispatcher) {
@@ -371,7 +376,7 @@ async function pause(msg) {
 }
 
 async function resume(msg) {
-    const getString = (key) => strings.getString(msg.guild.id, key);
+    const getString = getGetString(msg.guild.id);
     const connection = connections[msg.guild.id];
     const queue = database.get(msg.guild.id, 'music.queue');
     if (queue.songs.length !== 0) {
@@ -391,13 +396,15 @@ async function resume(msg) {
 }
 
 async function queue(msg) {
+    const getString = getGetString(msg.guild.id);
+
     const queue = database.get(msg.guild.id, 'music.queue');
     if (queue.songs.length !== 0) {
         const perPage = 20;
         const pages = queue.songs.length / perPage;
         let page = 0;
 
-        const totalString = strings.getString(msg.guild.id, 'queue_total');
+        const totalString = getString('queue_total');
 
         let navigating = true;
         let send = true;
@@ -435,13 +442,13 @@ async function queue(msg) {
         }
     } else {
         const embed = new MessageEmbed()
-            .setDescription(strings.getString(msg.guild.id, 'music_empty_queue'));
+            .setDescription(getString('music_empty_queue'));
         await msg.channel.send(embed);
     }
 }
 
 async function remove(msg, [item], log = true) {
-    const getString = (key) => strings.getString(msg.guild.id, key);
+    const getString = getGetString(msg.guild.id);
     if (item) {
         const connection = connections[msg.guild.id];
         const queue = database.get(msg.guild.id, 'music.queue');
@@ -493,7 +500,8 @@ async function clear(msg) {
 }
 
 async function now(msg) {
-    const getString = (key) => strings.getString(msg.guild.id, key);
+    const getString = getGetString(msg.guild.id);
+
     const connection = connections[msg.guild.id];
     const queue = database.get(msg.guild.id, 'music.queue');
     if (connection && connection.dispatcher) {
@@ -518,7 +526,7 @@ async function now(msg) {
 }
 
 async function repeat(msg, [what]) {
-    const getString = (key) => strings.getString(msg.guild.id, key);
+    const getString = getGetString(msg.guild.id);
     const queue = database.get(msg.guild.id, 'music.queue');
     const options = {
         'disable': 0,
@@ -545,6 +553,7 @@ async function repeat(msg, [what]) {
 }
 
 async function shuffle(msg) {
+    const getString = getGetString(msg.guild.id);
     const queue = database.get(msg.guild.id, 'music.queue');
     const first = queue.songs.shift();
     const songs = queue.songs;
@@ -557,11 +566,11 @@ async function shuffle(msg) {
     }
     queue.songs.unshift(first);
     database.set(msg.guild.id, queue, 'music.queue');
-    await msg.channel.send(strings.getString(msg.guild.id, 'shuffle_shuffled'));
+    await msg.channel.send(getString('shuffle_shuffled'));
 }
 
 async function playlist(msg, [command, ...name]) {
-    const getString = (key) => strings.getString(msg.guild.id, key);
+    const getString = getGetString(msg.guild.id);
     const music = database.get(msg.guild.id, 'music');
     if (command && name.length !== 0) {
         name = name.join(' ');
@@ -619,7 +628,8 @@ async function playlist(msg, [command, ...name]) {
 }
 
 async function volume(msg, [percentage]) {
-    const getString = (key) => strings.getString(msg.guild.id, key);
+    const getString = getGetString(msg.guild.id);
+
     if (percentage) {
         if (!isNaN(percentage) && percentage >= 0 && percentage <= 500) {
             const connection = connections[msg.guild.id];

@@ -11,26 +11,29 @@ client.on('ready', async () => {
     });
 });
 
+function ensure(guildId) {
+    const db = {};
+    db.aliases = database.ensure(guildId, defaultAliases, 'aliases');
+    db.music = database.ensure(guildId, {}, 'music');
+    db.music.queue = database.ensure(guildId, {}, 'music.queue');
+    db.music.queue.songs = database.ensure(guildId, [], 'music.queue.songs');
+    db.music.queue.repeat = database.ensure(guildId, 0, 'music.queue.repeat');
+    db.music.volume = database.ensure(guildId, 100, 'music.volume');
+    db.music.playlists = database.ensure(guildId, {}, 'music.playlists');
+    db.settings = database.ensure(guildId, {}, 'settings');
+    db.settings.prefix = database.ensure(guildId, '$', 'settings.prefix');
+    db.settings.space = database.ensure(guildId, false, 'settings.space');
+    db.settings.ridicule = database.ensure(guildId, {}, 'settings.ridicule');
+    db.settings.ridicule.on = database.ensure(guildId, true, 'settings.ridicule.on');
+    db.settings.ridicule.chance = database.ensure(guildId, 100, 'settings.ridicule.chance');
+    db.settings.language = database.ensure(guildId, 'english', 'settings.language');
+    return db;
+}
+
 client.on('message', async msg => {
     if (msg.author.bot) return;
 
-    const db = database.ensure(msg.guild.id, {
-        aliases: defaultAliases,
-        music: {
-            queue: {
-                songs: [],
-                repeat: 0
-            },
-            volume: 100,
-            playlists: {}
-        },
-        settings: {
-            prefix: '$',
-            space: false,
-            randomRetard: true,
-            language: 'en'
-        }
-    });
+    const db = ensure(msg.guild.id);
 
     const mention = msg.mentions.users.first();
     let space = db.settings.space;
@@ -41,7 +44,6 @@ client.on('message', async msg => {
     }
 
     const canTalk = (msg.guild.me.permissions & 2048) === 2048;
-    const randomRetard = db.settings.randomRetard;
     const content = msg.content;
     const prefix = db.settings.prefix;
     if (canTalk && (content.startsWith(db.settings.prefix + (space ? ' ' : '')) || call) && content.length > (space + prefix.length)) {
@@ -80,7 +82,7 @@ client.on('message', async msg => {
                 console.error(err);
             }
         }
-    } else if (canTalk && randomRetard && Math.floor(Math.random() * 100) === 0) {
+    } else if (canTalk && db.settings.ridicule.on && Math.floor(Math.random() * db.settings.ridicule.chance) === 0) {
         const ret = commands['retard'];
         ret.function(msg, content.split(' '));
     }
@@ -89,8 +91,9 @@ client.on('message', async msg => {
 if (!String.prototype.format) {
     String.prototype.format = function () {
         const args = arguments;
-        return this.replace(/{(\d+)}/g, function (match, number) {
-            return typeof args[number] != 'undefined' ? args[number] : match;
+        return this.replace(/{(\d+)}/g, (match, number) => {
+            const arg = args[number];
+            return arg ? arg : match;
         });
     };
 }

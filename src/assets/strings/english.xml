@@ -30,9 +30,12 @@
     <!--<editor-fold desc="alias">-->
     <string name="alias_override">You can not override a default command</string>
     <string name="alias_prefix">Command should not start with a prefix</string>
-    <string name="alias_changed">Alias '{0}' {1}!</string>
-    <string name="alias_description">Add an alias for a command</string>
+    <string name="alias_not_command">`{0}` is not a command</string>
+    <string name="alias_add_changed">changed</string>
+    <string name="alias_add_added">added</string>
+    <string name="alias_add">Alias `{0}` {1}!</string>
     <string name="alias_arguments">Alias needs at least 2 arguments</string>
+    <string name="alias_description">Add an alias for a command</string>
     <string name="alias_help">
         {0}alias [command_name] [command]
 
@@ -43,7 +46,6 @@
     <!--</editor-fold>-->
 
     <!--<editor-fold desc="aliasrm">-->
-    <string name="aliasrm_reset">Aliases reset!</string>
     <string name="aliasrm_removed">Removed `{0}` from alias list</string>
     <string name="aliasrm_find">Could not find alias with name `{0}`</string>
     <string name="aliasrm_arguments">Second argument should contain an alias name</string>
@@ -142,8 +144,7 @@
         {0}
         ```
     </string>
-    <string name="play_added_items_to_queue">Added **{0}** items to the queue</string>
-    <string name="play_added_song_to_queue">Added `{0}` to the queue</string>
+    <string name="play_added_items_to_queue">Added **{0}** songs to the queue</string>
     <string name="play_youtube_mix">Mixes aren't supported</string>
     <string name="play_unsupported">This platform isn't supported (yet)</string>
     <string name="play_no_results">No search results</string>
@@ -374,14 +375,22 @@
     <string name="ridicule_is">Ridicule is **{0}**</string>
     <string name="ridicule_is_on">on</string>
     <string name="ridicule_is_off">off</string>
-    <string name="ridicule_bad">Bad argument</string>
-    <string name="ridicule_description">1 in 100 chance to get ridiculed</string>
+    <string name="ridicule_bad">should be `on` or `off`</string>
+    <string name="ridicule_chance_is">Chance to get ridiculed is `1/{0}`</string>
+    <string name="ridicule_change">Chance to get ridiculed is now `1/{0}`</string>
+    <string name="ridicule_change_bad">`{0}` is not a number or invalid</string>
+    <string name="ridicule_bad_two">Missing arguments</string>
+    <string name="ridicule_description">Chance to get ridiculed</string>
     <string name="ridicule_help">
-        {0}ridicule [on|off]
+        {0}ridicule [parameters]
 
         examples:
-            {0}ridicule on
-            {0}ridicule off
+            {0}ridicule turn
+            {0}ridicule turn on
+            {0}ridicule turn off
+            {0}ridicule chance
+            {0}ridicule chance 100
+            {0}ridicule chance 1000
     </string>
     <!--</editor-fold>-->
 

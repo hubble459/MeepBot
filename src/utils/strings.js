@@ -25,8 +25,8 @@ function missingNames(locales) {
             if (first === locale) {
                 names.push(name);
             } else if (!names.includes(name)) {
-                if (!missing[locale]) {
-                    missing[locale] = [];
+                if (!missing[first]) {
+                    missing[first] = [];
                 }
                 missing[first].push(name);
                 names.push(name);
@@ -57,8 +57,6 @@ const strings = function (stringPath) {
 
         locales[locale.replace('.xml', '')] = strings;
     }
-
-    console.log(locales['english']['echo_help']);
 
     // Check for missing
     const missing = missingNames(locales);
