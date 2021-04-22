@@ -43,7 +43,7 @@ client.on('message', async msg => {
         space = true;
     }
 
-    const canTalk = (msg.guild.me.permissions & 2048) === 2048;
+    const canTalk = (msg.guild.me.permissionsIn(msg.channel) & 2048) === 2048;
     const content = msg.content;
     const prefix = db.settings.prefix;
     if (canTalk && (content.startsWith(db.settings.prefix + (space ? ' ' : '')) || call) && content.length > (space + prefix.length)) {
@@ -72,7 +72,7 @@ client.on('message', async msg => {
                 args: args
             });
 
-            if (fun.permissions && ((msg.guild.me.permissions & fun.permissions) !== fun.permissions)) {
+            if (fun.permissions && ((msg.guild.me.permissionsIn(msg.channel) & fun.permissions) !== fun.permissions)) {
                 return msg.channel.send('Bot has insufficient permissions for this command');
             }
 

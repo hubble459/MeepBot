@@ -176,6 +176,11 @@
     <!--</editor-fold>-->
 
     <!--<editor-fold desc="skip">-->
+    <string name="skip_notify">
+        Skipping `{0}`
+        Now playing `{1}`
+    </string>
+    <string name="skip_not_a_number">Not a number</string>
     <string name="skip_nothing">Nothing to skip</string>
     <string name="skip_description">Skip a song</string>
     <string name="skip_help">
@@ -209,6 +214,7 @@
 
     <!--<editor-fold desc="resume">-->
     <string name="queue_total">total: {0}</string>
+    <string name="queue_duration">duration: {0}</string>
     <string name="queue_description">Song queue</string>
     <string name="queue_help">
         {0}queue
@@ -249,7 +255,7 @@
     <!--</editor-fold>-->
 
     <!--<editor-fold desc="repeat">-->
-    <string name="repeat_help">Options: ( **disable** | **queue** | **song** )</string>
+    <string name="repeat_options">Options: ( **disable** | **queue** | **song** )</string>
     <string name="repeat_disabled">Looping is `disabled`</string>
     <string name="repeat_queue">Looping `the queue`</string>
     <string name="repeat_song">Looping `song`</string>
@@ -412,7 +418,7 @@
     <!--</editor-fold>-->
 
     <!--<editor-fold desc="weeb">-->
-    <string name="weeb_description">Get weeb images</string>
+    <string name="weeb_description">Get weeb image</string>
     <string name="weeb_help">
         {0}weeb
     </string>

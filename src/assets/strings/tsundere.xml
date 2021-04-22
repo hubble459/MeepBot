@@ -64,7 +64,7 @@
     <string name="aliases_description">list your un-funnies</string>
     <string name="aliases_help">
         {0}aliases [option]
-        
+
         examples:
             {0}aliases
             {0}aliases reset
@@ -72,7 +72,7 @@
     <!--</editor-fold>-->
 
     <!--<editor-fold desc="help">-->
-    <string name="help_description">i can believe i fell for someone like you _\*looks away*_</string>
+    <string name="help_description">i can't believe i fell for someone like you _\*looks away*_</string>
     <string name="help_help">
         {0}help [command]
 
@@ -83,23 +83,26 @@
     <!--</editor-fold>-->
 
     <!--<editor-fold desc="magic">-->
-    <string name="magic_description">Magical echo</string>
+    <string name="magic_description">maybe say `i love you`? not that i would care</string>
     <string name="magic_help">
         {0}magic [words]
 
         examples:
-            {0}magic owo
-            {0}magic swoooosh
+            {0}magic i love you
+            {0}magic uwu
     </string>
     <!--</editor-fold>-->
 
     <!--<editor-fold desc="meep">-->
-    <string name="meep_see_help">See `{0}help meep` for help</string>
-    <string name="meep_no_images">There are no images for this hentai</string>
-    <string name="meep_invalid_page">Invalid page</string>
-    <string name="meep_not_reading">You aren't reading a hentai</string>
-    <string name="meep_missing_page">Missing page number</string>
-    <string name="meep_description">Hentai</string>
+    <string name="meep_see_help">s-stop 😳</string>
+    <string name="meep_no_images">this one is too lewd to show >///&lt;</string>
+    <string name="meep_invalid_page">
+        that page.. no
+        try another one
+    </string>
+    <string name="meep_not_reading">are you trying to break me? _\*huff*_</string>
+    <string name="meep_missing_page">page what? page ur mom</string>
+    <string name="meep_description">h-hentai~!</string>
     <string name="meep_help">
         {0}meep [arguments]
 
@@ -124,8 +127,14 @@
 
     <!--<editor-fold desc="music">-->
     <string name="music_added_to_queue">added _\*belch*_ `{0}` to the queue</string>
-    <string name="music_now_playing">Now playing `{0}`</string>
-    <string name="music_empty_queue">The queue is `empty`</string>
+    <string name="music_now_playing">
+        now playing `{0}`...
+        do you actually enjoy listening to this?
+    </string>
+    <string name="music_empty_queue">
+        the queue is `empty`
+        f-fill me up?
+    </string>
     <!--</editor-fold>-->
 
     <!--<editor-fold desc="play">-->
@@ -139,7 +148,7 @@
     <string name="play_progress_not_found_name">{0} fucky song(s)</string>
     <string name="play_added_items_to_queue">added **{0}** songs to the queue</string>
     <string name="play_youtube_mix">baka! i can't play youtube mixes òwó</string>
-    <string name="play_unsupported">what the fuck kinda url is that?</string>
+    <string name="play_unsupported">what the heck kinda url is that?</string>
     <string name="play_no_results">lol, i can't even find ur stupid song on yt</string>
     <!--</editor-fold>-->
 
@@ -150,8 +159,13 @@
     <!--</editor-fold>-->
 
     <!--<editor-fold desc="skip">-->
-    <string name="skip_nothing">Nothing to skip</string>
-    <string name="skip_description">Skip a song</string>
+    <string name="skip_notify">
+        fine i'll skip `{0}`. i wasn't listening to it anyway
+        now playing `{1}`
+    </string>
+    <string name="skip_not_a_number">do you know what numbers are</string>
+    <string name="skip_nothing">skip what? 😳</string>
+    <string name="skip_description">skip a song</string>
     <string name="skip_help">
         {0}skip [to number]
 
@@ -162,20 +176,20 @@
     <!--</editor-fold>-->
 
     <!--<editor-fold desc="pause">-->
-    <string name="pause_paused">Paused</string>
-    <string name="pause_already_paused">Already paused!</string>
-    <string name="pause_no_songs">Not playing any songs</string>
-    <string name="pause_description">Pause song</string>
+    <string name="pause_paused">ugh fine, i guess i'll pause it for you</string>
+    <string name="pause_already_paused">b-but.. i'm already paused</string>
+    <string name="pause_no_songs">what are you trying to pause</string>
+    <string name="pause_description">pause song</string>
     <string name="pause_help">
         {0}pause
     </string>
     <!--</editor-fold>-->
 
     <!--<editor-fold desc="resume">-->
-    <string name="resume_resuming">Resuming...</string>
-    <string name="resume_not_paused">Not paused</string>
-    <string name="resume_no_queue">There is no queue</string>
-    <string name="resume_description">Resume song</string>
+    <string name="resume_resuming">you... you sure you don't want to play anything else?</string>
+    <string name="resume_not_paused">resume, but not paused? are you a baka?</string>
+    <string name="resume_no_queue">there is literally nothing to resume</string>
+    <string name="resume_description">resume song</string>
     <string name="resume_help">
         {0}resume
     </string>
@@ -183,18 +197,19 @@
 
     <!--<editor-fold desc="resume">-->
     <string name="queue_total">total: {0}</string>
-    <string name="queue_description">Song queue</string>
+    <string name="queue_duration">duration: {0}</string>
+    <string name="queue_description">queue</string>
     <string name="queue_help">
         {0}queue
     </string>
     <!--</editor-fold>-->
 
     <!--<editor-fold desc="remove">-->
-    <string name="remove_cleared">Cleared queue!</string>
-    <string name="remove_invalid_id">Invalid item id</string>
-    <string name="remove_no_id">No item id given</string>
-    <string name="remove_song">Removed `{0}` from the queue</string>
-    <string name="remove_description">Remove a song from queue</string>
+    <string name="remove_cleared">i guess the queue is gone now</string>
+    <string name="remove_invalid_id">i can't remove a song if you're unclear about what should be removed</string>
+    <string name="remove_no_id">i can't remove a song if you're unclear about what should be removed</string>
+    <string name="remove_song">the best song, `{0}`, has been removed from the queue</string>
+    <string name="remove_description">remove a song from queue</string>
     <string name="remove_help">
         {0}remove [item_id]
 
@@ -205,29 +220,29 @@
     <!--</editor-fold>-->
 
     <!--<editor-fold desc="clear">-->
-    <string name="clear_description">Clear queue</string>
+    <string name="clear_description">clear queue</string>
     <string name="clear_help">
         {0}clear
     </string>
     <!--</editor-fold>-->
 
-    <!--<editor-fold desc="show">-->
-    <string name="now_paused">Paused</string>
-    <string name="now_playing">Playing</string>
-    <string name="now_live">Live</string>
-    <string name="now_not_playing">Not playing any song</string>
-    <string name="now_description">Get the currently playing song</string>
+    <!--<editor-fold desc="now">-->
+    <string name="now_paused">paused</string>
+    <string name="now_playing">playing</string>
+    <string name="now_live">live</string>
+    <string name="now_not_playing">nothing</string>
+    <string name="now_description">see what's playing</string>
     <string name="now_help">
-        {0}clear
+        {0}now
     </string>
     <!--</editor-fold>-->
 
     <!--<editor-fold desc="repeat">-->
-    <string name="repeat_help">Options: ( **disable** | **queue** | **song** )</string>
-    <string name="repeat_disabled">Looping is `disabled`</string>
-    <string name="repeat_queue">Looping `the queue`</string>
-    <string name="repeat_song">Looping `song`</string>
-    <string name="repeat_description">Repeat the song or queue</string>
+    <string name="repeat_options">options: ( **disable** | **queue** | **song** )</string>
+    <string name="repeat_disabled">not looping anything</string>
+    <string name="repeat_queue">the `queue` is being looped through</string>
+    <string name="repeat_song">`song` is looping</string>
+    <string name="repeat_description">repeat the song or queue</string>
     <string name="repeat_help">
         {0}repeat
 
@@ -240,38 +255,47 @@
     <!--</editor-fold>-->
 
     <!--<editor-fold desc="shuffle">-->
-    <string name="shuffle_shuffled">Queue shuffled!</string>
-    <string name="shuffle_description">Shuffle the queue</string>
+    <string name="shuffle_shuffled">
+        shuffling queue...
+        i've put the best songs at the end for you &lt;3
+    </string>
+    <string name="shuffle_description">shuffle queue</string>
     <string name="shuffle_help">
         {0}shuffle
     </string>
     <!--</editor-fold>-->
 
     <!--<editor-fold desc="playlist">-->
-    <string name="playlist_load">Playing **{0}** songs from '{1}'</string>
-    <string name="playlist_not_found">Playlist with the name '{0}' does not exists</string>
-    <string name="playlist_exists">A playlist with the name '{0}' already exists</string>
-    <string name="playlist_saved">Playlist '{0}' with **{1}** songs saved!</string>
-    <string name="playlist_empty">Queue is empty so it would be useless to save this to a playlist</string>
-    <string name="playlist_removed">Removed '{0}' from playlists</string>
+    <string name="playlist_load">playing **{0}** songs from `{1}`</string>
+    <string name="playlist_not_found">playlist with the name `{0}` does not exists</string>
+    <string name="playlist_exists">a playlist with the name `{0}` already exists</string>
+    <string name="playlist_saved">
+        **{1}** songs saved to playlist `{0}`
+        like anyone will ever listen to this one
+    </string>
+    <string name="playlist_empty">why would you want to save an empty queue to a playlist</string>
+    <string name="playlist_removed">
+        removed `{0}` from playlists
+        i guess it wasn't quirky enough for you
+    </string>
     <string name="playlist_playlists">playlists</string>
-    <string name="playlist_description">Playlist management</string>
+    <string name="playlist_description">playlist stuff</string>
     <string name="playlist_help">
         {0}playlist [arguments]
 
         examples:
             {0}playlist
-            {0}playlist save [playlist_name]
-            {0}playlist load [playlist_name]
-            {0}playlist remove [playlist_name]
+            {0}playlist save [playlist name]
+            {0}playlist load [playlist name]
+            {0}playlist remove [playlist name]
     </string>
     <!--</editor-fold>-->
 
     <!--<editor-fold desc="volume">-->
-    <string name="volume_change">Changed volume to **{0}**%</string>
-    <string name="volume_invalid">Invalid volume number</string>
-    <string name="volume_current">Volume is at **{0}**%</string>
-    <string name="volume_description">Change the volume [0 - 500]</string>
+    <string name="volume_change">changed volume to **{0}**%</string>
+    <string name="volume_invalid">what did you expect would happen?</string>
+    <string name="volume_current">volume is at **{0}**%</string>
+    <string name="volume_description">change the volume [0 - 500]</string>
     <string name="volume_help">
         default: 100
         {0}volume [percent]
@@ -284,38 +308,37 @@
     <!--</editor-fold>-->
 
     <!--<editor-fold desc="nick">-->
-    <string name="nick_changed">Nickname changed to **{0}**</string>
-    <string name="nick_empty">Nickname cannot be empty</string>
-    <string name="nick_description">Change the bot nickname</string>
+    <string name="nick_changed">y-you can call me **{0}** o//o</string>
+    <string name="nick_empty">w-what's my name?</string>
+    <string name="nick_description">change my name</string>
     <string name="nick_help">
         {0}nick [nickname]
-        
+
         examples:
-            {0}nick slut
-            {0}nick owo machine
+            {0}nick baby
+            {0}nick cute girl
     </string>
     <!--</editor-fold>-->
 
     <!--<editor-fold desc="ping">-->
-    <string name="ping_pong">Pong!</string>
+    <string name="ping_pong">uwu!</string>
     <string name="ping_diff">
-        Pong!
+        uwu!
         ```apache
-        Roundtrip: {0} ms
-        Time: {1} ms
+        roundtrip: {0} ms
+        time: {1} ms
         ```
     </string>
-    <string name="ping_empty">Nickname cannot be empty</string>
-    <string name="ping_description">Response time</string>
+    <string name="ping_description">response time</string>
     <string name="ping_help">
         {0}ping
     </string>
     <!--</editor-fold>-->
 
     <!--<editor-fold desc="prefix">-->
-    <string name="prefix_changed">Prefix is now `{0}`</string>
-    <string name="prefix_current">The current prefix is `{0}`</string>
-    <string name="prefix_description">Change the prefix for this server</string>
+    <string name="prefix_changed">prefix is now `{0}`</string>
+    <string name="prefix_current">the current prefix is `{0}`</string>
+    <string name="prefix_description">change the prefix for this server</string>
     <string name="prefix_help">
         {0}prefix [prefix]
 
@@ -326,14 +349,14 @@
     <!--</editor-fold>-->
 
     <!--<editor-fold desc="profile">-->
-    <string name="profile_description">Get info from your profile</string>
+    <string name="profile_description">let me describe you</string>
     <string name="profile_help">
         {0}profile
     </string>
     <!--</editor-fold>-->
 
     <!--<editor-fold desc="retard">-->
-    <string name="retard_description">echo but more funni</string>
+    <string name="retard_description">your brain?</string>
     <string name="retard_help">
         {0}retard [words]
 
@@ -344,17 +367,17 @@
     <!--</editor-fold>-->
 
     <!--<editor-fold desc="ridicule">-->
-    <string name="ridicule_on">Ridicule turned **on**</string>
-    <string name="ridicule_off">Ridicule turned **off**</string>
-    <string name="ridicule_is">Ridicule is **{0}**</string>
+    <string name="ridicule_on">ridicule turned **on**</string>
+    <string name="ridicule_off">ridicule turned **off**</string>
+    <string name="ridicule_is">ridicule is **{0}**</string>
     <string name="ridicule_is_on">on</string>
     <string name="ridicule_is_off">off</string>
     <string name="ridicule_bad">should be `on` or `off`</string>
-    <string name="ridicule_chance_is">Chance to get ridiculed is `1/{0}`</string>
-    <string name="ridicule_change">Chance to get ridiculed is now `1/{0}`</string>
+    <string name="ridicule_chance_is">chance to get ridiculed is `1/{0}`</string>
+    <string name="ridicule_change">chance to get ridiculed is now `1/{0}`</string>
     <string name="ridicule_change_bad">`{0}` is not a number or invalid</string>
-    <string name="ridicule_bad_two">Missing arguments</string>
-    <string name="ridicule_description">Chance to get ridiculed</string>
+    <string name="ridicule_bad_two">missing arguments</string>
+    <string name="ridicule_description">chance to get ridiculed</string>
     <string name="ridicule_help">
         {0}ridicule [parameters]
 
@@ -371,22 +394,22 @@
     <!--<editor-fold desc="space">-->
     <string name="space_disabled">enabled</string>
     <string name="space_enabled">disabled</string>
-    <string name="space_on">Space after command {0}</string>
-    <string name="space_description">Toggle the space after the prefix on or off</string>
+    <string name="space_on">space after command {0}</string>
+    <string name="space_description">toggle the space after the prefix on or off</string>
     <string name="space_help">
         {0}space
     </string>
     <!--</editor-fold>-->
 
     <!--<editor-fold desc="test">-->
-    <string name="test_description">Command for testing things</string>
+    <string name="test_description">command for testing things</string>
     <string name="test_help">
-        Don't use me.. 😳 im for my master only
+        don't use me.. 😳 im for my master only
     </string>
     <!--</editor-fold>-->
 
     <!--<editor-fold desc="weeb">-->
-    <string name="weeb_description">Get weeb images</string>
+    <string name="weeb_description">get weeb image</string>
     <string name="weeb_help">
         {0}weeb
     </string>
