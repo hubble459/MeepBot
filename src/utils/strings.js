@@ -78,6 +78,7 @@ const strings = function (stringPath) {
         find(locale) {
             return Object.keys(locales).find(loc => loc.startsWith(locale));
         },
+        languages: Object.keys(locales),
         getString,
         getGetString(guildId) {
             return (key) => getString(guildId, key);

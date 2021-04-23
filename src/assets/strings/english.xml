@@ -27,6 +27,13 @@
     </string>
     <!--</editor-fold>-->
 
+    <!--<editor-fold desc="languages">-->
+    <string name="languages_description">List all available languages</string>
+    <string name="languages_help">
+        {0}languages
+    </string>
+    <!--</editor-fold>-->
+
     <!--<editor-fold desc="alias">-->
     <string name="alias_override">You can not override a default command</string>
     <string name="alias_prefix">Command should not start with a prefix</string>

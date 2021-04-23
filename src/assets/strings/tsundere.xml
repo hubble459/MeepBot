@@ -27,6 +27,13 @@
     </string>
     <!--</editor-fold>-->
 
+    <!--<editor-fold desc="languages">-->
+    <string name="languages_description">list all available languages</string>
+    <string name="languages_help">
+        {0}languages
+    </string>
+    <!--</editor-fold>-->
+
     <!--<editor-fold desc="alias">-->
     <string name="alias_override">why are you trying to override my commands >:C</string>
     <string name="alias_prefix">imagine placing a prefix on an alias</string>
