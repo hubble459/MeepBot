@@ -426,12 +426,9 @@
     <!--</editor-fold>-->
 
     <!--<editor-fold desc="weeb">-->
-    <string name="weeb_bad_tag">
-        Unknown tag
-        Check the help command or the danbooru site for more info
-    </string>
+    <string name="weeb_too_many_tags">You can only use two tags</string>
     <string name="weeb_not_found">Could not find weeb image</string>
-    <string name="weeb_description">Get weeb image from danbooru</string>
+    <string name="weeb_description">Get weeb image from Danbooru</string>
     <string name="weeb_help">
         {0}weeb
 

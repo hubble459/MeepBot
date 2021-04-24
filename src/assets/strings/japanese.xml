@@ -433,6 +433,7 @@
     <!--</editor-fold>-->
 
     <!--<editor-fold desc="weeb">-->
+    <string name="weeb_too_many_tags">使用できるタグは2つだけです</string>
     <string name="weeb_not_found">アニメ画像が見つかりません</string>
     <string name="weeb_bad_tag">
         悪いタグ

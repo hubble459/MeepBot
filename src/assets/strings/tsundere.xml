@@ -394,11 +394,11 @@
     <!--</editor-fold>-->
 
     <!--<editor-fold desc="weeb">-->
-
-    <string name="weeb_bad_tag">i couldn't find a thing with those fucky tags 🥺</string>
-    <string name="weeb_bad_tag">
-        You stupid! >~&lt;
-        Do you not know which tags are valid?
-    </string>
+    <string name="weeb_too_many_tags">two tags max!!11</string>
+    <string name="weeb_not_found">i couldn't find a working image, try again 🥺</string>
+<!--    <string name="weeb_bad_tag">-->
+<!--        You stupid! >~&lt;-->
+<!--        Do you not know which tags are valid?-->
+<!--    </string>-->
     <!--</editor-fold>-->
 </resources>
