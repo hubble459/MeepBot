@@ -15,6 +15,14 @@ module.exports = {
         command: 'play',
         args: []
     },
+    's': {
+        command: 'skip',
+        args: []
+    },
+    'fs': {
+        command: 'skip',
+        args: []
+    },
     'disconnect': {
         command: 'stop',
         args: []

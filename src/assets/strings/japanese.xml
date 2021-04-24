@@ -1,26 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--<editor-fold desc="echo">-->
-    <string name="echo_empty">I can't echo an empty message</string>
-    <string name="echo_description">Make me say words</string>
+    <string name="echo_empty">空のメッセージをエコーできません</string>
+    <string name="echo_description">言葉を言わせて</string>
     <string name="echo_help">
-        {0}echo [words]
+        {0}echo [台詞]
 
-        examples:
-            {0}echo I'm so adorable uwu
-            {0}echo They kinda sus
+        例えば：
+            {0}echo 私はとてもかわいいです (´｡• ᵕ •｡`) ♡
+            {0}echo 愛してる、お兄ちゃん
     </string>
     <!--</editor-fold>-->
 
     <!--<editor-fold desc="language">-->
-    <string name="language_current">Current language is `{0}`</string>
-    <string name="language_changed">Changed the language to `{0}`</string>
-    <string name="language_not_found">Language with name `{0}` could not be found</string>
-    <string name="language_description">Change the bot language for this server</string>
+    <string name="language_current">現在の言語は `{0}`</string>
+    <string name="language_changed">言語を `{0}` に変更</string>
+    <string name="language_not_found">「`{0}`」という名前の言語が見つかりませんでした</string>
+    <string name="language_description">このサーバーのボット言語を変更しました</string>
     <string name="language_help">
-        {0}language [lang]
+        {0}language [言語]
 
-        examples:
+        例えば：
             {0}language
             {0}language english
             {0}language tsundere
@@ -28,26 +28,26 @@
     <!--</editor-fold>-->
 
     <!--<editor-fold desc="languages">-->
-    <string name="languages_description">List all available languages</string>
+    <string name="languages_description">利用可能なすべての言語を一覧表示</string>
     <string name="languages_help">
         {0}languages
     </string>
     <!--</editor-fold>-->
 
     <!--<editor-fold desc="alias">-->
-    <string name="alias_override">You can not override a default command</string>
-    <string name="alias_prefix">Command should not start with a prefix</string>
-    <string name="alias_not_command">`{0}` is not a command</string>
-    <string name="alias_add_changed">changed</string>
-    <string name="alias_add_added">added</string>
-    <string name="alias_add">Alias `{0}` {1}!</string>
-    <string name="alias_arguments">Alias needs at least 2 arguments</string>
-    <string name="alias_description">Add an alias for a command</string>
+    <string name="alias_override">デフォルトのコマンドを上書きすることはできません</string>
+    <string name="alias_prefix">コマンドはプレフィックスで開始しないでください</string>
+    <string name="alias_not_command">「`{0}`」はコマンドではありません</string>
+    <string name="alias_add_changed">が変更されました</string>
+    <string name="alias_add_added">が追加されました</string>
+    <string name="alias_add">エイリアス `{0}` {1}!</string>
+    <string name="alias_arguments">エイリアスには少なくとも2つの引数が必要です</string>
+    <string name="alias_description">コマンドのエイリアスを追加する</string>
     <string name="alias_help">
-        {0}alias [command_name] [command]
+        {0}alias [コマンド名] [コマンド]
 
-        examples:
-            {0}alias owo echo fuck my ass
+        例えば：
+            {0}alias 猫 echo にゃー
             {0}alias nice play https://www.youtube.com/watch?v=myax0WsTSWA
     </string>
     <!--</editor-fold>-->
@@ -60,7 +60,7 @@
     <string name="aliasrm_help">
         {0}aliasrm [alias]
 
-        examples:
+        例えば：
             {0}aliasrm owo
             {0}aliasrm nice
     </string>
@@ -72,7 +72,7 @@
     <string name="aliases_help">
         {0}aliases [option]
         
-        examples:
+        例えば：
             {0}aliases
             {0}aliases reset
     </string>
@@ -83,7 +83,7 @@
     <string name="help_help">
         {0}help [command]
 
-        examples:
+        例えば：
             {0}help
             {0}help meep
     </string>
@@ -94,7 +94,7 @@
     <string name="magic_help">
         {0}magic [words]
 
-        examples:
+        例えば：
             {0}magic owo
             {0}magic swoooosh
     </string>
@@ -110,7 +110,7 @@
     <string name="meep_help">
         {0}meep [arguments]
 
-        examples:
+        例えば：
             # random url
             {0}meep
             {0}meep english
@@ -159,7 +159,7 @@
     <string name="play_help">
         {0}play [values]
 
-        examples:
+        例えば：
             {0}play https://www.youtube.com/watch?v=...
             {0}play https://www.youtube.com/playlist?list=...
             {0}play https://soundcloud.com/...
@@ -193,7 +193,7 @@
     <string name="skip_help">
         {0}skip [to number]
 
-        examples:
+        例えば：
             {0}skip
             {0}skip 20
     </string>
@@ -237,7 +237,7 @@
     <string name="remove_help">
         {0}remove [item_id]
 
-        examples:
+        例えば：
             {0}remove 2
             {0}remove all
     </string>
@@ -270,7 +270,7 @@
     <string name="repeat_help">
         {0}repeat
 
-        examples:
+        例えば：
             {0}repeat
             {0}repeat disable
             {0}repeat queue
@@ -298,7 +298,7 @@
     <string name="playlist_help">
         {0}playlist [arguments]
 
-        examples:
+        例えば：
             {0}playlist
             {0}playlist save [playlist_name]
             {0}playlist load [playlist_name]
@@ -315,7 +315,7 @@
         default: 100
         {0}volume [percent]
 
-        examples:
+        例えば：
             {0}volume
             {0}volume 0
             {0}volume 100
@@ -329,7 +329,7 @@
     <string name="nick_help">
         {0}nick [nickname]
         
-        examples:
+        例えば：
             {0}nick slut
             {0}nick owo machine
     </string>
@@ -358,7 +358,7 @@
     <string name="prefix_help">
         {0}prefix [prefix]
 
-        examples:
+        例えば：
             {0}prefix !
             {0}prefix =
     </string>
@@ -376,7 +376,7 @@
     <string name="retard_help">
         {0}retard [words]
 
-        examples:
+        例えば：
             {0}retard fuck my ass
             {0}retard i love javascript
     </string>
@@ -397,7 +397,7 @@
     <string name="ridicule_help">
         {0}ridicule [parameters]
 
-        examples:
+        例えば：
             {0}ridicule turn
             {0}ridicule turn on
             {0}ridicule turn off

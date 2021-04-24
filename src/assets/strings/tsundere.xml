@@ -13,9 +13,9 @@
     <!--</editor-fold>-->
 
     <!--<editor-fold desc="language">-->
-    <string name="language_current">language is {0}! Can't you tell?! &gt;~&lt;</string>
-    <string name="language_changed">it's not like I'm happy you changed the language to {0}... *bloosh*</string>
-    <string name="language_not_found">**{0}** isn't even a language *huff*</string>
+    <string name="language_current">language is `{0}`! Can't you tell?! &gt;~&lt;</string>
+    <string name="language_changed">it's not like I'm happy you changed the language to `{0}`... *bloosh*</string>
+    <string name="language_not_found">`{0}` isn't even a language *huff*</string>
     <string name="language_description">i guess you could use this command to get rid of me...</string>
     <string name="language_help">
         {0}language [lang]
