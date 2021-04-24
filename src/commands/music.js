@@ -174,6 +174,7 @@ async function play(msg, args = ['']) {
                         } else {
                             type = getString('play_second');
                         }
+                        const plural = getString('play_plural');
 
                         const embed = new MessageEmbed()
                             .setTitle(getString('play_progress'))
@@ -185,10 +186,10 @@ async function play(msg, args = ['']) {
                                         from,
                                         (100 / from * at).toFixed(2), // percent
                                         songAvg.toFixed(2), // song p/s
-                                        songAvg !== 1 ? 's' : '', // plural
+                                        songAvg !== 1 ? plural : '', // plural
                                         eta.toFixed(2), // eta
                                         type, // type
-                                        eta !== 1 ? 's' : '', // type plural
+                                        eta !== 1 ? plural : '', // type plural
                                     )
                             );
                         if (errors.length > 0) {

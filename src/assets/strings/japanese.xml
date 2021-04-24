@@ -13,9 +13,9 @@
     <!--</editor-fold>-->
 
     <!--<editor-fold desc="language">-->
-    <string name="language_current">現在の言語は `{0}`</string>
-    <string name="language_changed">言語を `{0}` に変更</string>
-    <string name="language_not_found">「`{0}`」という名前の言語が見つかりませんでした</string>
+    <string name="language_current">現在の言語は「{0}」</string>
+    <string name="language_changed">言語を「{0}」に変更</string>
+    <string name="language_not_found">「{0}」という名前の言語が見つかりませんでした</string>
     <string name="language_description">このサーバーのボット言語を変更しました</string>
     <string name="language_help">
         {0}language [言語]
@@ -37,10 +37,10 @@
     <!--<editor-fold desc="alias">-->
     <string name="alias_override">デフォルトのコマンドを上書きすることはできません</string>
     <string name="alias_prefix">コマンドはプレフィックスで開始しないでください</string>
-    <string name="alias_not_command">「`{0}`」はコマンドではありません</string>
+    <string name="alias_not_command">「{0}」はコマンドではありません</string>
     <string name="alias_add_changed">が変更されました</string>
     <string name="alias_add_added">が追加されました</string>
-    <string name="alias_add">エイリアス `{0}` {1}!</string>
+    <string name="alias_add">エイリアス「{0}」{1}!</string>
     <string name="alias_arguments">エイリアスには少なくとも2つの引数が必要です</string>
     <string name="alias_description">コマンドのエイリアスを追加する</string>
     <string name="alias_help">
@@ -53,24 +53,24 @@
     <!--</editor-fold>-->
 
     <!--<editor-fold desc="aliasrm">-->
-    <string name="aliasrm_removed">Removed `{0}` from alias list</string>
-    <string name="aliasrm_find">Could not find alias with name `{0}`</string>
-    <string name="aliasrm_arguments">Second argument should contain an alias name</string>
-    <string name="aliasrm_description">Remove an alias</string>
+    <string name="aliasrm_removed">エイリアスリストから「{0}」を削除しました</string>
+    <string name="aliasrm_find">「{0}」という名前のエイリアスが見つかりませんでした</string>
+    <string name="aliasrm_arguments">2番目の引数にはエイリアス名を含める必要があります</string>
+    <string name="aliasrm_description">エイリアスを削除する</string>
     <string name="aliasrm_help">
-        {0}aliasrm [alias]
+        {0}aliasrm [エイリアス]
 
         例えば：
-            {0}aliasrm owo
+            {0}aliasrm 猫
             {0}aliasrm nice
     </string>
     <!--</editor-fold>-->
 
     <!--<editor-fold desc="aliases">-->
-    <string name="aliases_reset">Aliases reset!</string>
-    <string name="aliases_description">List all aliases</string>
+    <string name="aliases_reset">エイリアスがリセットされました！</string>
+    <string name="aliases_description">すべてのエイリアスを一覧表示</string>
     <string name="aliases_help">
-        {0}aliases [option]
+        {0}aliases [オプション]
         
         例えば：
             {0}aliases
@@ -79,9 +79,9 @@
     <!--</editor-fold>-->
 
     <!--<editor-fold desc="help">-->
-    <string name="help_description">This menu</string>
+    <string name="help_description">このメニュー</string>
     <string name="help_help">
-        {0}help [command]
+        {0}help [コマンド]
 
         例えば：
             {0}help
@@ -90,83 +90,85 @@
     <!--</editor-fold>-->
 
     <!--<editor-fold desc="magic">-->
-    <string name="magic_description">Magical echo</string>
+    <string name="magic_description">マジカルエコー</string>
     <string name="magic_help">
-        {0}magic [words]
+        {0}magic [言葉]
 
         例えば：
             {0}magic owo
-            {0}magic swoooosh
+            {0}magic 変換！
     </string>
     <!--</editor-fold>-->
 
     <!--<editor-fold desc="meep">-->
-    <string name="meep_see_help">See `{0}help meep` for help</string>
-    <string name="meep_no_images">There are no images for this hentai</string>
-    <string name="meep_invalid_page">Invalid page</string>
-    <string name="meep_not_reading">You aren't reading a hentai</string>
-    <string name="meep_missing_page">Missing page number</string>
-    <string name="meep_description">Hentai</string>
+    <string name="meep_see_help">ヘルプについては、「{0}help meep」を参照してください</string>
+    <string name="meep_no_images">変態が見つかりません</string>
+    <string name="meep_invalid_page">無効なページ</string>
+    <string name="meep_not_reading">あなたは変態を読んでいません</string>
+    <string name="meep_missing_page">ページ番号がありません</string>
+    <string name="meep_description">変態</string>
     <string name="meep_help">
-        {0}meep [arguments]
+        {0}meep [引数]
 
         例えば：
-            # random url
+            # ランダムなURL
             {0}meep
             {0}meep english
 
-            # read random
+            # ランダムに読む
             {0}meep read
             {0}meep read english
 
-            # read from url or numbers
+            # URLまたは番号から読み取る
             {0}meep read https://nhentai.net/g/203620/
             {0}meep read 203620
             {0}meep read 203620 9
 
-            # navigate reader to page
+            # リーダーをページに移動
             {0}meep page 10
     </string>
     <!--</editor-fold>-->
 
     <!--<editor-fold desc="music">-->
-    <string name="music_added_to_queue">Added `{0}` to the queue</string>
-    <string name="music_now_playing">Now playing `{0}`</string>
-    <string name="music_empty_queue">The queue is `empty`</string>
+    <string name="music_added_to_queue">キューに「{0}」を追加</string>
+    <string name="music_now_playing">現在「{0}」を再生しています</string>
+    <string name="music_empty_queue">キューは「空」です</string>
     <!--</editor-fold>-->
 
     <!--<editor-fold desc="play">-->
-    <string name="play_join_vc">Join a voice channel first</string>
-    <string name="play_second">second</string>
-    <string name="play_minute">minute</string>
-    <string name="play_progress">progress</string>
+    <string name="play_join_vc">最初に音声チャネルに参加する</string>
+    <string name="play_second">秒</string>
+    <string name="play_minute">分</string>
+    <string name="play_progress">進捗</string>
+    <string name="play_plural"/>
     <string name="play_progress_desc">
         {0} / {1} `{2}%`
-        **avg**: {3} song{4} per second
-        **eta**: {5} {6}{7}
+        **avg**: 毎秒{3}曲
+        **eta**: {5} {6}
     </string>
-    <string name="play_progress_not_found_name">not found ({0})</string>
+    <string name="play_progress_not_found_name">見つかりません ({0})</string>
     <string name="play_progress_not_found_value">
         ```haskell
         {0}
         ```
     </string>
-    <string name="play_added_items_to_queue">Added **{0}** songs to the queue</string>
-    <string name="play_youtube_mix">Mixes aren't supported</string>
-    <string name="play_unsupported">This platform isn't supported (yet)</string>
-    <string name="play_no_results">No search results</string>
-    <string name="play_description">Play a song from youtube, spotify or soundcloud</string>
+    <string name="play_added_items_to_queue">キューに**{0}**曲を追加しました</string>
+    <string name="play_youtube_mix">ミックスはサポートされていません</string>
+    <string name="play_unsupported">このプラットフォームは（まだ）サポートされていません</string>
+    <string name="play_no_results">検索結果がありません</string>
+    <string name="play_description">YouTube、Spotify、SoundCloudから曲を再生する</string>
     <string name="play_help">
-        {0}play [values]
+        {0}play [URLまたはクエリ]
 
         例えば：
+            {0}play kinoko teikoku - first demo album
             {0}play https://www.youtube.com/watch?v=...
             {0}play https://www.youtube.com/playlist?list=...
             {0}play https://soundcloud.com/...
             {0}play https://open.spotify.com/track/...
             {0}play https://open.spotify.com/playlist/...
 
-            # Multiple links
+            # 複数のリンク
             {0}play https://open.spotify.com/track/...
         https://www.youtube.com/watch?v=...
         https://soundcloud.com/...
@@ -174,9 +176,9 @@
     <!--</editor-fold>-->
 
     <!--<editor-fold desc="stop">-->
-    <string name="stop_disconnected">Disconnected</string>
-    <string name="stop_not_connected">Not connected</string>
-    <string name="stop_description">Disconnect bot</string>
+    <string name="stop_disconnected">切断されました</string>
+    <string name="stop_not_connected">接続されていません</string>
+    <string name="stop_description">ボットを切断します</string>
     <string name="stop_help">
         {0}stop
     </string>
@@ -184,14 +186,14 @@
 
     <!--<editor-fold desc="skip">-->
     <string name="skip_notify">
-        Skipping `{0}`
-        Now playing `{1}`
+        「{0}」をスキップする
+        現在「{1}」を再生しています
     </string>
-    <string name="skip_not_a_number">Not a number</string>
-    <string name="skip_nothing">Nothing to skip</string>
-    <string name="skip_description">Skip a song</string>
+    <string name="skip_not_a_number">数ではありません</string>
+    <string name="skip_nothing">スキップするものはありません</string>
+    <string name="skip_description">曲をスキップする</string>
     <string name="skip_help">
-        {0}skip [to number]
+        {0}skip [番号]
 
         例えば：
             {0}skip
@@ -200,42 +202,42 @@
     <!--</editor-fold>-->
 
     <!--<editor-fold desc="pause">-->
-    <string name="pause_paused">Paused</string>
-    <string name="pause_already_paused">Already paused!</string>
-    <string name="pause_no_songs">Not playing any songs</string>
-    <string name="pause_description">Pause song</string>
+    <string name="pause_paused">一時停止</string>
+    <string name="pause_already_paused">すでに一時停止しています！</string>
+    <string name="pause_no_songs">曲を再生していません</string>
+    <string name="pause_description">曲を一時停止</string>
     <string name="pause_help">
         {0}pause
     </string>
     <!--</editor-fold>-->
 
     <!--<editor-fold desc="resume">-->
-    <string name="resume_resuming">Resuming...</string>
-    <string name="resume_not_paused">Not paused</string>
-    <string name="resume_no_queue">There is no queue</string>
-    <string name="resume_description">Resume song</string>
+    <string name="resume_resuming">再開しています...</string>
+    <string name="resume_not_paused">一時停止していません</string>
+    <string name="resume_no_queue">キューはありません</string>
+    <string name="resume_description">曲を再開</string>
     <string name="resume_help">
         {0}resume
     </string>
     <!--</editor-fold>-->
 
     <!--<editor-fold desc="resume">-->
-    <string name="queue_total">total: {0}</string>
-    <string name="queue_duration">duration: {0}</string>
-    <string name="queue_description">Song queue</string>
+    <string name="queue_total">合計：{0}</string>
+    <string name="queue_duration">期間：{0}</string>
+    <string name="queue_description">ソングキュー</string>
     <string name="queue_help">
         {0}queue
     </string>
     <!--</editor-fold>-->
 
     <!--<editor-fold desc="remove">-->
-    <string name="remove_cleared">Cleared queue!</string>
-    <string name="remove_invalid_id">Invalid item id</string>
-    <string name="remove_no_id">No item id given</string>
-    <string name="remove_song">Removed `{0}` from the queue</string>
-    <string name="remove_description">Remove a song from queue</string>
+    <string name="remove_cleared">キューをクリアしました！</string>
+    <string name="remove_invalid_id">アイテムIDが無効です</string>
+    <string name="remove_no_id">アイテムIDが指定されていません</string>
+    <string name="remove_song">キューから「{0}」を削除しました</string>
+    <string name="remove_description">キューから曲を削除します</string>
     <string name="remove_help">
-        {0}remove [item_id]
+        {0}remove [アイテムID]
 
         例えば：
             {0}remove 2
@@ -244,29 +246,29 @@
     <!--</editor-fold>-->
 
     <!--<editor-fold desc="clear">-->
-    <string name="clear_description">Clear queue</string>
+    <string name="clear_description">キューをクリアする</string>
     <string name="clear_help">
         {0}clear
     </string>
     <!--</editor-fold>-->
 
     <!--<editor-fold desc="show">-->
-    <string name="now_paused">Paused</string>
-    <string name="now_playing">Playing</string>
-    <string name="now_live">Live</string>
-    <string name="now_not_playing">Not playing any song</string>
-    <string name="now_description">Get the currently playing song</string>
+    <string name="now_paused">一時停止上</string>
+    <string name="now_playing">流れています</string>
+    <string name="now_live">ライブ</string>
+    <string name="now_not_playing">曲を再生していません</string>
+    <string name="now_description">現在再生中の曲を取得する</string>
     <string name="now_help">
         {0}clear
     </string>
     <!--</editor-fold>-->
 
     <!--<editor-fold desc="repeat">-->
-    <string name="repeat_options">Options: ( **disable** | **queue** | **song** )</string>
-    <string name="repeat_disabled">Looping is `disabled`</string>
-    <string name="repeat_queue">Looping `the queue`</string>
-    <string name="repeat_song">Looping `song`</string>
-    <string name="repeat_description">Repeat the song or queue</string>
+    <string name="repeat_options">オプション：( **disable** | **queue** | **song** )</string>
+    <string name="repeat_disabled">ループは `disabled`</string>
+    <string name="repeat_queue">`queue` をループする</string>
+    <string name="repeat_song">`song` をループする</string>
+    <string name="repeat_description">曲またはキューをループする</string>
     <string name="repeat_help">
         {0}repeat
 
@@ -279,41 +281,41 @@
     <!--</editor-fold>-->
 
     <!--<editor-fold desc="shuffle">-->
-    <string name="shuffle_shuffled">Queue shuffled!</string>
-    <string name="shuffle_description">Shuffle the queue</string>
+    <string name="shuffle_shuffled">キューがシャッフルされました！</string>
+    <string name="shuffle_description">キューをシャッフルする</string>
     <string name="shuffle_help">
         {0}shuffle
     </string>
     <!--</editor-fold>-->
 
     <!--<editor-fold desc="playlist">-->
-    <string name="playlist_load">Playing **{0}** songs from '{1}'</string>
-    <string name="playlist_not_found">Playlist with the name '{0}' does not exists</string>
-    <string name="playlist_exists">A playlist with the name '{0}' already exists</string>
-    <string name="playlist_saved">Playlist '{0}' with **{1}** songs saved!</string>
-    <string name="playlist_empty">Queue is empty so it would be useless to save this to a playlist</string>
-    <string name="playlist_removed">Removed '{0}' from playlists</string>
-    <string name="playlist_playlists">playlists</string>
-    <string name="playlist_description">Playlist management</string>
+    <string name="playlist_load">「{1}」から**{0}**曲を再生する</string>
+    <string name="playlist_not_found">「{0}」という名前のプレイリストは存在しません</string>
+    <string name="playlist_exists">「{0}」という名前のプレイリストはすでに存在します</string>
+    <string name="playlist_saved">{1}曲保存したプレイリスト「{0}」！</string>
+    <string name="playlist_empty">キューが空なので、これをプレイリストに保存しても意味がありません</string>
+    <string name="playlist_removed">プレイリストから「{0}」を削除</string>
+    <string name="playlist_playlists">プレイリスト</string>
+    <string name="playlist_description">プレイリスト管理</string>
     <string name="playlist_help">
-        {0}playlist [arguments]
+        {0}playlist [引数]
 
         例えば：
             {0}playlist
-            {0}playlist save [playlist_name]
-            {0}playlist load [playlist_name]
-            {0}playlist remove [playlist_name]
+            {0}playlist save [プレイリスト名]
+            {0}playlist load [プレイリスト名]
+            {0}playlist remove [プレイリスト名]
     </string>
     <!--</editor-fold>-->
 
     <!--<editor-fold desc="volume">-->
-    <string name="volume_change">Changed volume to **{0}**%</string>
-    <string name="volume_invalid">Invalid volume number</string>
-    <string name="volume_current">Volume is at **{0}**%</string>
-    <string name="volume_description">Change the volume [0 - 500]</string>
+    <string name="volume_change">ボリュームを**{0}**％に変更しました</string>
+    <string name="volume_invalid">ボリューム番号が無効です</string>
+    <string name="volume_current">ボリュームは**{0}**％です</string>
+    <string name="volume_description">音量を変更する[0-500]</string>
     <string name="volume_help">
-        default: 100
-        {0}volume [percent]
+        デフォルト：50
+        {0}volume [パーセント]
 
         例えば：
             {0}volume
@@ -323,40 +325,39 @@
     <!--</editor-fold>-->
 
     <!--<editor-fold desc="nick">-->
-    <string name="nick_changed">Nickname changed to **{0}**</string>
-    <string name="nick_empty">Nickname cannot be empty</string>
-    <string name="nick_description">Change the bot nickname</string>
+    <string name="nick_changed">ニックネームが**{0}**に変更されました</string>
+    <string name="nick_empty">ニックネームを空にすることはできません</string>
+    <string name="nick_description">ボットのニックネームを変更する</string>
     <string name="nick_help">
-        {0}nick [nickname]
+        {0}nick [ニックネーム]
         
         例えば：
-            {0}nick slut
-            {0}nick owo machine
+            {0}nick 変態
+            {0}nick 花ちゃん
     </string>
     <!--</editor-fold>-->
 
     <!--<editor-fold desc="ping">-->
-    <string name="ping_pong">Pong!</string>
+    <string name="ping_pong">ポン!</string>
     <string name="ping_diff">
-        Pong!
+        ポン!
         ```apache
-        Roundtrip: {0} ms
-        Time: {1} ms
+        時間：{0} ms
         ```
     </string>
-    <string name="ping_empty">Nickname cannot be empty</string>
-    <string name="ping_description">Response time</string>
+    <string name="ping_empty">ニックネームを空にすることはできません</string>
+    <string name="ping_description">反応時間</string>
     <string name="ping_help">
         {0}ping
     </string>
     <!--</editor-fold>-->
 
     <!--<editor-fold desc="prefix">-->
-    <string name="prefix_changed">Prefix is now `{0}`</string>
-    <string name="prefix_current">The current prefix is `{0}`</string>
-    <string name="prefix_description">Change the prefix for this server</string>
+    <string name="prefix_changed">プレフィックスが「{0}」になりました</string>
+    <string name="prefix_current">現在のプレフィックスは「{0}」です</string>
+    <string name="prefix_description">このサーバーのプレフィックスを変更します</string>
     <string name="prefix_help">
-        {0}prefix [prefix]
+        {0}prefix [プレフィックス]
 
         例えば：
             {0}prefix !
@@ -365,37 +366,37 @@
     <!--</editor-fold>-->
 
     <!--<editor-fold desc="profile">-->
-    <string name="profile_description">Get info from your profile</string>
+    <string name="profile_description">あなたのプロフィールから情報を得る</string>
     <string name="profile_help">
         {0}profile
     </string>
     <!--</editor-fold>-->
 
     <!--<editor-fold desc="retard">-->
-    <string name="retard_description">echo but more funni</string>
+    <string name="retard_description">エコーがもっと面白い</string>
     <string name="retard_help">
-        {0}retard [words]
+        {0}retard [言葉]
 
         例えば：
-            {0}retard fuck my ass
+            {0}retard uwu, i love you papa
             {0}retard i love javascript
     </string>
     <!--</editor-fold>-->
 
     <!--<editor-fold desc="ridicule">-->
-    <string name="ridicule_on">Ridicule turned **on**</string>
-    <string name="ridicule_off">Ridicule turned **off**</string>
-    <string name="ridicule_is">Ridicule is **{0}**</string>
-    <string name="ridicule_is_on">on</string>
-    <string name="ridicule_is_off">off</string>
-    <string name="ridicule_bad">should be `on` or `off`</string>
-    <string name="ridicule_chance_is">Chance to get ridiculed is `1/{0}`</string>
-    <string name="ridicule_change">Chance to get ridiculed is now `1/{0}`</string>
-    <string name="ridicule_change_bad">`{0}` is not a number or invalid</string>
-    <string name="ridicule_bad_two">Missing arguments</string>
-    <string name="ridicule_description">Chance to get ridiculed</string>
+    <string name="ridicule_on">嘲笑がオ**ン**になりました</string>
+    <string name="ridicule_off">嘲笑が**フ**になりました</string>
+    <string name="ridicule_is">嘲笑は**{0}**です</string>
+    <string name="ridicule_is_on">オン</string>
+    <string name="ridicule_is_off">オフ</string>
+    <string name="ridicule_bad">「on」または「off」にする必要があります</string>
+    <string name="ridicule_chance_is">嘲笑されるチャンスは「1 / {0}」</string>
+    <string name="ridicule_change">嘲笑されるチャンスは「1 / {0}」になりました</string>
+    <string name="ridicule_change_bad">「{0}」は数字ではないか無効です</string>
+    <string name="ridicule_bad_two">引数がありません</string>
+    <string name="ridicule_description">嘲笑されるチャンス</string>
     <string name="ridicule_help">
-        {0}ridicule [parameters]
+        {0}ridicule [パラメーター]
 
         例えば：
             {0}ridicule turn
@@ -408,24 +409,24 @@
     <!--</editor-fold>-->
 
     <!--<editor-fold desc="space">-->
-    <string name="space_disabled">enabled</string>
-    <string name="space_enabled">disabled</string>
-    <string name="space_on">Space after command {0}</string>
-    <string name="space_description">Toggle the space after the prefix on or off</string>
+    <string name="space_disabled">有効</string>
+    <string name="space_enabled">無効</string>
+    <string name="space_on">コマンド後のスペースは「{0}」です</string>
+    <string name="space_description">プレフィックスの後のスペースをオンまたはオフに切り替えます</string>
     <string name="space_help">
         {0}space
     </string>
     <!--</editor-fold>-->
 
     <!--<editor-fold desc="test">-->
-    <string name="test_description">Command for testing things</string>
+    <string name="test_description">物事をテストするためのコマンド</string>
     <string name="test_help">
-        Don't use me.. 😳 im for my master only
+        私を使わないでください..😳 私は私のマスターのためだけです
     </string>
     <!--</editor-fold>-->
 
     <!--<editor-fold desc="weeb">-->
-    <string name="weeb_description">Get weeb image</string>
+    <string name="weeb_description">ウィーブ画像を取得する</string>
     <string name="weeb_help">
         {0}weeb
     </string>

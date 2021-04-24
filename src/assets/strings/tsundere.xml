@@ -304,7 +304,7 @@
     <string name="volume_current">volume is at **{0}**%</string>
     <string name="volume_description">change the volume [0 - 500]</string>
     <string name="volume_help">
-        default: 100
+        default: 50
         {0}volume [percent]
 
         examples:
@@ -332,8 +332,7 @@
     <string name="ping_diff">
         uwu!
         ```apache
-        roundtrip: {0} ms
-        time: {1} ms
+        time: {0} ms
         ```
     </string>
     <string name="ping_description">response time</string>
@@ -401,7 +400,7 @@
     <!--<editor-fold desc="space">-->
     <string name="space_disabled">enabled</string>
     <string name="space_enabled">disabled</string>
-    <string name="space_on">space after command {0}</string>
+    <string name="space_on">space after command **{0}**</string>
     <string name="space_description">toggle the space after the prefix on or off</string>
     <string name="space_help">
         {0}space

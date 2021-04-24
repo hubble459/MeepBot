@@ -49,7 +49,7 @@ const strings = function (stringPath) {
             for (const str of resources.string) {
                 // (?=[ \W])(?<!\w)|\n(?=\n)
                 // |\n(?=\n)
-                strings[str.name] = str['$t'].replace(/ {7,8}/g, '');
+                strings[str.name] = (str['$t'] || '').replace(/ {7,8}/g, '');
             }
         } else {
             strings[resources.string.name] = resources.string['$t'];

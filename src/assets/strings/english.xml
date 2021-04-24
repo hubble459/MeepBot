@@ -139,6 +139,7 @@
     <string name="play_join_vc">Join a voice channel first</string>
     <string name="play_second">second</string>
     <string name="play_minute">minute</string>
+    <string name="play_plural">s</string>
     <string name="play_progress">progress</string>
     <string name="play_progress_desc">
         {0} / {1} `{2}%`
@@ -157,9 +158,10 @@
     <string name="play_no_results">No search results</string>
     <string name="play_description">Play a song from youtube, spotify or soundcloud</string>
     <string name="play_help">
-        {0}play [values]
+        {0}play [url or query]
 
         examples:
+            {0}play silver fins waiting so long
             {0}play https://www.youtube.com/watch?v=...
             {0}play https://www.youtube.com/playlist?list=...
             {0}play https://soundcloud.com/...
@@ -264,7 +266,7 @@
     <!--<editor-fold desc="repeat">-->
     <string name="repeat_options">Options: ( **disable** | **queue** | **song** )</string>
     <string name="repeat_disabled">Looping is `disabled`</string>
-    <string name="repeat_queue">Looping `the queue`</string>
+    <string name="repeat_queue">Looping `queue`</string>
     <string name="repeat_song">Looping `song`</string>
     <string name="repeat_description">Repeat the song or queue</string>
     <string name="repeat_help">
@@ -290,7 +292,7 @@
     <string name="playlist_load">Playing **{0}** songs from '{1}'</string>
     <string name="playlist_not_found">Playlist with the name '{0}' does not exists</string>
     <string name="playlist_exists">A playlist with the name '{0}' already exists</string>
-    <string name="playlist_saved">Playlist '{0}' with **{1}** songs saved!</string>
+    <string name="playlist_saved">Playlist '{0}' with **{1}** song(s) saved!</string>
     <string name="playlist_empty">Queue is empty so it would be useless to save this to a playlist</string>
     <string name="playlist_removed">Removed '{0}' from playlists</string>
     <string name="playlist_playlists">playlists</string>
@@ -312,7 +314,7 @@
     <string name="volume_current">Volume is at **{0}**%</string>
     <string name="volume_description">Change the volume [0 - 500]</string>
     <string name="volume_help">
-        default: 100
+        default: 50
         {0}volume [percent]
 
         examples:
@@ -340,8 +342,7 @@
     <string name="ping_diff">
         Pong!
         ```apache
-        Roundtrip: {0} ms
-        Time: {1} ms
+        time: {0} ms
         ```
     </string>
     <string name="ping_empty">Nickname cannot be empty</string>
@@ -410,7 +411,7 @@
     <!--<editor-fold desc="space">-->
     <string name="space_disabled">enabled</string>
     <string name="space_enabled">disabled</string>
-    <string name="space_on">Space after command {0}</string>
+    <string name="space_on">Space after command is **{0}**</string>
     <string name="space_description">Toggle the space after the prefix on or off</string>
     <string name="space_help">
         {0}space

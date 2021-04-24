@@ -5,7 +5,7 @@ async function ping(msg) {
 
     msg = await msg.channel.send(getString('ping_pong'));
     const diff = Date.now() - msg.createdTimestamp;
-    await msg.edit(getString('ping_diff').format(diff, Math.floor(diff / 2)));
+    await msg.edit(getString('ping_diff').format(diff));
 }
 
 module.exports = {

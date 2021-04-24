@@ -18,7 +18,7 @@ function ensure(guildId) {
     db.music.queue = database.ensure(guildId, {}, 'music.queue');
     db.music.queue.songs = database.ensure(guildId, [], 'music.queue.songs');
     db.music.queue.repeat = database.ensure(guildId, 0, 'music.queue.repeat');
-    db.music.volume = database.ensure(guildId, 100, 'music.volume');
+    db.music.volume = database.ensure(guildId, 50, 'music.volume');
     db.music.playlists = database.ensure(guildId, {}, 'music.playlists');
     db.settings = database.ensure(guildId, {}, 'settings');
     db.settings.prefix = database.ensure(guildId, '$', 'settings.prefix');
