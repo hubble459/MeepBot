@@ -431,4 +431,11 @@
         {0}weeb
     </string>
     <!--</editor-fold>-->
+
+    <!--<editor-fold desc="weeb">-->
+    <string name="weeb_not_found">アニメ画像が見つかりません</string>
+    <string name="weeb_bad_tag">
+        悪いタグ
+    </string>
+    <!--</editor-fold>-->
 </resources>

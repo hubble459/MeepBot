@@ -426,9 +426,20 @@
     <!--</editor-fold>-->
 
     <!--<editor-fold desc="weeb">-->
-    <string name="weeb_description">Get weeb image</string>
+    <string name="weeb_bad_tag">
+        Unknown tag
+        Check the help command or the danbooru site for more info
+    </string>
+    <string name="weeb_not_found">Could not find weeb image</string>
+    <string name="weeb_description">Get weeb image from danbooru</string>
     <string name="weeb_help">
         {0}weeb
+
+        examples:
+            {0}weeb
+            {0}weeb *_(cosplay)
+            {0}weeb blonde_hair blue_eyes
+            {0}weeb ~blonde_hair ~blue_eyes
     </string>
     <!--</editor-fold>-->
 </resources>

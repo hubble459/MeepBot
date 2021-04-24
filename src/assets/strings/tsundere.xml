@@ -384,17 +384,6 @@
     <string name="ridicule_change_bad">`{0}` is not a number or invalid</string>
     <string name="ridicule_bad_two">missing arguments</string>
     <string name="ridicule_description">chance to get ridiculed</string>
-    <string name="ridicule_help">
-        {0}ridicule [parameters]
-
-        examples:
-            {0}ridicule turn
-            {0}ridicule turn on
-            {0}ridicule turn off
-            {0}ridicule chance
-            {0}ridicule chance 100
-            {0}ridicule chance 1000
-    </string>
     <!--</editor-fold>-->
 
     <!--<editor-fold desc="space">-->
@@ -402,22 +391,14 @@
     <string name="space_enabled">disabled</string>
     <string name="space_on">space after command **{0}**</string>
     <string name="space_description">toggle the space after the prefix on or off</string>
-    <string name="space_help">
-        {0}space
-    </string>
-    <!--</editor-fold>-->
-
-    <!--<editor-fold desc="test">-->
-    <string name="test_description">command for testing things</string>
-    <string name="test_help">
-        don't use me.. 😳 im for my master only
-    </string>
     <!--</editor-fold>-->
 
     <!--<editor-fold desc="weeb">-->
-    <string name="weeb_description">get weeb image</string>
-    <string name="weeb_help">
-        {0}weeb
+
+    <string name="weeb_bad_tag">i couldn't find a thing with those fucky tags 🥺</string>
+    <string name="weeb_bad_tag">
+        You stupid! >~&lt;
+        Do you not know which tags are valid?
     </string>
     <!--</editor-fold>-->
 </resources>
