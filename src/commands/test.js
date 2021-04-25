@@ -5,7 +5,6 @@ const {name, dialog} = require('../../test.json');
 const responses = {};
 const data = [];
 const emojis = {
-    '0️⃣': 0,
     '1️⃣': 1,
     '2️⃣': 2,
     '3️⃣': 3,
@@ -34,7 +33,7 @@ async function test(message) {
 async function storyTest(msg, dialog) {
     for (const state of dialog) {
         if (state.choices) {
-            const choices = state.choices.map((c, i) => (i) + '. ' + c).join('\n');
+            const choices = state.choices.map((c, i) => (i + 1) + '. ' + c).join('\n');
             data.push(choices);
             await editMessage(msg);
             const choice = await awaitResponse(msg, state.choices.length, 30000);
@@ -73,8 +72,7 @@ async function awaitResponse(msg, amount, ms) {
         errors: ['time']
     })).first();
     await msg.reactions.removeAll();
-    console.log(emojis[reaction.emoji.name]);
-    return emojis[reaction.emoji.name];
+    return emojis[reaction.emoji.name] - 1;
 }
 
 async function editMessage(msg) {
