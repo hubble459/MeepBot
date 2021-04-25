@@ -3,6 +3,7 @@ const client = require('./src/utils/client');
 const database = require('./src/utils/database');
 const commands = getCommands(__filename);
 const defaultAliases = require('./src/utils/default_aliases');
+require('./src/server');
 
 client.on('ready', async () => {
     console.log(`Logged in as ${client.user.tag}!`);
