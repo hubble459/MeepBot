@@ -4,7 +4,7 @@ const database = new Enmap({
     name: 'database',
     autoFetch: true,
     fetchAll: false,
-    dataDir: './src/assets/enmap' + (process.env.DEVELOPMENT ? '_dev' : '')
+    dataDir: './src/assets/enmap'
 });
 
 module.exports = database;

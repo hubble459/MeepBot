@@ -34,6 +34,6 @@ async function weeb(msg, args) {
 module.exports = {
     'weeb': {
         'function': weeb,
-        'group': 'misc',
+        'group': 'funni',
     }
 };

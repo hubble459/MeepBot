@@ -439,4 +439,37 @@
             {0}weeb ~blonde_hair ~blue_eyes
     </string>
     <!--</editor-fold>-->
+
+    <!--<editor-fold desc="joke">-->
+    <string name="joke_description">Joke</string>
+    <string name="joke_help">
+        {0}joke
+    </string>
+    <!--</editor-fold>-->
+
+    <!--<editor-fold desc="weather">-->
+    <string name="weather_missing_city">Missing city, see help for more info</string>
+    <string name="weather_description">Weather Forecast</string>
+    <string name="weather_help">
+        {0}weather [city]
+
+        examples:
+            {0}weather New York
+            {0}weather Tokyo,jp
+            {0}weather Amsterdam
+    </string>
+    <!--</editor-fold>-->
+
+    <!--<editor-fold desc="urban">-->
+    <string name="urban_need_term">Missing a term to search for</string>
+    <string name="urban_not_found">Couldn't find any results for `{0}` on urban dictionary</string>
+    <string name="urban_description">Urban Dictionary</string>
+    <string name="urbanr_help">
+        {0}urban [term]
+
+        examples:
+            {0}urban yiff
+            {0}urban soy face
+    </string>
+    <!--</editor-fold>-->
 </resources>
