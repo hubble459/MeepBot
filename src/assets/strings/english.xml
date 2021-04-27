@@ -448,10 +448,10 @@
     <!--</editor-fold>-->
 
     <!--<editor-fold desc="weather">-->
-    <string name="weather_missing_city">Missing city, see help for more info</string>
+    <string name="weather_missing_city">Missing location, see help for more info</string>
     <string name="weather_description">Weather Forecast</string>
     <string name="weather_help">
-        {0}weather [city]
+        {0}weather [location]
 
         examples:
             {0}weather New York
@@ -470,6 +470,20 @@
         examples:
             {0}urban yiff
             {0}urban soy face
+    </string>
+    <!--</editor-fold>-->
+
+    <!--<editor-fold desc="wiki">-->
+    <string name="wiki_lang">en</string>
+    <string name="wiki_need_term">Missing a term to search for</string>
+    <string name="wiki_no_results">Couldn't find any results for `{0}` on wikipedia</string>
+    <string name="wiki_description">Wikipedia</string>
+    <string name="wiki_help">
+        {0}wiki [term]
+
+        examples:
+            {0}wiki Bonsai Kitten
+            {0}wiki Spherical cow
     </string>
     <!--</editor-fold>-->
 </resources>

@@ -396,9 +396,38 @@
     <!--<editor-fold desc="weeb">-->
     <string name="weeb_too_many_tags">two tags max!!11</string>
     <string name="weeb_not_found">i couldn't find a working image, try again 🥺</string>
-<!--    <string name="weeb_bad_tag">-->
-<!--        You stupid! >~&lt;-->
-<!--        Do you not know which tags are valid?-->
-<!--    </string>-->
+    <!--</editor-fold>-->
+
+    <!--<editor-fold desc="joke">-->
+    <string name="joke_description">your life</string>
+    <string name="joke_help">
+        {0}joke
+    </string>
+    <!--</editor-fold>-->
+
+    <!--<editor-fold desc="weather">-->
+    <string name="weather_missing_city">weather of where?!</string>
+    <string name="weather_description">weather forecast</string>
+    <!--</editor-fold>-->
+
+    <!--<editor-fold desc="urban">-->
+    <string name="urban_need_term">searching for ...? no.</string>
+    <string name="urban_not_found">`{0}`...? what is wrong with you</string>
+    <string name="urban_description">urban dictionary</string>
+    <!--</editor-fold>-->
+
+    <!--<editor-fold desc="wiki">-->
+    <string name="wiki_need_term">searching for ...? no.</string>
+    <string name="wiki_no_results">
+        wikipedia can't find `{0}`.
+        maybe create the article yourself</string>
+    <string name="wiki_description">wikipedia</string>
+    <string name="wiki_help">
+        {0}wiki [term]
+
+        examples:
+            {0}wiki tsundere
+            {0}wiki weeaboo
+    </string>
     <!--</editor-fold>-->
 </resources>

@@ -435,8 +435,62 @@
     <!--<editor-fold desc="weeb">-->
     <string name="weeb_too_many_tags">使用できるタグは2つだけです</string>
     <string name="weeb_not_found">アニメ画像が見つかりません</string>
-    <string name="weeb_bad_tag">
-        悪いタグ
+    <string name="weeb_description">ダンブールからウィーブ画像を取得</string>
+    <string name="weeb_help">
+        {0}weeb
+
+        例えば：
+            {0}weeb
+            {0}weeb *_(cosplay)
+            {0}weeb blonde_hair blue_eyes
+            {0}weeb ~blonde_hair ~blue_eyes
+    </string>
+    <!--</editor-fold>-->
+
+    <!--<editor-fold desc="joke">-->
+    <string name="joke_description">Joke</string>
+    <string name="joke_help">
+        {0}joke
+    </string>
+    <!--</editor-fold>-->
+
+    <!--<editor-fold desc="weather">-->
+    <string name="weather_missing_city">場所がありません。詳細についてはヘルプを参照してください</string>
+    <string name="weather_description">天気予報</string>
+    <string name="weather_help">
+        {0}weather [ロケーション]
+
+        例えば：
+            {0}weather New York
+            {0}weather Tokyo,jp
+            {0}weather Amsterdam
+    </string>
+    <!--</editor-fold>-->
+
+    <!--<editor-fold desc="urban">-->
+    <string name="urban_need_term">検索する用語がありません</string>
+    <string name="urban_not_found">アーバンディクショナリで「{0}」の結果が見つかりませんでした</string>
+    <string name="urban_description">アーバンディクショナリー</string>
+    <string name="urbanr_help">
+        {0}urban [用語]
+
+        例えば：
+            {0}urban yiff
+            {0}urban soy face
+    </string>
+    <!--</editor-fold>-->
+
+    <!--<editor-fold desc="wiki">-->
+    <string name="wiki_lang">jp</string>
+    <string name="wiki_need_term">検索する用語がありません</string>
+    <string name="wiki_no_results">ウィキペディアで「{0}」の結果が見つかりませんでした</string>
+    <string name="wiki_description">ウィキペディア</string>
+    <string name="wiki_help">
+        {0}wiki [用語]
+
+        例えば：
+            {0}wiki 端午
+            {0}wiki 柏餅
     </string>
     <!--</editor-fold>-->
 </resources>
