@@ -21,9 +21,9 @@
         {0}language [lang]
 
         examples:
-            {0}language
-            {0}language english
-            {0}language tsundere
+        {0}language
+        {0}language english
+        {0}language tsundere
     </string>
     <!--</editor-fold>-->
 
@@ -47,22 +47,24 @@
         {0}alias [command_name] [command]
 
         examples:
-            {0}alias love magic i ***don't*** love you
-            {0}alias pogchamp echo ugh fine, i guess you are my little pogchamp
+        {0}alias love magic i ***don't*** love you
+        {0}alias pogchamp echo ugh fine, i guess you are my little pogchamp
     </string>
     <!--</editor-fold>-->
 
     <!--<editor-fold desc="aliasrm">-->
     <string name="aliasrm_removed">about time you removed `{0}` from your aliases, it wasn't funny</string>
     <string name="aliasrm_find">`{0}` is not one of your aliases, baka</string>
-    <string name="aliasrm_arguments">wow! i guess you think you don't need to read the help sections to understand my commands</string>
+    <string name="aliasrm_arguments">wow! i guess you think you don't need to read the help sections to understand my
+        commands
+    </string>
     <string name="aliasrm_description">remove a mistake</string>
     <string name="aliasrm_help">
         {0}aliasrm [alias]
 
         examples:
-            {0}aliasrm love
-            {0}aliasrm pogchamp
+        {0}aliasrm love
+        {0}aliasrm pogchamp
     </string>
     <!--</editor-fold>-->
 
@@ -73,8 +75,8 @@
         {0}aliases [option]
 
         examples:
-            {0}aliases
-            {0}aliases reset
+        {0}aliases
+        {0}aliases reset
     </string>
     <!--</editor-fold>-->
 
@@ -84,8 +86,8 @@
         {0}help [command]
 
         examples:
-            {0}help
-            {0}help meep
+        {0}help
+        {0}help meep
     </string>
     <!--</editor-fold>-->
 
@@ -95,8 +97,8 @@
         {0}magic [words]
 
         examples:
-            {0}magic i love you
-            {0}magic uwu
+        {0}magic i love you
+        {0}magic uwu
     </string>
     <!--</editor-fold>-->
 
@@ -114,21 +116,21 @@
         {0}meep [arguments]
 
         examples:
-            # random url
-            {0}meep
-            {0}meep english
+        # random url
+        {0}meep
+        {0}meep english
 
-            # read random
-            {0}meep read
-            {0}meep read english
+        # read random
+        {0}meep read
+        {0}meep read english
 
-            # read from url or numbers
-            {0}meep read https://nhentai.net/g/203620/
-            {0}meep read 203620
-            {0}meep read 203620 9
+        # read from url or numbers
+        {0}meep read https://nhentai.net/g/203620/
+        {0}meep read 203620
+        {0}meep read 203620 9
 
-            # navigate reader to page
-            {0}meep page 10
+        # navigate reader to page
+        {0}meep page 10
     </string>
     <!--</editor-fold>-->
 
@@ -177,8 +179,8 @@
         {0}skip [to number]
 
         examples:
-            {0}skip
-            {0}skip 20
+        {0}skip
+        {0}skip 20
     </string>
     <!--</editor-fold>-->
 
@@ -221,8 +223,8 @@
         {0}remove [item_id]
 
         examples:
-            {0}remove 2
-            {0}remove all
+        {0}remove 2
+        {0}remove all
     </string>
     <!--</editor-fold>-->
 
@@ -254,10 +256,10 @@
         {0}repeat
 
         examples:
-            {0}repeat
-            {0}repeat disable
-            {0}repeat queue
-            {0}repeat song
+        {0}repeat
+        {0}repeat disable
+        {0}repeat queue
+        {0}repeat song
     </string>
     <!--</editor-fold>-->
 
@@ -291,10 +293,10 @@
         {0}playlist [arguments]
 
         examples:
-            {0}playlist
-            {0}playlist save [playlist name]
-            {0}playlist load [playlist name]
-            {0}playlist remove [playlist name]
+        {0}playlist
+        {0}playlist save [playlist name]
+        {0}playlist load [playlist name]
+        {0}playlist remove [playlist name]
     </string>
     <!--</editor-fold>-->
 
@@ -308,9 +310,9 @@
         {0}volume [percent]
 
         examples:
-            {0}volume
-            {0}volume 0
-            {0}volume 100
+        {0}volume
+        {0}volume 0
+        {0}volume 100
     </string>
     <!--</editor-fold>-->
 
@@ -322,8 +324,8 @@
         {0}nick [nickname]
 
         examples:
-            {0}nick baby
-            {0}nick cute girl
+        {0}nick baby
+        {0}nick cute girl
     </string>
     <!--</editor-fold>-->
 
@@ -349,8 +351,8 @@
         {0}prefix [prefix]
 
         examples:
-            {0}prefix !
-            {0}prefix =
+        {0}prefix !
+        {0}prefix =
     </string>
     <!--</editor-fold>-->
 
@@ -367,8 +369,8 @@
         {0}retard [words]
 
         examples:
-            {0}retard fuck my ass
-            {0}retard i love javascript
+        {0}retard fuck my ass
+        {0}retard i love javascript
     </string>
     <!--</editor-fold>-->
 
@@ -420,14 +422,15 @@
     <string name="wiki_need_term">searching for ...? no.</string>
     <string name="wiki_no_results">
         wikipedia can't find `{0}`.
-        maybe create the article yourself</string>
+        maybe create the article yourself
+    </string>
     <string name="wiki_description">wikipedia</string>
     <string name="wiki_help">
         {0}wiki [term]
 
         examples:
-            {0}wiki tsundere
-            {0}wiki weeaboo
+        {0}wiki tsundere
+        {0}wiki weeaboo
     </string>
     <!--</editor-fold>-->
 </resources>

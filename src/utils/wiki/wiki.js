@@ -1,6 +1,6 @@
 'use strict';
 
-const { pagination, api, aggregate } = require('./util');
+const {pagination, api, aggregate} = require('./util');
 const wikiPage = require('./page');
 
 /**
@@ -243,7 +243,7 @@ module.exports = function wiki(options = {}) {
 			action: 'query',
 			list: 'mostviewed'
 		}).then(res =>
-			res.query.mostviewed.map(({ title, count }) => ({ title, count }))
+			res.query.mostviewed.map(({title, count}) => ({title, count}))
 		);
 	}
 
@@ -314,4 +314,4 @@ module.exports = function wiki(options = {}) {
 		mostViewed,
 		api: rawApi
 	};
-}
+};

@@ -7,8 +7,8 @@
         {0}echo [台詞]
 
         例えば：
-            {0}echo 私はとてもかわいいです (´｡• ᵕ •｡`) ♡
-            {0}echo 愛してる、お兄ちゃん
+        {0}echo 私はとてもかわいいです (´｡• ᵕ •｡`) ♡
+        {0}echo 愛してる、お兄ちゃん
     </string>
     <!--</editor-fold>-->
 
@@ -21,9 +21,9 @@
         {0}language [言語]
 
         例えば：
-            {0}language
-            {0}language english
-            {0}language tsundere
+        {0}language
+        {0}language english
+        {0}language tsundere
     </string>
     <!--</editor-fold>-->
 
@@ -47,8 +47,8 @@
         {0}alias [コマンド名] [コマンド]
 
         例えば：
-            {0}alias 猫 echo にゃー
-            {0}alias nice play https://www.youtube.com/watch?v=myax0WsTSWA
+        {0}alias 猫 echo にゃー
+        {0}alias nice play https://www.youtube.com/watch?v=myax0WsTSWA
     </string>
     <!--</editor-fold>-->
 
@@ -61,8 +61,8 @@
         {0}aliasrm [エイリアス]
 
         例えば：
-            {0}aliasrm 猫
-            {0}aliasrm nice
+        {0}aliasrm 猫
+        {0}aliasrm nice
     </string>
     <!--</editor-fold>-->
 
@@ -71,10 +71,10 @@
     <string name="aliases_description">すべてのエイリアスを一覧表示</string>
     <string name="aliases_help">
         {0}aliases [オプション]
-        
+
         例えば：
-            {0}aliases
-            {0}aliases reset
+        {0}aliases
+        {0}aliases reset
     </string>
     <!--</editor-fold>-->
 
@@ -84,8 +84,8 @@
         {0}help [コマンド]
 
         例えば：
-            {0}help
-            {0}help meep
+        {0}help
+        {0}help meep
     </string>
     <!--</editor-fold>-->
 
@@ -95,8 +95,8 @@
         {0}magic [言葉]
 
         例えば：
-            {0}magic owo
-            {0}magic 変換！
+        {0}magic owo
+        {0}magic 変換！
     </string>
     <!--</editor-fold>-->
 
@@ -111,21 +111,21 @@
         {0}meep [引数]
 
         例えば：
-            # ランダムなURL
-            {0}meep
-            {0}meep english
+        # ランダムなURL
+        {0}meep
+        {0}meep english
 
-            # ランダムに読む
-            {0}meep read
-            {0}meep read english
+        # ランダムに読む
+        {0}meep read
+        {0}meep read english
 
-            # URLまたは番号から読み取る
-            {0}meep read https://nhentai.net/g/203620/
-            {0}meep read 203620
-            {0}meep read 203620 9
+        # URLまたは番号から読み取る
+        {0}meep read https://nhentai.net/g/203620/
+        {0}meep read 203620
+        {0}meep read 203620 9
 
-            # リーダーをページに移動
-            {0}meep page 10
+        # リーダーをページに移動
+        {0}meep page 10
     </string>
     <!--</editor-fold>-->
 
@@ -161,15 +161,15 @@
         {0}play [URLまたはクエリ]
 
         例えば：
-            {0}play kinoko teikoku - first demo album
-            {0}play https://www.youtube.com/watch?v=...
-            {0}play https://www.youtube.com/playlist?list=...
-            {0}play https://soundcloud.com/...
-            {0}play https://open.spotify.com/track/...
-            {0}play https://open.spotify.com/playlist/...
+        {0}play kinoko teikoku - first demo album
+        {0}play https://www.youtube.com/watch?v=...
+        {0}play https://www.youtube.com/playlist?list=...
+        {0}play https://soundcloud.com/...
+        {0}play https://open.spotify.com/track/...
+        {0}play https://open.spotify.com/playlist/...
 
-            # 複数のリンク
-            {0}play https://open.spotify.com/track/...
+        # 複数のリンク
+        {0}play https://open.spotify.com/track/...
         https://www.youtube.com/watch?v=...
         https://soundcloud.com/...
     </string>
@@ -196,8 +196,8 @@
         {0}skip [番号]
 
         例えば：
-            {0}skip
-            {0}skip 20
+        {0}skip
+        {0}skip 20
     </string>
     <!--</editor-fold>-->
 
@@ -240,8 +240,8 @@
         {0}remove [アイテムID]
 
         例えば：
-            {0}remove 2
-            {0}remove all
+        {0}remove 2
+        {0}remove all
     </string>
     <!--</editor-fold>-->
 
@@ -273,10 +273,10 @@
         {0}repeat
 
         例えば：
-            {0}repeat
-            {0}repeat disable
-            {0}repeat queue
-            {0}repeat song
+        {0}repeat
+        {0}repeat disable
+        {0}repeat queue
+        {0}repeat song
     </string>
     <!--</editor-fold>-->
 
@@ -301,10 +301,10 @@
         {0}playlist [引数]
 
         例えば：
-            {0}playlist
-            {0}playlist save [プレイリスト名]
-            {0}playlist load [プレイリスト名]
-            {0}playlist remove [プレイリスト名]
+        {0}playlist
+        {0}playlist save [プレイリスト名]
+        {0}playlist load [プレイリスト名]
+        {0}playlist remove [プレイリスト名]
     </string>
     <!--</editor-fold>-->
 
@@ -318,9 +318,9 @@
         {0}volume [パーセント]
 
         例えば：
-            {0}volume
-            {0}volume 0
-            {0}volume 100
+        {0}volume
+        {0}volume 0
+        {0}volume 100
     </string>
     <!--</editor-fold>-->
 
@@ -330,10 +330,10 @@
     <string name="nick_description">ボットのニックネームを変更する</string>
     <string name="nick_help">
         {0}nick [ニックネーム]
-        
+
         例えば：
-            {0}nick 変態
-            {0}nick 花ちゃん
+        {0}nick 変態
+        {0}nick 花ちゃん
     </string>
     <!--</editor-fold>-->
 
@@ -360,8 +360,8 @@
         {0}prefix [プレフィックス]
 
         例えば：
-            {0}prefix !
-            {0}prefix =
+        {0}prefix !
+        {0}prefix =
     </string>
     <!--</editor-fold>-->
 
@@ -378,8 +378,8 @@
         {0}retard [言葉]
 
         例えば：
-            {0}retard uwu, i love you papa
-            {0}retard i love javascript
+        {0}retard uwu, i love you papa
+        {0}retard i love javascript
     </string>
     <!--</editor-fold>-->
 
@@ -399,12 +399,12 @@
         {0}ridicule [パラメーター]
 
         例えば：
-            {0}ridicule turn
-            {0}ridicule turn on
-            {0}ridicule turn off
-            {0}ridicule chance
-            {0}ridicule chance 100
-            {0}ridicule chance 1000
+        {0}ridicule turn
+        {0}ridicule turn on
+        {0}ridicule turn off
+        {0}ridicule chance
+        {0}ridicule chance 100
+        {0}ridicule chance 1000
     </string>
     <!--</editor-fold>-->
 
@@ -440,10 +440,10 @@
         {0}weeb
 
         例えば：
-            {0}weeb
-            {0}weeb *_(cosplay)
-            {0}weeb blonde_hair blue_eyes
-            {0}weeb ~blonde_hair ~blue_eyes
+        {0}weeb
+        {0}weeb *_(cosplay)
+        {0}weeb blonde_hair blue_eyes
+        {0}weeb ~blonde_hair ~blue_eyes
     </string>
     <!--</editor-fold>-->
 
@@ -461,9 +461,9 @@
         {0}weather [ロケーション]
 
         例えば：
-            {0}weather New York
-            {0}weather Tokyo,jp
-            {0}weather Amsterdam
+        {0}weather New York
+        {0}weather Tokyo,jp
+        {0}weather Amsterdam
     </string>
     <!--</editor-fold>-->
 
@@ -475,8 +475,8 @@
         {0}urban [用語]
 
         例えば：
-            {0}urban yiff
-            {0}urban soy face
+        {0}urban yiff
+        {0}urban soy face
     </string>
     <!--</editor-fold>-->
 
@@ -489,8 +489,8 @@
         {0}wiki [用語]
 
         例えば：
-            {0}wiki 端午
-            {0}wiki 柏餅
+        {0}wiki 端午
+        {0}wiki 柏餅
     </string>
     <!--</editor-fold>-->
 </resources>

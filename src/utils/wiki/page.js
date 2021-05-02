@@ -1,7 +1,7 @@
-const { aggregatePagination, pagination, api, parseContent } = require('./util');
-const { parseCoordinates } = require('./coordinates');
+const {aggregatePagination, pagination, api, parseContent} = require('./util');
+const {parseCoordinates} = require('./coordinates');
 const infoboxParser = require('infobox-parser');
-const { tokenize, constructTree } = require('hyntax');
+const {tokenize, constructTree} = require('hyntax');
 
 const get = (obj, first, ...rest) => {
 	if (obj === undefined || first === undefined) return obj;
@@ -127,11 +127,11 @@ module.exports = function wikiPage(rawPageInfo, apiOptions) {
 			// Handle different translations of "image" here
 			const mainImageName = getFileName(
 				info.image ||
-					info.bildname ||
-					info.imagen ||
-					info.Immagine ||
-					info.badge ||
-					info.logo
+				info.bildname ||
+				info.imagen ||
+				info.Immagine ||
+				info.badge ||
+				info.logo
 			);
 			// Handle case where no info box exists
 			if (!mainImageName) {
@@ -145,7 +145,7 @@ module.exports = function wikiPage(rawPageInfo, apiOptions) {
 						: undefined;
 				});
 			}
-			const image = images.find(({ title }) => {
+			const image = images.find(({title}) => {
 				const filename = getFileName(title);
 				// Some wikis use underscores for spaces, some don't
 				return (
@@ -235,8 +235,8 @@ module.exports = function wikiPage(rawPageInfo, apiOptions) {
 	function references() {
 		return html()
 			.then(inputHTML => {
-				const { tokens } = tokenize(inputHTML);
-				const { ast } = constructTree(tokens);
+				const {tokens} = tokenize(inputHTML);
+				const {ast} = constructTree(tokens);
 				return ast;
 			})
 			.then(ast => {
@@ -493,4 +493,4 @@ module.exports = function wikiPage(rawPageInfo, apiOptions) {
 	});
 
 	return page;
-}
+};

@@ -1,5 +1,5 @@
 async function magic(msg, args) {
-    await msg.channel.send(`
+	await msg.channel.send(`
         （ ͡° ͜ʖ ͡°)つ━☆・。
 ⊂　　 ノ 　　　・゜+.
 　しーＪ　　　°。+ ´¨)
@@ -9,8 +9,8 @@ async function magic(msg, args) {
 }
 
 module.exports = {
-    'magic': {
-        'function': magic,
-        'group': 'funni',
-    }
+	'magic': {
+		'function': magic,
+		'group': 'funni',
+	}
 };

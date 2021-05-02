@@ -81,7 +81,7 @@ function convertCoordinatesFromStrings(matches) {
 }
 
 // simplifies positive / negative calculation in decimal conversion
-const directions = { N: 1, S: -1, E: 1, W: -1 };
+const directions = {N: 1, S: -1, E: 1, W: -1};
 
 /**
  * @ignore
@@ -127,4 +127,4 @@ function floatOrDefault(numStr) {
 
 module.exports = {
 	parseCoordinates
-}
+};

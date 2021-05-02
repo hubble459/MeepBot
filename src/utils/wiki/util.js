@@ -1,4 +1,4 @@
-const fetch = require( 'cross-fetch');
+const fetch = require('cross-fetch');
 const querystring = require('querystring');
 
 const fetchOptions = {
@@ -28,10 +28,10 @@ function api(apiOptions, params = {}) {
 	const url = `${apiOptions.apiUrl}?${querystring.stringify(qs)}`;
 	return fetch(
 		url,
-		Object.assign({ headers: apiOptions.headers }, fetchOptions)
+		Object.assign({headers: apiOptions.headers}, fetchOptions)
 	)
 		.then(res => {
-			if(res.ok) {
+			if (res.ok) {
 				return res.json();
 			}
 			throw new Error(`${res.status}: ${res.statusText}`);
@@ -111,7 +111,7 @@ function getHeadings(text) {
 function parseContent(source) {
 	const headings = getHeadings(source);
 
-	const minLevel = Math.min(...headings.map(({ level }) => level));
+	const minLevel = Math.min(...headings.map(({level}) => level));
 
 	const sections = headings.map((heading, index) => {
 		const next = headings[index + 1];
@@ -176,4 +176,4 @@ module.exports = {
 	aggregatePagination,
 	parseContent,
 	pagination
-}
+};

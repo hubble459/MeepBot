@@ -7,8 +7,8 @@
         {0}echo [words]
 
         examples:
-            {0}echo I'm so adorable uwu
-            {0}echo They kinda sus
+        {0}echo I'm so adorable uwu
+        {0}echo They kinda sus
     </string>
     <!--</editor-fold>-->
 
@@ -21,9 +21,9 @@
         {0}language [lang]
 
         examples:
-            {0}language
-            {0}language english
-            {0}language tsundere
+        {0}language
+        {0}language english
+        {0}language tsundere
     </string>
     <!--</editor-fold>-->
 
@@ -47,8 +47,8 @@
         {0}alias [command_name] [command]
 
         examples:
-            {0}alias owo echo fuck my ass
-            {0}alias nice play https://www.youtube.com/watch?v=myax0WsTSWA
+        {0}alias owo echo fuck my ass
+        {0}alias nice play https://www.youtube.com/watch?v=myax0WsTSWA
     </string>
     <!--</editor-fold>-->
 
@@ -61,8 +61,8 @@
         {0}aliasrm [alias]
 
         examples:
-            {0}aliasrm owo
-            {0}aliasrm nice
+        {0}aliasrm owo
+        {0}aliasrm nice
     </string>
     <!--</editor-fold>-->
 
@@ -71,10 +71,10 @@
     <string name="aliases_description">List all aliases</string>
     <string name="aliases_help">
         {0}aliases [option]
-        
+
         examples:
-            {0}aliases
-            {0}aliases reset
+        {0}aliases
+        {0}aliases reset
     </string>
     <!--</editor-fold>-->
 
@@ -84,8 +84,8 @@
         {0}help [command]
 
         examples:
-            {0}help
-            {0}help meep
+        {0}help
+        {0}help meep
     </string>
     <!--</editor-fold>-->
 
@@ -95,8 +95,8 @@
         {0}magic [words]
 
         examples:
-            {0}magic owo
-            {0}magic swoooosh
+        {0}magic owo
+        {0}magic swoooosh
     </string>
     <!--</editor-fold>-->
 
@@ -111,21 +111,21 @@
         {0}meep [arguments]
 
         examples:
-            # random url
-            {0}meep
-            {0}meep english
+        # random url
+        {0}meep
+        {0}meep english
 
-            # read random
-            {0}meep read
-            {0}meep read english
+        # read random
+        {0}meep read
+        {0}meep read english
 
-            # read from url or numbers
-            {0}meep read https://nhentai.net/g/203620/
-            {0}meep read 203620
-            {0}meep read 203620 9
+        # read from url or numbers
+        {0}meep read https://nhentai.net/g/203620/
+        {0}meep read 203620
+        {0}meep read 203620 9
 
-            # navigate reader to page
-            {0}meep page 10
+        # navigate reader to page
+        {0}meep page 10
     </string>
     <!--</editor-fold>-->
 
@@ -161,15 +161,15 @@
         {0}play [url or query]
 
         examples:
-            {0}play silver fins waiting so long
-            {0}play https://www.youtube.com/watch?v=...
-            {0}play https://www.youtube.com/playlist?list=...
-            {0}play https://soundcloud.com/...
-            {0}play https://open.spotify.com/track/...
-            {0}play https://open.spotify.com/playlist/...
+        {0}play silver fins waiting so long
+        {0}play https://www.youtube.com/watch?v=...
+        {0}play https://www.youtube.com/playlist?list=...
+        {0}play https://soundcloud.com/...
+        {0}play https://open.spotify.com/track/...
+        {0}play https://open.spotify.com/playlist/...
 
-            # Multiple links
-            {0}play https://open.spotify.com/track/...
+        # Multiple links
+        {0}play https://open.spotify.com/track/...
         https://www.youtube.com/watch?v=...
         https://soundcloud.com/...
     </string>
@@ -196,8 +196,8 @@
         {0}skip [to number]
 
         examples:
-            {0}skip
-            {0}skip 20
+        {0}skip
+        {0}skip 20
     </string>
     <!--</editor-fold>-->
 
@@ -240,8 +240,8 @@
         {0}remove [item_id]
 
         examples:
-            {0}remove 2
-            {0}remove all
+        {0}remove 2
+        {0}remove all
     </string>
     <!--</editor-fold>-->
 
@@ -273,10 +273,10 @@
         {0}repeat
 
         examples:
-            {0}repeat
-            {0}repeat disable
-            {0}repeat queue
-            {0}repeat song
+        {0}repeat
+        {0}repeat disable
+        {0}repeat queue
+        {0}repeat song
     </string>
     <!--</editor-fold>-->
 
@@ -301,10 +301,10 @@
         {0}playlist [arguments]
 
         examples:
-            {0}playlist
-            {0}playlist save [playlist_name]
-            {0}playlist load [playlist_name]
-            {0}playlist remove [playlist_name]
+        {0}playlist
+        {0}playlist save [playlist_name]
+        {0}playlist load [playlist_name]
+        {0}playlist remove [playlist_name]
     </string>
     <!--</editor-fold>-->
 
@@ -318,9 +318,9 @@
         {0}volume [percent]
 
         examples:
-            {0}volume
-            {0}volume 0
-            {0}volume 100
+        {0}volume
+        {0}volume 0
+        {0}volume 100
     </string>
     <!--</editor-fold>-->
 
@@ -330,10 +330,10 @@
     <string name="nick_description">Change the bot nickname</string>
     <string name="nick_help">
         {0}nick [nickname]
-        
+
         examples:
-            {0}nick slut
-            {0}nick owo machine
+        {0}nick slut
+        {0}nick owo machine
     </string>
     <!--</editor-fold>-->
 
@@ -360,8 +360,8 @@
         {0}prefix [prefix]
 
         examples:
-            {0}prefix !
-            {0}prefix =
+        {0}prefix !
+        {0}prefix =
     </string>
     <!--</editor-fold>-->
 
@@ -378,8 +378,8 @@
         {0}retard [words]
 
         examples:
-            {0}retard fuck my ass
-            {0}retard i love javascript
+        {0}retard fuck my ass
+        {0}retard i love javascript
     </string>
     <!--</editor-fold>-->
 
@@ -399,12 +399,12 @@
         {0}ridicule [parameters]
 
         examples:
-            {0}ridicule turn
-            {0}ridicule turn on
-            {0}ridicule turn off
-            {0}ridicule chance
-            {0}ridicule chance 100
-            {0}ridicule chance 1000
+        {0}ridicule turn
+        {0}ridicule turn on
+        {0}ridicule turn off
+        {0}ridicule chance
+        {0}ridicule chance 100
+        {0}ridicule chance 1000
     </string>
     <!--</editor-fold>-->
 
@@ -433,10 +433,10 @@
         {0}weeb
 
         examples:
-            {0}weeb
-            {0}weeb *_(cosplay)
-            {0}weeb blonde_hair blue_eyes
-            {0}weeb ~blonde_hair ~blue_eyes
+        {0}weeb
+        {0}weeb *_(cosplay)
+        {0}weeb blonde_hair blue_eyes
+        {0}weeb ~blonde_hair ~blue_eyes
     </string>
     <!--</editor-fold>-->
 
@@ -454,9 +454,9 @@
         {0}weather [location]
 
         examples:
-            {0}weather New York
-            {0}weather Tokyo,jp
-            {0}weather Amsterdam
+        {0}weather New York
+        {0}weather Tokyo,jp
+        {0}weather Amsterdam
     </string>
     <!--</editor-fold>-->
 
@@ -468,8 +468,8 @@
         {0}urban [term]
 
         examples:
-            {0}urban yiff
-            {0}urban soy face
+        {0}urban yiff
+        {0}urban soy face
     </string>
     <!--</editor-fold>-->
 
@@ -482,8 +482,8 @@
         {0}wiki [term]
 
         examples:
-            {0}wiki Bonsai Kitten
-            {0}wiki Spherical cow
+        {0}wiki Bonsai Kitten
+        {0}wiki Spherical cow
     </string>
     <!--</editor-fold>-->
 </resources>

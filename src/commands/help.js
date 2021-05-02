@@ -6,67 +6,67 @@ const commands = getCommands(__filename);
 
 const groups = {};
 for (const [name, cmd] of Object.entries(commands)) {
-    cmd.name = name;
-    if (!groups[cmd.group || 'misc']) {
-        groups[cmd.group || 'misc'] = [];
-    }
-    groups[cmd.group || 'misc'].push(cmd);
+	cmd.name = name;
+	if (!groups[cmd.group || 'misc']) {
+		groups[cmd.group || 'misc'] = [];
+	}
+	groups[cmd.group || 'misc'].push(cmd);
 }
 
 async function help(msg, [command]) {
-    const prefix = database.get(msg.guild.id, 'settings.prefix') + (database.get(msg.guild.id, 'settings.space') ? ' ' : '');
-    if (command) {
-        let cmd = commands[command] || command === 'help';
+	const prefix = database.get(msg.guild.id, 'settings.prefix') + (database.get(msg.guild.id, 'settings.space') ? ' ' : '');
+	if (command) {
+		let cmd = commands[command] || command === 'help';
 
-        while (!cmd) {
-            const aliasCommand = database.get(msg.guild.id, `aliases.${command}`);
-            if (aliasCommand) {
-                cmd = commands[aliasCommand.command];
-                command = aliasCommand.command;
-            } else {
-                break;
-            }
-        }
+		while (!cmd) {
+			const aliasCommand = database.get(msg.guild.id, `aliases.${command}`);
+			if (aliasCommand) {
+				cmd = commands[aliasCommand.command];
+				command = aliasCommand.command;
+			} else {
+				break;
+			}
+		}
 
-        if (cmd) {
-            const embed = new MessageEmbed()
-                .setTitle(command)
-                .addField(
-                    strings.getString(msg.guild.id, `${command}_description`),
-                    '```apache\n' +
-                    strings.getString(msg.guild.id, `${command}_help`).format(prefix) +
-                    '```');
+		if (cmd) {
+			const embed = new MessageEmbed()
+				.setTitle(command)
+				.addField(
+					strings.getString(msg.guild.id, `${command}_description`),
+					'```apache\n' +
+					strings.getString(msg.guild.id, `${command}_help`).format(prefix) +
+					'```');
 
-            await msg.channel.send(embed);
-        } else {
-            await msg.channel.send(`Command \`${command}\` not found`);
-        }
-    } else {
-        const fields = [];
-        for (const [group, commands] of Object.entries(groups)) {
-            const body =
-                '```apache\n' +
-                commands
-                    .map(command => `${prefix}${command.name}`)
-                    .join('\n') +
-                '```';
+			await msg.channel.send(embed);
+		} else {
+			await msg.channel.send(`Command \`${command}\` not found`);
+		}
+	} else {
+		const fields = [];
+		for (const [group, commands] of Object.entries(groups)) {
+			const body =
+				'```apache\n' +
+				commands
+					.map(command => `${prefix}${command.name}`)
+					.join('\n') +
+				'```';
 
-            fields.push({name: group, value: body, inline: true});
-        }
+			fields.push({name: group, value: body, inline: true});
+		}
 
-        const embed = new MessageEmbed()
-            .setTitle('help')
-            .addFields(...fields)
-            .setDescription(`use \`${prefix}help [command]\` for more info`)
-            .setTimestamp();
+		const embed = new MessageEmbed()
+			.setTitle('help')
+			.addFields(...fields)
+			.setDescription(`use \`${prefix}help [command]\` for more info`)
+			.setTimestamp();
 
-        await msg.channel.send(embed);
-    }
+		await msg.channel.send(embed);
+	}
 }
 
 module.exports = {
-    'help': {
-        'function': help,
-        'group': 'misc',
-    }
+	'help': {
+		'function': help,
+		'group': 'misc',
+	}
 };
