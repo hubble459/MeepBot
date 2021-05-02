@@ -1,5 +1,3 @@
-// noinspection JSUnusedGlobalSymbols
-
 const {getGetString} = require('../utils/strings');
 const ytdl = require('ytdl-core');
 const ytpl = require('ytpl');
@@ -121,7 +119,11 @@ async function addSong(playNext, msg, queue, connection, song) {
 	if (queue.songs.length !== 0) {
 		await msg.channel.send(getString('music_added_to_queue').format(song.title));
 	}
-	queue.songs[playNext ? 'unshift' : 'push'](song);
+	if (playNext) {
+		queue.songs.splice(1, 0, song);
+	} else {
+		queue.songs.push(song);
+	}
 
 	if (shouldPlay(connection)) {
 		await nextSong(msg.guild.id, queue);
@@ -221,13 +223,21 @@ async function play(playNext = false, msg, args = ['']) {
 					const sp = shouldPlay(connection);
 
 					if (songs) {
-						queue.songs[playNext ? 'unshift' : 'push'](...songs);
+						if (playNext) {
+							queue.songs.splice(1, 0, ...songs);
+						} else {
+							queue.songs.push(...songs);
+						}
 						await msg.channel.send(getString('play_added_items_to_queue').format(songs.length));
 					} else if (song) {
 						if (queue.songs.length !== 0) {
 							await msg.channel.send(getString('music_added_to_queue').format(song.title));
 						}
-						queue.songs[playNext ? 'unshift' : 'push'](song);
+						if (playNext) {
+							queue.songs.splice(1, 0, song);
+						} else {
+							queue.songs.push(song);
+						}
 					}
 
 					if (sp) {
@@ -265,7 +275,11 @@ async function play(playNext = false, msg, args = ['']) {
 						thumbnail: bestThumbnail.url
 					};
 				});
-				queue.songs[playNext ? 'unshift' : 'push'](...songs);
+				if (playNext) {
+					queue.songs.splice(1, 0, ...songs);
+				} else {
+					queue.songs.push(...songs);
+				}
 				await msg.channel.send(getString('play_added_items_to_queue').format(songs.length));
 				if (shouldPlay(connection)) {
 					await nextSong(msg.guild.id, queue);
@@ -290,7 +304,11 @@ async function play(playNext = false, msg, args = ['']) {
 					await msg.channel.send(getString('music_added_to_queue').format(song.title));
 				}
 
-				queue.songs[playNext ? 'unshift' : 'push'](song);
+				if (playNext) {
+					queue.songs.splice(1, 0, song);
+				} else {
+					queue.songs.push(song);
+				}
 
 				if (shouldPlay(connection)) {
 					await nextSong(msg.guild.id, queue);
