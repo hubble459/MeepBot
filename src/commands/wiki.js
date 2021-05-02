@@ -4,7 +4,7 @@ const {getGetString} = require('../utils/strings');
 const wikiJs = require('../utils/wiki/wiki');
 
 async function wiki(msg, args) {
-	const getString = getGetString(msg.guild.id);
+	const getString = getGetString((msg.guild || msg.author).id);
 	if (args.length > 0) {
 		const query = args.join(' ');
 		try {

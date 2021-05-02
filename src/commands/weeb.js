@@ -3,7 +3,7 @@ const {MessageAttachment} = require('discord.js');
 const {getGetString} = require('../utils/strings');
 
 async function weeb(msg, args) {
-	const getString = getGetString(msg.guild.id);
+	const getString = getGetString((msg.guild || msg.author).id);
 	// args.unshift('-source:twitter.com');
 	if (args.length > 2) {
 		return msg.channel.send(getString('weeb_too_many_tags'));

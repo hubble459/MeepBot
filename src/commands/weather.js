@@ -22,7 +22,7 @@ async function weather(msg, args) {
 			await msg.channel.send(json.message);
 		}
 	} else {
-		await msg.channel.send(getString(msg.guild.id, 'weather_missing_city'));
+		await msg.channel.send(getString((msg.guild || msg.author).id, 'weather_missing_city'));
 	}
 }
 

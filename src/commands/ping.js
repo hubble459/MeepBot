@@ -1,7 +1,7 @@
 const {getGetString} = require('../utils/strings');
 
 async function ping(msg) {
-	const getString = getGetString(msg.guild.id);
+	const getString = getGetString((msg.guild || msg.author).id);
 
 	msg = await msg.channel.send(getString('ping_pong'));
 	const diff = Date.now() - msg.createdTimestamp;

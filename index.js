@@ -33,22 +33,31 @@ function ensure(guildId) {
 
 client.on('message', async msg => {
 	if (msg.author.bot) return;
+	const permissions = msg.guild ? msg.guild.me.permissionsIn(msg.channel) : 51264;
 
-	const db = ensure(msg.guild.id);
+	const db = ensure((msg.guild || msg.author).id);
+	const id = msg.guild ? msg.guild.me.id : process.env.DEVELOPMENT ? '831981303721099317' : '627920674354364416';
 
 	const mention = msg.mentions.users.first();
 	let space = db.settings.space;
 	let call;
 	if (mention) {
-		call = mention.id === msg.guild.me.id;
+		call = mention.id === id;
 		space = true;
 	}
 
-	const canTalk = (msg.guild.me.permissionsIn(msg.channel) & 2048) === 2048;
+	const canTalk = (permissions & 2048) === 2048;
 	const content = msg.content;
+	if (!content) return;
 	const prefix = db.settings.prefix;
 	if (canTalk && (content.startsWith(db.settings.prefix + (space ? ' ' : '')) || call) && content.length > (space + prefix.length)) {
-		let command = (space ? content.split(' ')[1] : content.split(' ')[0].substr(prefix.length)).toLowerCase();
+		let command = (space ? content.split(' ')[1] : content.split(' ')[0].substr(prefix.length));
+		console.log(command);
+		if (!command) {
+			return;
+		} else {
+			command = command.toLowerCase();
+		}
 		let args = content
 			.split(' ')
 			.slice(1 + space)
@@ -68,12 +77,16 @@ client.on('message', async msg => {
 
 		if (fun) {
 			console.log({
-				server: msg.guild.name,
+				server: (msg.guild ? msg.guild.name : msg.author.username),
 				command: command,
 				args: args
 			});
 
-			if (fun.permissions && ((msg.guild.me.permissionsIn(msg.channel) & fun.permissions) !== fun.permissions)) {
+			if (fun.no_dm && !msg.guild) {
+				return msg.channel.send(`This command does not work in DMs`);
+			}
+
+			if (fun.permissions && ((permissions & fun.permissions) !== fun.permissions)) {
 				return msg.channel.send('Bot has insufficient permissions for this command');
 			}
 

@@ -21,15 +21,15 @@ async function meep(msg, args) {
 		const page = args[2] || 1;
 		await readHentai(msg, validUrl ? url : await getRandomHentai(url === 'english'), validUrl ? page : 1);
 	} else {
-		const prefix = database.get(msg.guild.id, 'settings.prefix');
-		await msg.channel.send(getString(msg.guild.id, 'meep_see_help').format(prefix));
+		const prefix = database.get((msg.guild || msg.author).id, 'settings.prefix');
+		await msg.channel.send(getString((msg.guild || msg.author).id, 'meep_see_help').format(prefix));
 	}
 }
 
 async function readHentai(msg, url, page = 1) {
 	const {title, images} = await getHentaiData(url);
 	if (images.length === 0) {
-		return msg.channel.send(getString(msg.guild.id, 'meep_no_images'));
+		return msg.channel.send(getString((msg.guild || msg.author).id, 'meep_no_images'));
 	}
 
 	let reading = true;
@@ -99,13 +99,13 @@ async function gotoPage(msg, page) {
 				if (data.page !== 1) await data.msg.react('⬅️');
 				if (data.page !== data.images.length) await data.msg.react('➡️');
 			} else {
-				await msg.channel.send(getString(msg.guild.id, 'meep_invalid_page'));
+				await msg.channel.send(getString((msg.guild || msg.author).id, 'meep_invalid_page'));
 			}
 		} else {
-			await msg.channel.send(getString(msg.guild.id, 'meep_not_reading'));
+			await msg.channel.send(getString((msg.guild || msg.author).id, 'meep_not_reading'));
 		}
 	} else {
-		await msg.channel.send(getString(msg.guild.id, 'meep_missing_page'));
+		await msg.channel.send(getString((msg.guild || msg.author).id, 'meep_missing_page'));
 	}
 }
 

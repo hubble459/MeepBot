@@ -3,7 +3,7 @@ const fetch = require('node-fetch');
 const {MessageEmbed} = require('discord.js');
 
 async function urban(msg, args) {
-	const getString = getGetString(msg.guild.id);
+	const getString = getGetString((msg.guild || msg.author).id);
 	if (args.length > 0) {
 		const options = {
 			method: 'GET',

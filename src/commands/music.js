@@ -114,7 +114,7 @@ async function nextSong(guildId, queue) {
 }
 
 async function addSong(playNext, msg, queue, connection, song) {
-	const getString = getGetString(msg.guild.id);
+	const getString = getGetString((msg.guild || msg.author).id);
 
 	if (queue.songs.length !== 0) {
 		await msg.channel.send(getString('music_added_to_queue').format(song.title));
@@ -126,13 +126,13 @@ async function addSong(playNext, msg, queue, connection, song) {
 	}
 
 	if (shouldPlay(connection)) {
-		await nextSong(msg.guild.id, queue);
+		await nextSong((msg.guild || msg.author).id, queue);
 		await msg.channel.send(getString('music_now_playing').format(queue.songs[0].title));
 	}
 }
 
 async function play(playNext = false, msg, args = ['']) {
-	const getString = getGetString(msg.guild.id);
+	const getString = getGetString((msg.guild || msg.author).id);
 
 	const tmp = [];
 	args.forEach(a => tmp.push(...a.split('\n')));
@@ -142,14 +142,14 @@ async function play(playNext = false, msg, args = ['']) {
 		await msg.channel.send(getString('play_join_vc'));
 	} else {
 		// Get queue
-		const queue = database.get(msg.guild.id, 'music.queue');
+		const queue = database.get((msg.guild || msg.author).id, 'music.queue');
 
 		// Join if not already joined
-		let connection = connections[msg.guild.id] || msg.guild.voice ? msg.guild.connection : undefined;
+		let connection = connections[(msg.guild || msg.author).id] || msg.guild.voice ? msg.guild.connection : undefined;
 		if (!connection) {
 			connection = await msg.member.voice.channel.join();
 		}
-		connections[msg.guild.id] = connection;
+		connections[(msg.guild || msg.author).id] = connection;
 
 		// Play song
 		const url = args[0];
@@ -241,7 +241,7 @@ async function play(playNext = false, msg, args = ['']) {
 					}
 
 					if (sp) {
-						await nextSong(msg.guild.id, queue);
+						await nextSong((msg.guild || msg.author).id, queue);
 						await msg.channel.send(getString('music_now_playing').format(queue.songs[0].title));
 					}
 				} catch (err) {
@@ -282,7 +282,7 @@ async function play(playNext = false, msg, args = ['']) {
 				}
 				await msg.channel.send(getString('play_added_items_to_queue').format(songs.length));
 				if (shouldPlay(connection)) {
-					await nextSong(msg.guild.id, queue);
+					await nextSong((msg.guild || msg.author).id, queue);
 					await msg.channel.send(getString('music_now_playing').format(queue.songs[0].title));
 				}
 			} else if (url.match(/^(http(s)?:\/\/)?((w){3}.)?youtu(be|.be)?(\.com)?\/.+/)) {
@@ -311,7 +311,7 @@ async function play(playNext = false, msg, args = ['']) {
 				}
 
 				if (shouldPlay(connection)) {
-					await nextSong(msg.guild.id, queue);
+					await nextSong((msg.guild || msg.author).id, queue);
 					await msg.channel.send(getString('music_now_playing').format(queue.songs[0].title));
 				} else {
 				}
@@ -327,7 +327,7 @@ async function play(playNext = false, msg, args = ['']) {
 				return;
 			}
 		} else if (queue.songs.length !== 0) {
-			await nextSong(msg.guild.id, queue);
+			await nextSong((msg.guild || msg.author).id, queue);
 		} else {
 			await msg.channel.send(
 				new MessageEmbed()
@@ -346,18 +346,18 @@ async function play(playNext = false, msg, args = ['']) {
 }
 
 async function stop(msg) {
-	const getString = getGetString(msg.guild.id);
-	const connection = connections[msg.guild.id];
+	const getString = getGetString((msg.guild || msg.author).id);
+	const connection = connections[(msg.guild || msg.author).id];
 	if (connection) {
-		const queue = database.get(msg.guild.id, 'music.queue');
+		const queue = database.get((msg.guild || msg.author).id, 'music.queue');
 		const song = queue.songs[0];
 		if (connection.dispatcher && !connection.dispatcher.paused && song) {
 			const pauseTime = connection.dispatcher.paused ? Date.now() - connection.dispatcher.pausedSince + song.pauseTime : song.pauseTime;
 			song.seek = msToSeconds(Date.now() - connection.dispatcher.startTime - pauseTime);
-			updateDatabase(queue, msg.guild.id);
+			updateDatabase(queue, (msg.guild || msg.author).id);
 		}
 		connection.disconnect();
-		delete connections[msg.guild.id];
+		delete connections[(msg.guild || msg.author).id];
 		await msg.channel.send(getString('stop_disconnected'));
 	} else {
 		await msg.channel.send(getString('stop_not_connected'));
@@ -365,9 +365,9 @@ async function stop(msg) {
 }
 
 async function skip(msg, [to]) {
-	const getString = getGetString(msg.guild.id);
-	const queue = database.get(msg.guild.id, 'music.queue');
-	const connection = connections[msg.guild.id];
+	const getString = getGetString((msg.guild || msg.author).id);
+	const queue = database.get((msg.guild || msg.author).id, 'music.queue');
+	const connection = connections[(msg.guild || msg.author).id];
 
 	if (connection && connection.dispatcher) {
 		if (to) {
@@ -390,23 +390,23 @@ async function skip(msg, [to]) {
 		await msg.channel.send(getString('skip_notify').format(song, next));
 
 		queue.songs = queue.songs.slice(to);
-		await nextSong(msg.guild.id, queue);
+		await nextSong((msg.guild || msg.author).id, queue);
 	} else {
 		await msg.channel.send(getString('skip_nothing'));
 	}
 }
 
 async function pause(msg) {
-	const getString = getGetString(msg.guild.id);
-	const connection = connections[msg.guild.id];
-	const queue = database.get(msg.guild.id, 'music.queue');
+	const getString = getGetString((msg.guild || msg.author).id);
+	const connection = connections[(msg.guild || msg.author).id];
+	const queue = database.get((msg.guild || msg.author).id, 'music.queue');
 	if (queue.songs.length !== 0 && connection && connection.dispatcher) {
 		if (!connection.dispatcher.paused) {
 			const song = queue.songs[0];
 			if (song) {
 				const pauseTime = connection.dispatcher.paused ? Date.now() - connection.dispatcher.pausedSince + song.pauseTime : song.pauseTime;
 				song.seek = msToSeconds(Date.now() - connection.dispatcher.startTime - pauseTime);
-				updateDatabase(queue, msg.guild.id);
+				updateDatabase(queue, (msg.guild || msg.author).id);
 			}
 
 			connection.dispatcher.pause(true);
@@ -420,9 +420,9 @@ async function pause(msg) {
 }
 
 async function resume(msg) {
-	const getString = getGetString(msg.guild.id);
-	const connection = connections[msg.guild.id];
-	const queue = database.get(msg.guild.id, 'music.queue');
+	const getString = getGetString((msg.guild || msg.author).id);
+	const connection = connections[(msg.guild || msg.author).id];
+	const queue = database.get((msg.guild || msg.author).id, 'music.queue');
 	if (queue.songs.length !== 0) {
 		if (!connection || !connection.dispatcher) {
 			await play(false, msg, []);
@@ -440,9 +440,9 @@ async function resume(msg) {
 }
 
 async function queue(msg) {
-	const getString = getGetString(msg.guild.id);
+	const getString = getGetString((msg.guild || msg.author).id);
 
-	const queue = database.get(msg.guild.id, 'music.queue');
+	const queue = database.get((msg.guild || msg.author).id, 'music.queue');
 	if (queue.songs.length !== 0) {
 		const perPage = 20;
 		const pages = queue.songs.length / perPage;
@@ -497,17 +497,17 @@ async function queue(msg) {
 }
 
 async function remove(msg, [item], log = true) {
-	const getString = getGetString(msg.guild.id);
+	const getString = getGetString((msg.guild || msg.author).id);
 	if (item) {
-		const connection = connections[msg.guild.id];
-		const queue = database.get(msg.guild.id, 'music.queue');
+		const connection = connections[(msg.guild || msg.author).id];
+		const queue = database.get((msg.guild || msg.author).id, 'music.queue');
 		if (queue.songs.length > 0) {
 			if (item === 'all') {
 				queue.songs = [];
 				if (connection && connection.dispatcher) {
 					connection.dispatcher.destroy();
 				}
-				updateDatabase(queue, msg.guild.id);
+				updateDatabase(queue, (msg.guild || msg.author).id);
 				if (log) {
 					await msg.channel.send(getString('remove_cleared'));
 				}
@@ -529,7 +529,7 @@ async function remove(msg, [item], log = true) {
 						deleted = queue.songs.splice(item, 1);
 					}
 					await msg.channel.send(getString('remove_song').format(deleted[0].title));
-					updateDatabase(queue, msg.guild.id);
+					updateDatabase(queue, (msg.guild || msg.author).id);
 				}
 			} else {
 				await msg.channel.send(getString('remove_invalid_id'));
@@ -549,10 +549,10 @@ async function clear(msg) {
 }
 
 async function now(msg) {
-	const getString = getGetString(msg.guild.id);
+	const getString = getGetString((msg.guild || msg.author).id);
 
-	const connection = connections[msg.guild.id];
-	const queue = database.get(msg.guild.id, 'music.queue');
+	const connection = connections[(msg.guild || msg.author).id];
+	const queue = database.get((msg.guild || msg.author).id, 'music.queue');
 	if (connection && connection.dispatcher) {
 		const song = queue.songs[0];
 
@@ -575,8 +575,8 @@ async function now(msg) {
 }
 
 async function repeat(msg, [what]) {
-	const getString = getGetString(msg.guild.id);
-	const queue = database.get(msg.guild.id, 'music.queue');
+	const getString = getGetString((msg.guild || msg.author).id);
+	const queue = database.get((msg.guild || msg.author).id, 'music.queue');
 	const options = {
 		'disable': 0,
 		'queue': 1,
@@ -586,7 +586,7 @@ async function repeat(msg, [what]) {
 	what = options[what];
 	if (what !== undefined) {
 		queue.repeat = what;
-		updateDatabase(queue, msg.guild.id);
+		updateDatabase(queue, (msg.guild || msg.author).id);
 	} else {
 		help = getString('repeat_options') + '\n\n';
 	}
@@ -602,8 +602,8 @@ async function repeat(msg, [what]) {
 }
 
 async function shuffle(msg) {
-	const getString = getGetString(msg.guild.id);
-	const queue = database.get(msg.guild.id, 'music.queue');
+	const getString = getGetString((msg.guild || msg.author).id);
+	const queue = database.get((msg.guild || msg.author).id, 'music.queue');
 	const first = queue.songs.shift();
 	const songs = queue.songs;
 	for (let i = 0; i < 1000; i++) {
@@ -614,13 +614,13 @@ async function shuffle(msg) {
 		songs[rand2] = tmp;
 	}
 	queue.songs.unshift(first);
-	database.set(msg.guild.id, queue, 'music.queue');
+	database.set((msg.guild || msg.author).id, queue, 'music.queue');
 	await msg.channel.send(getString('shuffle_shuffled'));
 }
 
 async function playlist(msg, [command, ...name]) {
-	const getString = getGetString(msg.guild.id);
-	const music = database.get(msg.guild.id, 'music');
+	const getString = getGetString((msg.guild || msg.author).id);
+	const music = database.get((msg.guild || msg.author).id, 'music');
 	if (command && name.length !== 0) {
 		name = name.join(' ');
 		const playlist = music.playlists[name];
@@ -629,7 +629,7 @@ async function playlist(msg, [command, ...name]) {
 			case 'l':
 				if (playlist) {
 					await remove(msg, ['all'], false);
-					database.set(msg.guild.id, playlist, 'music.queue');
+					database.set((msg.guild || msg.author).id, playlist, 'music.queue');
 					await msg.channel.send(getString('playlist_load').format(playlist.songs.length, name));
 					await play(false, msg, []);
 				} else {
@@ -643,7 +643,7 @@ async function playlist(msg, [command, ...name]) {
 						await msg.channel.send(getString('playlist_exists').format(name));
 					} else {
 						music.queue.songs[0].seek = 0;
-						database.set(msg.guild.id, music.queue, 'music.playlists.' + name);
+						database.set((msg.guild || msg.author).id, music.queue, 'music.playlists.' + name);
 						await msg.channel.send(getString('playlist_saved').format(name, music.queue.songs.length));
 					}
 				} else {
@@ -653,7 +653,7 @@ async function playlist(msg, [command, ...name]) {
 			case 'rm':
 			case 'remove':
 				if (playlist) {
-					database.delete(msg.guild.id, `music.playlists.${name}`);
+					database.delete((msg.guild || msg.author).id, `music.playlists.${name}`);
 					await msg.channel.send(getString('playlist_removed').format(name));
 				} else {
 					await msg.channel.send(getString('playlist_not_found').format(name));
@@ -677,12 +677,12 @@ async function playlist(msg, [command, ...name]) {
 }
 
 async function volume(msg, [percentage]) {
-	const getString = getGetString(msg.guild.id);
+	const getString = getGetString((msg.guild || msg.author).id);
 
 	if (percentage) {
 		if (!isNaN(percentage) && percentage >= 0 && percentage <= 500) {
-			const connection = connections[msg.guild.id];
-			database.set(msg.guild.id, percentage, 'music.volume');
+			const connection = connections[(msg.guild || msg.author).id];
+			database.set((msg.guild || msg.author).id, percentage, 'music.volume');
 			if (connection && connection.dispatcher) {
 				connection.dispatcher.setVolume(percentage / 100);
 			}
@@ -691,7 +691,7 @@ async function volume(msg, [percentage]) {
 			await msg.channel.send(getString('volume_invalid'));
 		}
 	} else {
-		const volume = database.get(msg.guild.id, 'music.volume');
+		const volume = database.get((msg.guild || msg.author).id, 'music.volume');
 		await msg.channel.send(getString('volume_current').format(volume));
 	}
 }
@@ -700,65 +700,79 @@ module.exports = {
 	'play': {
 		'function': async (msg, args) => play(false, msg, args),
 		'group': 'music',
-		'permissions': 36700160
+		'permissions': 36700160,
+		'no_dm': true
 	},
 	'playnext': {
 		'function': async (msg, args) => play(true, msg, args),
 		'group': 'music',
-		'permissions': 36700160
+		'permissions': 36700160,
+		'no_dm': true
 	},
 	'stop': {
 		'function': stop,
 		'group': 'music',
-		'permissions': 36700160
+		'permissions': 36700160,
+		'no_dm': true
 	},
 	'skip': {
 		'function': skip,
 		'group': 'music',
-		'permissions': 36700160
+		'permissions': 36700160,
+		'no_dm': true
 	},
 	'pause': {
 		'function': pause,
 		'group': 'music',
-		'permissions': 36700160
+		'permissions': 36700160,
+		'no_dm': true
 	},
 	'resume': {
 		'function': resume,
 		'group': 'music',
-		'permissions': 36700160
+		'permissions': 36700160,
+		'no_dm': true
 	},
 	'queue': {
 		'function': queue,
 		'group': 'music',
-		'permissions': 59456
+		'permissions': 59456,
+		'no_dm': true
 	},
 	'clear': {
 		'function': clear,
 		'group': 'music',
+		'no_dm': true
 	},
 	'remove': {
 		'function': remove,
 		'group': 'music',
+		'no_dm': true
 	},
 	'now': {
 		'function': now,
 		'group': 'music',
+		'no_dm': true
 	},
 	'repeat': {
 		'function': repeat,
 		'group': 'music',
+		'no_dm': true
 	},
 	'shuffle': {
 		'function': shuffle,
 		'group': 'music',
+		'no_dm': true
 	},
 	'playlist': {
 		'function': playlist,
 		'group': 'music',
+		'no_dm': true
 	},
 	'volume': {
 		'function': volume,
 		'group': 'music',
+		'no_dm': true
 	},
 };
 

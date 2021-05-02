@@ -14,12 +14,12 @@ for (const [name, cmd] of Object.entries(commands)) {
 }
 
 async function help(msg, [command]) {
-	const prefix = database.get(msg.guild.id, 'settings.prefix') + (database.get(msg.guild.id, 'settings.space') ? ' ' : '');
+	const prefix = database.get((msg.guild || msg.author).id, 'settings.prefix') + (database.get((msg.guild || msg.author).id, 'settings.space') ? ' ' : '');
 	if (command) {
 		let cmd = commands[command] || command === 'help';
 
 		while (!cmd) {
-			const aliasCommand = database.get(msg.guild.id, `aliases.${command}`);
+			const aliasCommand = database.get((msg.guild || msg.author).id, `aliases.${command}`);
 			if (aliasCommand) {
 				cmd = commands[aliasCommand.command];
 				command = aliasCommand.command;
@@ -32,9 +32,9 @@ async function help(msg, [command]) {
 			const embed = new MessageEmbed()
 				.setTitle(command)
 				.addField(
-					strings.getString(msg.guild.id, `${command}_description`),
+					strings.getString((msg.guild || msg.author).id, `${command}_description`),
 					'```apache\n' +
-					strings.getString(msg.guild.id, `${command}_help`).format(prefix) +
+					strings.getString((msg.guild || msg.author).id, `${command}_help`).format(prefix) +
 					'```');
 
 			await msg.channel.send(embed);

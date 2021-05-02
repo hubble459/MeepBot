@@ -5,12 +5,12 @@ async function nick(msg, args) {
 		try {
 			const nickname = args.join(' ');
 			await msg.guild.me.setNickname(nickname);
-			await msg.channel.send(getString(msg.guild.id, 'nick_changed').format(nickname));
+			await msg.channel.send(getString((msg.guild || msg.author).id, 'nick_changed').format(nickname));
 		} catch (e) {
 			await msg.channel.send(e.message);
 		}
 	} else {
-		await msg.channel.send(getString(msg.guild.id, 'nick_empty'));
+		await msg.channel.send(getString((msg.guild || msg.author).id, 'nick_empty'));
 	}
 }
 
