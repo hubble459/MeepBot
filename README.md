@@ -16,14 +16,7 @@ Bot for meeping
 
 ## Install
 
-Create a file with the name `config.js` in de `src/utils/` folder.  
-The file should look like this:
-
-```javascript
-module.exports = {
-  token: 'my discord bot token here'
-};
-```
+make env for discord token
 
 After making this file, you can install the dependencies and run the program with the following:
 
