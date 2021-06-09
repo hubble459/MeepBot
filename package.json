@@ -1,8 +1,9 @@
 {
-  "name": "meep_bot",
+  "name": "@hubble34/meep_bot",
   "version": "1.0.3",
   "description": "Discord Bot",
   "main": "lib/index.js",
+  "private": "true",
   "types": "lib/index.d.ts",
   "files": [
     "lib/**/*"
