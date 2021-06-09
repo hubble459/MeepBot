@@ -1,5 +1,5 @@
 {
-  "name": "@hubble34/meep_bot",
+  "name": "meep_bot",
   "version": "1.0.4",
   "description": "Discord Bot",
   "main": "lib/index.js",
