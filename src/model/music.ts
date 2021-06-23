@@ -18,6 +18,7 @@ export type Song = {
     thumbnail?: string;
     durationMS: number;
     isLive: boolean;
+    artist?: string;
     requestor: {
         name: string;
         avatar: string;

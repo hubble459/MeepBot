@@ -1,5 +1,4 @@
 import { MessageEmbed } from 'discord.js';
-import ytdl from 'ytdl-core';
 import ytpl from 'ytpl';
 import ytsr, { Video } from 'ytsr';
 import { Spotify } from 'simple-spotify';
@@ -9,11 +8,12 @@ import MessageInteractionEvent from '../../model/interaction/message_interaction
 import SlashInteractionEvent from '../../model/interaction/slash_interaction_event';
 import { Song, SongType } from '../../model/music';
 import { stringToMilliseconds } from '../../util/util';
+import ytdl from 'ytdl-core';
+
+const spotify: Spotify = new Spotify();
 
 @Command('play', Category.music, 0, 'p')
 class Play {
-    private readonly spotify: Spotify = new Spotify();
-
     @args(/^(https?:\/\/)?(w{3}\.)?youtu(be|\.be)?(\.com)?\/.*\?.*list=.+$/, 'song', 'Song or URL', true)
     async playYTPlaylist({ interaction }: ExecData) {
         const url = interaction.args[0] as string;
@@ -66,6 +66,55 @@ class Play {
         }
     }
 
+    @args(spotify.playlistRegex)
+    async playSpotifyPlaylist({ interaction }: ExecData) {
+        const url = interaction.args[0] as string;
+        const playlist = await spotify.playlist(url);
+        const songs: Song[] = [];
+        for (const item of playlist.tracks.items) {
+            const track = item.track;
+            const song: Song = {
+                artist: track.artists[0].name,
+                title: track.name,
+                thumbnail: track.album
+                    ? track.album.images[0].url
+                    : track.artists[0].images
+                    ? track.artists[0].images[0].url
+                    : undefined,
+                isLive: false,
+                type: SongType.SPOTIFY,
+                durationMS: track.duration_ms,
+                url: track.href,
+                requestor: this.getRequestor(interaction)
+            };
+            songs.push(song);
+        }
+
+        await interaction.bot.musicPlayer.play(interaction, ...songs);
+    }
+
+    @args(spotify.trackRegex)
+    async playSpotifyTrack({ interaction }: ExecData) {
+        const url = interaction.args[0] as string;
+        const track = await spotify.track(url);
+        const song: Song = {
+            artist: track.artists[0].name,
+            title: track.name,
+            thumbnail: track.album
+                ? track.album.images[0].url
+                : track.artists[0].images
+                ? track.artists[0].images[0].url
+                : undefined,
+            isLive: false,
+            type: SongType.SPOTIFY,
+            durationMS: track.duration_ms,
+            url: track.href,
+            requestor: this.getRequestor(interaction)
+        };
+
+        await interaction.bot.musicPlayer.play(interaction, song);
+    }
+
     @args(/^(https?:\/\/)?(w{3}\.)?soundcloud\.com\/.+/)
     async playSoundcloud({ interaction }: ExecData) {
         const url = interaction.args[0] as string;
@@ -105,6 +154,14 @@ class Play {
     @args(['**'])
     async playSearch({ interaction }: ExecData) {
         const query = interaction.args.join(' ');
+        const song = await Play.searchYoutube(query);
+        if (song) {
+            song.requestor = this.getRequestor(interaction);
+            await interaction.bot.musicPlayer.play(interaction, song);
+        }
+    }
+
+    static async searchYoutube(query: string) {
         const queryFilterMap = await ytsr.getFilters(query);
         if (queryFilterMap) {
             const filters = queryFilterMap.get('Type');
@@ -112,21 +169,19 @@ class Play {
                 const filter = filters.get('Video');
                 if (filter && filter.url) {
                     const items = (await ytsr(filter.url, { limit: 5 })).items as Video[];
-                    const requestor = this.getRequestor(interaction);
                     for (const video of items) {
                         if (!video.upcoming && !video.isUpcoming) {
                             // TODO: Show choice menu
-                            const song: Song = {
+                            const song = {
                                 title: video.title,
                                 thumbnail: video.bestThumbnail.url || undefined,
                                 isLive: video.isLive,
                                 durationMS: stringToMilliseconds(video.duration || undefined),
                                 type: SongType.YOUTUBE,
-                                url: video.url,
-                                requestor
+                                url: video.url
                             };
 
-                            await interaction.bot.musicPlayer.play(interaction, song);
+                            return song as Song;
                             break;
                         }
                     }

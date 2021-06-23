@@ -28,7 +28,7 @@ abstract class InteractionEvent {
     readonly member?: GuildMember;
     readonly settings: Settings;
     readonly getString: (key: string, ...format: any[]) => string;
-    readonly tag: (text: TemplateStringsArray, ...vars: any[]) => string;
+    readonly tag: (...args: any) => any[];
     author: User;
 
     constructor(bot: MeepBot, data: any) {
@@ -61,17 +61,12 @@ abstract class InteractionEvent {
 
         this.getString = (key: string, ...format: any[]) =>
             this.bot.locales.string(this.settings.language, key).format(...format);
-        this.tag = (text: TemplateStringsArray, ...vars: any[]) => {
-            // Clone text
-            const t = text.slice();
-            for (let i = 0; i < text.length; i++) {
-                t.splice(t.indexOf(text[i], i) + 1, 0, vars.shift());
-            }
+        this.tag = (...args: any[]) => {
             let id = this.user.id;
             if (this.guild) {
                 id = this.guild.id;
             }
-            return '[' + id.slice(0, 5).color('fgMagenta') + '] ' + t.join('');
+            return ['[' + id.slice(0, 5).color('fgMagenta') + ']', ...args];
         };
     }
 }

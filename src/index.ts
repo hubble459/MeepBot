@@ -89,12 +89,12 @@ class MeepBot extends Client {
             const command = this.parseCommand(settings, cleanContent);
             if (command) {
                 const interaction = new MessageInteractionEvent(this, msg);
-                console.log(interaction.tag`[${'MESSAGE'.color('fgYellow')}]`, command.name);
+                console.log(...interaction.tag(`[${'MESSAGE'.color('fgYellow')}]`), command.name);
 
                 try {
                     await command.execute({ interaction, messageInteraction: interaction });
                 } catch (e) {
-                    console.error(e);
+                    console.error(...interaction.tag(e));
                 }
             }
         }
@@ -161,11 +161,11 @@ class MeepBot extends Client {
             const commandName = interaction.data.name.toLowerCase();
             const command = this.getCommand(interaction.settings, commandName);
             if (command) {
-                console.log(interaction.tag`[${'SLASH'.color('fgGreen')}]`, command.name);
+                console.log(...interaction.tag(`[${'SLASH'.color('fgGreen')}]`), command.name);
                 try {
                     await command.execute({ interaction, slashInteraction: interaction });
                 } catch (e) {
-                    console.error(e);
+                    console.error(...interaction.tag(e));
                 }
             }
         } else if (data.type === InteractionType.button) {
@@ -175,10 +175,10 @@ class MeepBot extends Client {
             const command = this.commandMap.find((cmd) => cmd.buttonIds.includes(customId));
             if (command) {
                 try {
-                    console.log(interaction.tag`[${'BUTTON'.color('fgGreen')}]`, customId);
+                    console.log(...interaction.tag(`[${'BUTTON'.color('fgGreen')}]`), customId);
                     await command.button(interaction);
                 } catch (e) {
-                    console.error(e);
+                    console.error(...interaction.tag(e));
                 }
             }
             if (!interaction.deferred && !interaction.replied) {

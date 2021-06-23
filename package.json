@@ -64,7 +64,6 @@
     "soundcloud.ts": "^0.4.0",
     "utf-8-validate": "^5.0.5",
     "xml2js": "^0.4.23",
-    "youtube-dl-binary": "^1.0.0",
     "ytdl-core": "^4.8.2",
     "ytpl": "^2.2.1",
     "ytsr": "^3.5.0"

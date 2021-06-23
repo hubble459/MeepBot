@@ -97,7 +97,11 @@ class Meep {
     }
 
     private async hentaiHomePage(interaction: SlashInteractionEvent | MessageInteractionEvent, hentai: Hentai) {
-        const embed = new MessageEmbed().setTitle(hentai.cleanTitle).setURL(hentai.url).setThumbnail(hentai.cover).setColor('#b00b69');
+        const embed = new MessageEmbed()
+            .setTitle(hentai.cleanTitle)
+            .setURL(hentai.url)
+            .setThumbnail(hentai.cover)
+            .setColor('#b00b69');
         if (hentai.parodies.length) embed.addField('parodies', this.stringArrayToCodeParts(hentai.parodies, 'parody'));
         if (hentai.characters.length)
             embed.addField('characters', this.stringArrayToCodeParts(hentai.characters, 'character'));

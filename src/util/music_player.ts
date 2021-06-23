@@ -1,13 +1,15 @@
 import { Message, MessageEmbed } from 'discord.js';
 import Enmap from 'enmap';
 import Soundcloud from 'soundcloud.ts';
-// import ytdl from "ytdl-core";
 import MessageInteractionEvent from '../model/interaction/message_interaction_event';
 import SlashInteractionEvent from '../model/interaction/slash_interaction_event';
 import { Music, RepeatType, Song, SongType } from '../model/music';
 import { millisecondsToTime } from './util';
 // @ts-ignore
-import ytdl from 'magmaplayer';
+import youtube_dl from 'magmaplayer';
+import ytsr, { Video } from 'ytsr';
+import Play from '../commands/music/play';
+import ButtonInteractionEvent from '../model/interaction/button_interaction_event';
 
 class MusicPlayer {
     public readonly soundcloud: Soundcloud;
@@ -41,7 +43,7 @@ class MusicPlayer {
         }
     }
 
-    public getMusic(interaction: MessageInteractionEvent | SlashInteractionEvent) {
+    public getMusic(interaction: MessageInteractionEvent | SlashInteractionEvent | ButtonInteractionEvent) {
         if (interaction.guild) {
             return this.musicMap.get(interaction.guild.id) as Music;
         }
@@ -54,10 +56,9 @@ class MusicPlayer {
             if (music) {
                 const song = music.queue[music.current];
                 const next = music.queue[music.current + 1];
-                this.musicMap.set(interaction.guild!.id, music.current + 1, 'current');
 
                 if (connection.dispatcher) {
-                    connection.dispatcher.destroy();
+                    connection.dispatcher.end();
                 }
                 const message = await interaction.send(
                     interaction.getString('skip_notify', song.title, next ? next.title : 'nothing')
@@ -73,9 +74,14 @@ class MusicPlayer {
         message?: Message
     ) {
         const music = this.getMusic(interaction);
-
-        if (music && (music.queue.length === 1)) {
+        
+        if (
+            music &&
+            (music.current < music.queue.length ||
+                (music.current === music.queue.length && music.repeat === RepeatType.QUEUE_REPEAT))
+        ) {
             const connection = await this.connect(interaction, true);
+
             if (connection) {
                 const song = music.queue[music.current];
                 if (respond) {
@@ -85,7 +91,7 @@ class MusicPlayer {
                         .setColor('#b00b69')
                         .setThumbnail(song.thumbnail || '')
                         .addField('Duration', millisecondsToTime(song.durationMS))
-                        .setFooter(`Requested by ${song.requestor.name}`);
+                        .setAuthor(`Requested by ${song.requestor.name}`, song.requestor.avatar);
                     if (!message) {
                         message = await interaction.send(embed);
                     } else if (interaction instanceof MessageInteractionEvent) {
@@ -98,17 +104,20 @@ class MusicPlayer {
                 let stream: any = song.url;
 
                 if (song.type === SongType.YOUTUBE) {
-                    stream = ytdl(song.url);
+                    stream = youtube_dl(song.url);
                 } else if (song.type === SongType.SOUNDCLOUD) {
                     stream = await this.soundcloud.util.streamTrack(stream);
                 } else if (song.type === SongType.SPOTIFY) {
-                    // TODO: Add SFDL
+                    const track = await Play.searchYoutube(song.artist + ' ' + song.title);
+                    if (track) {
+                        stream = youtube_dl(track.url);
+                    }
                 }
 
                 connection
                     .play(stream)
                     .on('finish', () => {
-                        if (music.repeat !== RepeatType.SONG_REPEAT) {
+                        if (music.repeat !== RepeatType.SONG_REPEAT) {                            
                             this.musicMap.set(
                                 interaction.guild!.id,
                                 ((music.current + 1) % music.queue.length) -
@@ -120,11 +129,16 @@ class MusicPlayer {
                         this.nextSong(interaction, true, message);
                     })
                     .on('error', (e) => {
-                        console.error(interaction.tag`${e}`);
+                        console.error(...interaction.tag(e));
                         this.skip(interaction);
                     });
             }
         }
+    }
+
+    async currentlyPlaying(interaction: MessageInteractionEvent | SlashInteractionEvent) {
+        const conn = await this.getConnection(interaction);
+        return conn && conn.voice && conn.voice.connection && conn.voice.connection.dispatcher;
     }
 
     async connect(interaction: MessageInteractionEvent | SlashInteractionEvent, system: boolean = false) {

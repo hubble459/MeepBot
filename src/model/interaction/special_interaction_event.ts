@@ -35,7 +35,7 @@ abstract class SpecialInteractionEvent extends InteractionEvent {
 
     constructor(bot: MeepBot, data: any) {
         super(bot, data);
-        this.replied = (!!data.message);
+        this.replied = !!data.message;
         this.deferred = false;
         this.endpoint = `https://discord.com/api/webhooks/${this.applicationId}/${this.token}/messages/@original`;
     }
@@ -102,17 +102,13 @@ abstract class SpecialInteractionEvent extends InteractionEvent {
         ephemeral: boolean = false,
         ...embeds: (MessageEmbed | MessageButton)[]
     ) {
-
         if (this.deferred || this.replied) {
             const postData = SpecialInteractionEvent.postData(this.deferred, data, ephemeral, embeds);
 
             let msg: Message;
             if (this.message && this.message.edit) {
                 // @ts-ignore
-                msg = await this.bot.api.channels[this.channel.id]
-                    .messages(this.message.id)
-                    .patch(postData.data)
-
+                msg = await this.bot.api.channels[this.channel.id].messages(this.message.id).patch(postData.data);
             } else {
                 msg = await this.api('PATCH', postData.data.data);
             }
