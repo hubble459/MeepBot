@@ -42,3 +42,7 @@ lib/
 # Gatsby files
 .idea/
 .cache/
+
+# OWO
+owo.ts
+database/enmap.*
