@@ -46,3 +46,4 @@ lib/
 # OWO
 owo.ts
 database/enmap.*
+.vscode

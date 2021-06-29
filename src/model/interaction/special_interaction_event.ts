@@ -41,9 +41,9 @@ abstract class SpecialInteractionEvent extends InteractionEvent {
     }
 
     public async defer(ephemeral: boolean = false) {
-        if (this.deferred || this.replied) {
-            throw new Error('BUTTON_ALREADY_REPLIED: This interaction already has a reply');
-        }
+        // if (this.deferred || this.replied) {
+        //     throw new Error('BUTTON_ALREADY_REPLIED: This interaction already has a reply');
+        // }
         // @ts-ignore
         await this.bot.api.interactions(this.id, this.token).callback.post({
             data: {
@@ -57,9 +57,9 @@ abstract class SpecialInteractionEvent extends InteractionEvent {
     }
 
     public async think(ephemeral: boolean = false): Promise<Message> {
-        if (this.deferred || this.replied) {
-            throw new Error('BUTTON_ALREADY_REPLIED: This interaction already has a reply');
-        }
+        // if (this.deferred || this.replied) {
+        //     throw new Error('BUTTON_ALREADY_REPLIED: This interaction already has a reply');
+        // }
         // @ts-ignore
         await this.bot.api.interactions(this.id, this.token).callback.post({
             data: {

@@ -1,7 +1,7 @@
 import { MessageEmbed } from 'discord.js';
 import ytpl from 'ytpl';
 import ytsr, { Video } from 'ytsr';
-import { Spotify } from 'simple-spotify';
+import { Spotify, SpotifyTrack } from 'simple-spotify';
 import Category from '../../model/category';
 import { args, bad, Command, ExecData } from '../../model/docorators/command';
 import MessageInteractionEvent from '../../model/interaction/message_interaction_event';
@@ -113,6 +113,57 @@ class Play {
         };
 
         await interaction.bot.musicPlayer.play(interaction, song);
+    }
+
+    @args(spotify.albumRegex)
+    async playSpotifyAlbum({ interaction }: ExecData) {
+        const url = interaction.args[0] as string;
+        const album = await spotify.album(url);
+        const tracks = await album.tracks();
+
+        const songs: Song[] = tracks.map(track => {
+            return {
+                artist: track.artists[0].name,
+                title: track.name,
+                thumbnail: album.images[0].url,
+                isLive: false,
+                type: SongType.SPOTIFY,
+                durationMS: track.duration_ms,
+                url: track.href,
+                requestor: this.getRequestor(interaction)
+            };
+        });
+
+        await interaction.bot.musicPlayer.play(interaction, ...songs);
+    }
+
+    @args(spotify.artistRegex)
+    async playSpotifyArtist({ interaction }: ExecData) {
+        const url = interaction.args[0] as string;
+        const artist = await spotify.artist(url);
+        const albums = await artist.albums();
+        const allSongs: Song[] = [];
+        for (const album of albums) {
+            const tracks = await album.tracks();
+            const songs: Song[] = tracks.map(track => {
+                return {
+                    artist: track.artists[0].name,
+                    title: track.name,
+                    thumbnail: track.album
+                        ? track.album.images[0].url
+                        : track.artists[0].images
+                        ? track.artists[0].images[0].url
+                        : undefined,
+                    isLive: false,
+                    type: SongType.SPOTIFY,
+                    durationMS: track.duration_ms,
+                    url: track.href,
+                    requestor: this.getRequestor(interaction)
+                };
+            });
+            allSongs.push(...songs);
+        }
+        await interaction.bot.musicPlayer.play(interaction, ...allSongs);
     }
 
     @args(/^(https?:\/\/)?(w{3}\.)?soundcloud\.com\/.+/)

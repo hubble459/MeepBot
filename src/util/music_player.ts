@@ -5,11 +5,14 @@ import MessageInteractionEvent from '../model/interaction/message_interaction_ev
 import SlashInteractionEvent from '../model/interaction/slash_interaction_event';
 import { Music, RepeatType, Song, SongType } from '../model/music';
 import { millisecondsToTime } from './util';
+import ytdl from 'ytdl-core';
 // @ts-ignore
-import youtube_dl from 'magmaplayer';
-import ytsr, { Video } from 'ytsr';
-import Play from '../commands/music/play';
+// import youtube_dl from 'magmaplayer';
+// import ytdl, { search, YoutubeInfo } from 'better-ytdl';
 import ButtonInteractionEvent from '../model/interaction/button_interaction_event';
+import { Readable } from 'stream';
+import { search, YoutubeInfo } from 'better-ytdl';
+import ytsr, { Video } from 'ytsr';
 
 class MusicPlayer {
     public readonly soundcloud: Soundcloud;
@@ -26,7 +29,8 @@ class MusicPlayer {
     }
 
     public async play(interaction: MessageInteractionEvent | SlashInteractionEvent, ...songs: Song[]) {
-        if (await this.connect(interaction)) {
+        const conn = await this.connect(interaction);
+        if (conn) {
             const musicSettings: Music = {
                 current: 0,
                 queue: [],
@@ -34,12 +38,38 @@ class MusicPlayer {
             };
 
             const guildId = interaction.guild!.id;
-            const music = this.musicMap.ensure(guildId, musicSettings);
+            const music = this.musicMap.ensure(guildId, musicSettings) as Music;
             music.queue = [...music.queue, ...songs];
             music.current = music.queue.length < music.current ? 0 : music.current;
             this.musicMap.set(guildId, music);
 
-            await this.nextSong(interaction);
+            if (!conn.dispatcher) {
+                await this.nextSong(interaction);
+            } else if (songs.length > 1) {
+                interaction.send(
+                    new MessageEmbed()
+                        .setTitle('Queued')
+                        .setAuthor(`Requested by ${songs[0].requestor.name}`, songs[0].requestor.avatar)
+                        .setDescription(`Added ${songs.length} songs`)
+                        .setThumbnail(songs[0].thumbnail || '')
+                        .addField('Duration', millisecondsToTime(songs.reduce((dur, song) => dur += song.durationMS, 0)))
+                        .setColor('#696969')
+                )
+            } else {
+                const song = songs[0];
+                const pos = music.queue.indexOf(song);
+                const durationUntil = music.queue.slice(music.current, pos).reduce((dur, song) => dur += song.durationMS, 0);
+                interaction.send(
+                    new MessageEmbed()
+                        .setTitle('Queued')
+                        .setAuthor(`Requested by ${song.requestor.name}`, song.requestor.avatar)
+                        .setDescription(`[${song.title}](${song.url})`)
+                        .setThumbnail(song.thumbnail || '')
+                        .addField('Duration', millisecondsToTime(song.durationMS))
+                        .addField('Will play after', millisecondsToTime(durationUntil))
+                        .setColor('#696969')
+                )
+            }
         }
     }
 
@@ -60,10 +90,9 @@ class MusicPlayer {
                 if (connection.dispatcher) {
                     connection.dispatcher.end();
                 }
-                const message = await interaction.send(
+                await interaction.send(
                     interaction.getString('skip_notify', song.title, next ? next.title : 'nothing')
                 );
-                await this.nextSong(interaction, false, message);
             }
         }
     }
@@ -74,16 +103,36 @@ class MusicPlayer {
         message?: Message
     ) {
         const music = this.getMusic(interaction);
-        
-        if (
-            music &&
-            (music.current < music.queue.length ||
-                (music.current === music.queue.length && music.repeat === RepeatType.QUEUE_REPEAT))
-        ) {
+
+        if (music && music.queue.length) {
             const connection = await this.connect(interaction, true);
 
             if (connection) {
                 const song = music.queue[music.current];
+
+                if (!song) {
+                    return;
+                }
+
+                let stream: string | Readable = song.url;
+
+                if (song.type === SongType.YOUTUBE) {
+                    stream = ytdl(song.url);
+                } else if (song.type === SongType.SOUNDCLOUD) {
+                    stream = await this.soundcloud.util.streamTrack(stream) as Readable;
+                } else if (song.type === SongType.SPOTIFY) {
+                    const searchResults = await this.searchYoutube(song.artist + ' ' + song.title);
+                    if (searchResults && searchResults[0]) {
+                        song.url = searchResults[0].url;
+                        stream = ytdl(searchResults[0].url);
+                    } else {
+                        await interaction.send(`ooga booga, song not found (${song.artist + ' ' + song.title})`);
+                        this.musicMap.set(interaction.guild!.id, music.current + 1, 'current');
+                        await this.nextSong(interaction);
+                        return;
+                    }
+                }
+
                 if (respond) {
                     const embed = new MessageEmbed()
                         .setTitle('Playing')
@@ -101,39 +150,54 @@ class MusicPlayer {
                     }
                 }
 
-                let stream: any = song.url;
+                if (!connection.dispatcher) {
+                    connection
+                        .play(stream)
+                        .on('close', () => {
+                            if (music.repeat === RepeatType.NO_REPEAT && music.queue.length === music.current + 3) {
+                                return;
+                            }
 
-                if (song.type === SongType.YOUTUBE) {
-                    stream = youtube_dl(song.url);
-                } else if (song.type === SongType.SOUNDCLOUD) {
-                    stream = await this.soundcloud.util.streamTrack(stream);
-                } else if (song.type === SongType.SPOTIFY) {
-                    const track = await Play.searchYoutube(song.artist + ' ' + song.title);
-                    if (track) {
-                        stream = youtube_dl(track.url);
-                    }
+                            if (music.repeat !== RepeatType.SONG_REPEAT) {
+                                this.musicMap.set(
+                                    interaction.guild!.id,
+                                    (music.repeat === RepeatType.QUEUE_REPEAT ? (music.current + 1) % music.queue.length : music.current + 1),
+                                    'current'
+                                );
+                            }
+                            this.nextSong(interaction, true, message);
+                        })
+                        .on('error', (e) => {
+                            console.error(...interaction.tag(e));
+                            this.skip(interaction);
+                        });
                 }
-
-                connection
-                    .play(stream)
-                    .on('finish', () => {
-                        if (music.repeat !== RepeatType.SONG_REPEAT) {                            
-                            this.musicMap.set(
-                                interaction.guild!.id,
-                                ((music.current + 1) % music.queue.length) -
-                                (music.repeat === RepeatType.QUEUE_REPEAT ? 1 : 0),
-                                'current'
-                            );
-                            //music.repeat === RepeatType.QUEUE_REPEAT
-                        }
-                        this.nextSong(interaction, true, message);
-                    })
-                    .on('error', (e) => {
-                        console.error(...interaction.tag(e));
-                        this.skip(interaction);
-                    });
             }
         }
+    }
+
+    async searchYoutube(query: string, limit: number = 1) {
+        // const filter1 = await ytsr.getFilters(query);
+        // if (filter1) {
+        //     const filter2 = filter1.get('Type');
+        //     if (filter2) {
+        //         const filter3 = filter2.get('Video');
+        //         if (filter3 && filter3.url) {
+        //             const filter4 = await ytsr.getFilters(filter3.url);
+        //             if (filter4) {
+        //                 const filter5 = filter4.get('Features');
+        //                 if (filter5) {
+        //                     const filter6 = filter5.get('Live');
+        //                     if (filter6 && filter6.url) {
+                                // const searchResults = await ytsr(filter6.url, { limit });
+                                const searchResults = await ytsr(query, { limit });                                
+                                return searchResults.items as Video[];
+        //                     }
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }        
     }
 
     async currentlyPlaying(interaction: MessageInteractionEvent | SlashInteractionEvent) {
@@ -173,6 +237,7 @@ class MusicPlayer {
 
         if (interaction.guild) {
             this.musicMap.set(interaction.guild.id, [], 'queue');
+            this.musicMap.set(interaction.guild.id, 0, 'current');
             return true;
         }
         return false;

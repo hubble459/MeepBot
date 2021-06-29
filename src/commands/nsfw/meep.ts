@@ -1,12 +1,12 @@
 import { Message, MessageEmbed } from 'discord.js';
-import { Hentai, NHentai, NHentaiSort, NHLanguage, SearchResults } from 'nhentai.js-api';
-import MessageButton from '../model/button/message_button';
-import Category from '../model/category';
-import { bad, button, choice, Command, ExecData, option, sub } from '../model/docorators/command';
-import ButtonInteractionEvent from '../model/interaction/button_interaction_event';
-import MessageInteractionEvent from '../model/interaction/message_interaction_event';
-import SlashInteractionEvent, { SlashOptionTypes } from '../model/interaction/slash_interaction_event';
-import { isTrue } from '../util/util';
+import { Hentai, NHentai, NHentaiSort, NHLanguage, SearchResults, Tag } from 'nhentai.js-api';
+import MessageButton from '../../model/button/message_button';
+import Category from '../../model/category';
+import { args, bad, button, choice, Command, ExecData, option, sub } from '../../model/docorators/command';
+import ButtonInteractionEvent from '../../model/interaction/button_interaction_event';
+import MessageInteractionEvent from '../../model/interaction/message_interaction_event';
+import SlashInteractionEvent, { SlashOptionTypes } from '../../model/interaction/slash_interaction_event';
+import { isTrue } from '../../util/util';
 
 type ImagePagination = {
     title: string;
@@ -91,8 +91,15 @@ class Meep {
     @sub('random', 'random hentai')
     @option('random', 'english', 'get a random english hentai', false, SlashOptionTypes.boolean)
     async random({ interaction }: ExecData) {
-        const english = <string>interaction.args[0];
-        const hentai = await this.nhentai.random(isTrue(english));
+        const english = (<string>interaction.args[0] || 'true').toLowerCase();
+        const hentai = await this.nhentai.random(isTrue(english) || english === 'english');
+        await this.hentaiHomePage(interaction, hentai);
+    }
+
+    @args(/(true|english)?/)
+    async randomEmpty({ interaction }: ExecData) {
+        const english = (<string>interaction.args[0] || 'true').toLowerCase();
+        const hentai = await this.nhentai.random(isTrue(english) || english === 'english');
         await this.hentaiHomePage(interaction, hentai);
     }
 
@@ -102,16 +109,24 @@ class Meep {
             .setURL(hentai.url)
             .setThumbnail(hentai.cover)
             .setColor('#b00b69');
-        if (hentai.parodies.length) embed.addField('parodies', this.stringArrayToCodeParts(hentai.parodies, 'parody'));
-        if (hentai.characters.length)
-            embed.addField('characters', this.stringArrayToCodeParts(hentai.characters, 'character'));
-        if (hentai.tags.length) embed.addField('tags', this.stringArrayToCodeParts(hentai.tags, 'tag'));
-        if (hentai.artists.length) embed.addField('artists', this.stringArrayToCodeParts(hentai.artists, 'artist'));
-        if (hentai.groups.length) embed.addField('groups', this.stringArrayToCodeParts(hentai.groups, 'group'));
-        if (hentai.languages.length)
-            embed.addField('languages', this.stringArrayToCodeParts(hentai.languages, 'language'));
-        if (hentai.categories.length)
-            embed.addField('categories', this.stringArrayToCodeParts(hentai.categories, 'category'));
+        for (const tagGroup in hentai.tags) {
+            if (Object.prototype.hasOwnProperty.call(hentai.tags, tagGroup)) {
+                const tags = <Tag[]>hentai.tags[<never>tagGroup];
+                if (tags.length) {
+                    embed.addField(tagGroup, this.tagArrayToCodeParts(tags))
+                }
+            }
+        }
+        // if (hentai.tags.parodies.length) embed.addField('parodies', this.stringArrayToCodeParts(hentai.parodies, 'parody'));
+        // if (hentai.tags.characters.length)
+        //     embed.addField('characters', this.stringArrayToCodeParts(hentai.characters, 'character'));
+        // if (hentai.tags.tags.length) embed.addField('tags', this.stringArrayToCodeParts(hentai.tags, 'tag'));
+        // if (hentai.tags.artists.length) embed.addField('artists', this.stringArrayToCodeParts(hentai.artists, 'artist'));
+        // if (hentai.tags.groups.length) embed.addField('groups', this.stringArrayToCodeParts(hentai.groups, 'group'));
+        // if (hentai.tags.languages.length)
+        //     embed.addField('languages', this.stringArrayToCodeParts(hentai.languages, 'language'));
+        // if (hentai.tags.categories.length)
+        //     embed.addField('categories', this.stringArrayToCodeParts(hentai.categories, 'category'));
 
         const read = new MessageButton().setLabel('read').setCustomId(MEEP_READ);
 
@@ -201,17 +216,19 @@ class Meep {
         }
     }
 
-    private stringArrayToCodeParts(arr: string[], link?: string) {
+    private tagArrayToCodeParts(arr: Tag[]) {
         const blocks = arr.map((t) =>
-            link ? `[\`${t.replace('|', '-')}\`](https://nhentai.net/${link}/${t.replace(/ /g, '-')})` : '`' + t + '`'
+            `[\`${t.name.replace('|', '-')}\`](${t.url})\`${t.amountString}\``
         );
-        let epp = false;
-        while (blocks.reduce((p, t) => t.length + p + 1, 0) > 1021) {
-            epp = true;
-            blocks.pop();
-        }
-        if (epp) {
-            blocks.push('`...`');
+
+        const size = blocks.reduce((size, tag) => size += tag.length, 0);
+        if (size > 1024) {
+            for (let i = blocks.length - 1; i >= 0; i--) {
+                blocks[i] = '`' + arr[i].name + '``' + arr[i].amountString+ '`';
+                if (blocks.reduce((size, tag) => size += tag.length, 0) <= 1024) {
+                    break;
+                }
+            }
         }
 
         return blocks.join(' ');
@@ -231,8 +248,7 @@ class Meep {
             .setTitle(`Search \`${results.search}\``)
             .setColor('#b00b69')
             .setFooter(
-                `${results.sort} | ${results.total} result${results.total === 1 ? '' : 's'}${
-                    results.total > 0 ? ` | page: ${results.page} of ${results.pages}` : ''
+                `${results.sort} | ${results.total} result${results.total === 1 ? '' : 's'}${results.total > 0 ? ` | page: ${results.page} of ${results.pages}` : ''
                 }`
             );
 

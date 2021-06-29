@@ -12,14 +12,16 @@ class CacheEnmap {
         this.enmap = new Enmap({
             name: 'cache',
             dataDir: databaseDir,
-            autoFetch: true,
-            fetchAll: false
+            fetchAll: true
         });
 
-        // Every 12 hours, remove items that haven't been used in 24 hours
-        setTimeout(
-            () => this.enmap.sweep((val: CachedItem) => !val.used || Date.now() - val.used > 86400000),
-            43200000
+        // Every hour, remove items that haven't been used for 2 hours  
+        setInterval(
+            () => {
+                const removed = this.enmap.sweep(({ used }: CachedItem) => !used || Date.now() - used > 7.2e6);
+                console.log(`[${'SWEEP'.color('fgYellow')}] swept ${removed} items`);
+            },
+            3.6e6
         );
     }
 

@@ -54,6 +54,10 @@ class Queue {
     async queueNext(interaction: ButtonInteractionEvent) {
         const page = <number>interaction.bot.cache.get(interaction.message.id);
         if (page !== undefined) {
+            const music = interaction.bot.musicPlayer.getMusic(interaction);
+            if (!music || page + 1 === Math.ceil(music.queue.length / SONGS_PER_PAGE)) {
+                return;
+            }
             interaction.bot.cache.set(interaction.message.id, page + 1);
             await this.changePage(interaction);
         }
@@ -63,6 +67,9 @@ class Queue {
     async queuePrev(interaction: ButtonInteractionEvent) {
         const page = <number>interaction.bot.cache.get(interaction.message.id);
         if (page !== undefined) {
+            if (page - 1 < 0) {
+                return;
+            }
             interaction.bot.cache.set(interaction.message.id, page - 1);
             await this.changePage(interaction);
         }
@@ -84,7 +91,7 @@ class Queue {
             const queue = music.queue
                 ? music.queue
                     .slice(page * SONGS_PER_PAGE, (page + 1) * SONGS_PER_PAGE)
-                    .map((s, i) => `${i + page * SONGS_PER_PAGE === music.current ? '+' : '-'} ${i + 1 + page * SONGS_PER_PAGE}. ${s.title}`)
+                    .map((s, i) => `${i + page * SONGS_PER_PAGE === music.current ? '!' : '-'}${i + 1 + page * SONGS_PER_PAGE}. ${s.title}`)
                     .join('\n')
                 : 'empty';
             const embed = new MessageEmbed()
@@ -102,8 +109,13 @@ class Queue {
     currentPage(music: Music) {
         const pages = Math.ceil(music.queue.length / SONGS_PER_PAGE);
         const total = music.queue.length;
+        let current = music.current;
 
-        return Math.floor((pages / total) * music.current);
+        if (current >= total) {
+            current = music.queue.length - 1;
+        }
+
+        return Math.floor((pages / total) * current);
     }
 }
 

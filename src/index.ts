@@ -133,11 +133,11 @@ class MeepBot extends Client {
         return this.commandMap.get(commandName) || this.commandMap.find((c) => c.aliases.includes(commandName));
     }
 
-    private onError(error: Error) {}
+    private onError(error: Error) { }
 
-    private onGuildCreate(guild: Guild) {}
+    private onGuildCreate(guild: Guild) { }
 
-    private onGuildDelete(guild: Guild) {}
+    private onGuildDelete(guild: Guild) { }
 
     private onVoiceStateUpdate(oldState: VoiceState, newState: VoiceState) {
         // if (oldState.channel && !newState.channel) {
@@ -181,8 +181,12 @@ class MeepBot extends Client {
                     console.error(...interaction.tag(e));
                 }
             }
-            if (!interaction.deferred && !interaction.replied) {
-                interaction.defer(true);
+            if (!interaction.deferred || !interaction.replied) {
+                try {
+                    await interaction.defer(true);
+                } catch (e) {
+                    console.error(...interaction.tag(`[${'BUTTON'.color('fgGreen')}]`), e);
+                }
             }
         }
     }
