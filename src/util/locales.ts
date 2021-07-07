@@ -1,6 +1,6 @@
 import fs from 'fs';
-import parser from 'xml2js';
 import path from 'path';
+import parser from 'xml2js';
 
 type XMLLocale = {
     resources: {

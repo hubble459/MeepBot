@@ -21,7 +21,7 @@ const MEEP_READ_PREVIOUS = 'meep_read_previous';
 const MEEP_SEARCH_PREVIOUS = 'meep_search_previous';
 const MEEP_SEARCH_NEXT = 'meep_search_next';
 
-@Command('meep', Category.nsfw, 0, 'hentai')
+@Command(['hentai', 'meep'], Category.nsfw)
 class Meep {
     readonly nhentai: NHentai;
 

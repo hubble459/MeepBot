@@ -1,7 +1,7 @@
 import Category from '../model/category';
 import { args, bad, Command, ExecData } from '../model/docorators/command';
 
-@Command('echo', Category.miscellaneous, 0, 'say')
+@Command(['echo', 'say'], Category.miscellaneous)
 class Echo {
     @args(['**'], 'text', 'text to echo', true)
     async echo({ interaction }: ExecData) {

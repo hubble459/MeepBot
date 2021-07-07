@@ -1,10 +1,8 @@
 import { Message, MessageEmbed } from 'discord.js';
-import fetch, { RequestInit } from 'node-fetch';
+import got, { OptionsOfJSONResponseBody } from 'got';
 import MeepBot from '../..';
 import MessageButton from '../button/message_button';
 import InteractionEvent, { InteractionCallbackType } from './interaction_event';
-import MessageInteractionEvent from './message_interaction_event';
-import SlashInteractionEvent from './slash_interaction_event';
 
 export type MessageButtonRow = {
     type: 1;
@@ -133,8 +131,8 @@ abstract class SpecialInteractionEvent extends InteractionEvent {
     }
 
     private async api(method: 'PATCH' | 'DELETE' | 'GET', data?: any) {
-        const options: RequestInit = {
-            method
+        const options: OptionsOfJSONResponseBody = {
+            method,
         };
         if (method === 'PATCH') {
             if (!data) {
@@ -146,7 +144,7 @@ abstract class SpecialInteractionEvent extends InteractionEvent {
                 options.body = JSON.stringify(data);
             }
         }
-        return (await fetch(this.endpoint, options)).json();
+        return <any>await got(this.endpoint, options).json();
     }
 
     public static postData(

@@ -3,7 +3,7 @@ import Category from '../model/category';
 import { Command, args, ExecData, bad } from '../model/docorators/command';
 import SlashInteractionEvent from '../model/interaction/slash_interaction_event';
 
-@Command('ping', Category.miscellaneous, 0, 'response')
+@Command(['ping', 'response'], Category.miscellaneous, 0)
 class Ping {
     @args(true)
     async pong({ interaction }: ExecData) {

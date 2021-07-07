@@ -15,7 +15,7 @@ const QUEUE_PREVIOUS = 'queue_prev';
 const next = new MessageButton().setLabel('next').setCustomId(QUEUE_NEXT);
 const prev = new MessageButton().setLabel('prev').setCustomId(QUEUE_PREVIOUS);
 
-@Command('queue', Category.music)
+@Command(['queue', 'q'], Category.music)
 class Queue {
     @args(/clear|true/, 'clear', 'clear the queue', false, SlashOptionTypes.boolean)
     async clear({ interaction }: ExecData) {
@@ -55,11 +55,10 @@ class Queue {
         const page = <number>interaction.bot.cache.get(interaction.message.id);
         if (page !== undefined) {
             const music = interaction.bot.musicPlayer.getMusic(interaction);
-            if (!music || page + 1 === Math.ceil(music.queue.length / SONGS_PER_PAGE)) {
-                return;
+            if (music && page + 1 < Math.ceil(music.queue.length + 1 / SONGS_PER_PAGE)) {
+                interaction.bot.cache.set(interaction.message.id, page + 1);
+                await this.changePage(interaction);
             }
-            interaction.bot.cache.set(interaction.message.id, page + 1);
-            await this.changePage(interaction);
         }
     }
 
@@ -67,11 +66,12 @@ class Queue {
     async queuePrev(interaction: ButtonInteractionEvent) {
         const page = <number>interaction.bot.cache.get(interaction.message.id);
         if (page !== undefined) {
-            if (page - 1 < 0) {
-                return;
+            console.log(page);
+
+            if (page - 1 > 1) {
+                interaction.bot.cache.set(interaction.message.id, page - 1);
+                await this.changePage(interaction);
             }
-            interaction.bot.cache.set(interaction.message.id, page - 1);
-            await this.changePage(interaction);
         }
     }
 
@@ -103,7 +103,7 @@ class Queue {
                 .setFooter(`page ${page + 1} of ${pages}`);
             return embed;
         }
-        return 'uWu';
+        return 'uwu';
     }
 
     currentPage(music: Music) {

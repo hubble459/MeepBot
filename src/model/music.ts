@@ -28,8 +28,8 @@ export type Song = {
 
 export type Music = {
     current: number;
-    // channelId: string;
-    // messageId: string;
+    volume: number;
+    seek: number;
     queue: Song[];
     repeat: RepeatType;
 };

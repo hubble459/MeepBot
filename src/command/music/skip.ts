@@ -2,7 +2,7 @@ import Category from '../../model/category';
 import { args, bad, Command, ExecData } from '../../model/docorators/command';
 import SlashInteractionEvent from '../../model/interaction/slash_interaction_event';
 
-@Command('skip', Category.music)
+@Command(['skip', 's'], Category.music)
 class Skip {
     @args(true)
     async skip({ interaction }: ExecData) {

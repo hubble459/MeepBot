@@ -6,7 +6,7 @@ type CachedItem = {
 };
 
 class CacheEnmap {
-    private readonly enmap: Enmap;
+    private readonly enmap: Enmap<string | number, any>;
 
     constructor(databaseDir: string) {
         this.enmap = new Enmap({
@@ -18,7 +18,7 @@ class CacheEnmap {
         // Every hour, remove items that haven't been used for 2 hours  
         setInterval(
             () => {
-                const removed = this.enmap.sweep(({ used }: CachedItem) => !used || Date.now() - used > 7.2e6);
+                const removed = this.enmap.sweep(({ used }: CachedItem) => !used || Date.now() - used >= 7.2e6);
                 console.log(`[${'SWEEP'.color('fgYellow')}] swept ${removed} items`);
             },
             3.6e6
@@ -45,6 +45,14 @@ class CacheEnmap {
             this.enmap.set(key, Date.now(), 'used');
         }
         return item as any;
+    }
+
+    delete(key: string | number, path?: string) {
+        this.enmap.delete(key, path);
+    }
+
+    remove(key: string | number, val: any, path?: string) {
+        this.enmap.remove(key, val, path);
     }
 }
 

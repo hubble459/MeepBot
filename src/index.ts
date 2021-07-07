@@ -1,7 +1,6 @@
-import { Client, Collection, Guild, Message, User, VoiceState } from 'discord.js';
-import { CommandType } from './model/docorators/command';
+import { Client, Collection, Guild, Message, User } from 'discord.js';
 import Locales from './util/locales';
-import * as path from 'path';
+import path from 'path';
 import MessageInteractionEvent from './model/interaction/message_interaction_event';
 import Enmap from 'enmap';
 import './util/console';
@@ -12,6 +11,9 @@ import SlashInteractionEvent from './model/interaction/slash_interaction_event';
 import ButtonInteractionEvent from './model/interaction/button_interaction_event';
 import MusicPlayer from './util/music_player';
 import CacheEnmap from './model/cache_enmap';
+import PluginUtils from './util/plugin_util';
+import type { CommandType } from './model/docorators/command';
+import type MeepPlugin from './model/plugin';
 
 console.log('Initializing MeepBot'.color('fgMagenta'));
 
@@ -28,18 +30,21 @@ type SettingsId = {
 };
 
 class MeepBot extends Client {
-    private readonly slashUtils: SlashUtils;
+    private readonly commandDir: string;
+    private readonly pluginDir: string;
     public readonly commandMap: Collection<string, CommandType> = new Collection();
+    public readonly pluginMap: Collection<string, MeepPlugin> = new Collection();
     public readonly locales: Locales;
     public readonly settings: Enmap;
     public readonly cache: CacheEnmap;
     public readonly cooldowns: Enmap;
     public readonly musicPlayer: MusicPlayer;
 
-    constructor(token: string, localeDir: string, commandDir?: string, databaseDir?: string) {
+    constructor(token: string, localeDir: string, commandDir?: string, pluginDir?: string, databaseDir?: string) {
         super(); // super({ intents: [Intents.NON_PRIVILEGED] } as ClientOptions);
         this.locales = new Locales(localeDir);
-        this.slashUtils = new SlashUtils(this, commandDir || path.join(__dirname, 'commands'), true);
+        this.commandDir = commandDir || path.join(__dirname, 'command');
+        this.pluginDir = pluginDir || path.join(__dirname, 'plugin');
         databaseDir = databaseDir || path.join(__dirname.slice(0, __dirname.lastIndexOf(path.sep)), 'database');
         this.settings = new Enmap({
             name: 'settings',
@@ -58,10 +63,8 @@ class MeepBot extends Client {
         this.login(token);
         this.on('ready', this.onReady);
         this.on('message', this.onMessage);
-        this.on('error', this.onError);
         this.on('guildCreate', this.onGuildCreate);
         this.on('guildDelete', this.onGuildDelete);
-        this.on('voiceStateUpdate', this.onVoiceStateUpdate);
     }
 
     private async onReady() {
@@ -70,11 +73,18 @@ class MeepBot extends Client {
             type: 'LISTENING'
         });
 
-        await this.locales.load();
-        await this.slashUtils.loadCommands();
         this.ws.on('INTERACTION_CREATE' as any, this.onInteraction.bind(this));
         // await this.slashUtils.removeAllSlashCommands();
-        console.log('Commands loaded!');
+
+        await this.locales.load();
+
+        new SlashUtils(this, this.commandDir, true);
+        const commandSize = this.commandMap.size;
+        console.log(`[${'COMMAND'.color('fgMagenta')}]`, `${commandSize} command${commandSize === 1 ? '' : 's'} loaded!`);
+
+        new PluginUtils(this, this.pluginDir);
+        const pluginSize = this.pluginMap.size;
+        console.log(`[${'PLUGIN'.color('fgMagenta')}]`, `${pluginSize} plugin${pluginSize === 1 ? '' : 's'} loaded!`);
     }
 
     private async onMessage(msg: Message) {
@@ -125,7 +135,7 @@ class MeepBot extends Client {
 
     private parseCommand(settings: Settings, content: string): CommandType | undefined {
         const parts = content.trim().split(/ +/);
-        const cName = parts[+settings.space].slice(+!settings.space).toLowerCase();
+        const cName = parts[+settings.space].slice(settings.prefix.length - 1+ +!settings.space).toLowerCase();        
         return this.getCommand(settings, cName);
     }
 
@@ -133,27 +143,9 @@ class MeepBot extends Client {
         return this.commandMap.get(commandName) || this.commandMap.find((c) => c.aliases.includes(commandName));
     }
 
-    private onError(error: Error) { }
-
     private onGuildCreate(guild: Guild) { }
 
     private onGuildDelete(guild: Guild) { }
-
-    private onVoiceStateUpdate(oldState: VoiceState, newState: VoiceState) {
-        // if (oldState.channel && !newState.channel) {
-        //     if (oldState.id === client.user!.id) {
-        //         const connection = this.connections[oldState.guild.id];
-        //         if (connection) {
-        //             connection.disconnect();
-        //         }
-        //         console.log('[VC] Left');
-        //     }
-        // } else if (!oldState.channel && newState.channel) {
-        //     if (newState.id === client.user!.id) {
-        //         console.log('[VC] Joined');
-        //     }
-        // }
-    }
 
     private async onInteraction(data: any) {
         if (data.type === InteractionType.slashCommand) {

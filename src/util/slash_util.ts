@@ -1,9 +1,10 @@
 import fs from 'fs';
 import path from 'path';
-import fetch from 'node-fetch';
+import got from 'got';
 import MeepBot from '..';
 import { CommandType } from '../model/docorators/command';
 import { SlashData } from '../model/interaction/slash_interaction_event';
+import { Color } from './console';
 
 class SlashUtils {
     private readonly testServers: string[] = ['372048803827548170', '448189430331867146'];
@@ -15,22 +16,24 @@ class SlashUtils {
         this.bot = bot;
         this.commandDir = commandDir;
         this.slashTest = slashTest || false;
+
+        if (fs.existsSync(commandDir)) {
+            this.loadCommandsRecursive(this.commandDir);
+        } else {
+            console.error(`[${'SLASH'.color('fgCyan')}]`, `'${commandDir}' does not exist`);
+        }
     }
 
-    public async loadCommands() {
-        await this.loadCommandsRecursive(this.commandDir);
-    }
-
-    private async loadCommandsRecursive(dirname: string) {
+    private loadCommandsRecursive(dirname: string) {
         const files = fs.readdirSync(dirname);
         for (const file of files) {
             const pathname = path.join(dirname as string, file);
             const stats = fs.lstatSync(pathname);
             if (stats.isDirectory()) {
-                await this.loadCommandsRecursive(pathname);
+                this.loadCommandsRecursive(pathname);
             } else if (path.extname(file).toLowerCase() === '.js') {
                 try {
-                    const command = new (await import(pathname)).default();
+                    const command = new (require(pathname)).default();
                     if (command.isCommand) {
                         this.registerSlashCommand(command);
                         this.bot.commandMap.set(command.name, command);
@@ -110,11 +113,11 @@ class SlashUtils {
 
         let succeeded = 0;
         for (const command of commands) {
-            const res = await fetch(endpoint + command.id, {
+            const res = await got(endpoint + command.id, {
                 method: 'DELETE',
                 headers: { Authorization: 'Bot ' + this.bot.token }
             });
-            if (res.ok) {
+            if (res.statusCode >= 200 && res.statusCode < 300) {
                 ++succeeded;
             }
         }

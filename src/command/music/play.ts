@@ -1,7 +1,7 @@
 import { MessageEmbed } from 'discord.js';
 import ytpl from 'ytpl';
 import ytsr, { Video } from 'ytsr';
-import { Spotify, SpotifyTrack } from 'simple-spotify';
+import { Spotify } from 'simple-spotify';
 import Category from '../../model/category';
 import { args, bad, Command, ExecData } from '../../model/docorators/command';
 import MessageInteractionEvent from '../../model/interaction/message_interaction_event';
@@ -12,8 +12,9 @@ import ytdl from 'ytdl-core';
 
 const spotify: Spotify = new Spotify();
 
-@Command('play', Category.music, 0, 'p')
+@Command(['play', 'p'], Category.music)
 class Play {
+
     @args(/^(https?:\/\/)?(w{3}\.)?youtu(be|\.be)?(\.com)?\/.*\?.*list=.+$/, 'song', 'Song or URL', true)
     async playYTPlaylist({ interaction }: ExecData) {
         const url = interaction.args[0] as string;
@@ -30,15 +31,15 @@ class Play {
 
         const songs = playlist.items.map(
             (video) =>
-                ({
-                    title: video.title,
-                    thumbnail: video.bestThumbnail.url,
-                    durationMS: (video.durationSec || 0) * 1000,
-                    type: SongType.YOUTUBE,
-                    url: video.url,
-                    isLive: video.isLive,
-                    requestor
-                } as Song)
+            ({
+                title: video.title,
+                thumbnail: video.bestThumbnail.url,
+                durationMS: (video.durationSec || 0) * 1000,
+                type: SongType.YOUTUBE,
+                url: video.url,
+                isLive: video.isLive,
+                requestor
+            } as Song)
         );
 
         await interaction.bot.musicPlayer.play(interaction, ...songs);
@@ -73,21 +74,23 @@ class Play {
         const songs: Song[] = [];
         for (const item of playlist.tracks.items) {
             const track = item.track;
-            const song: Song = {
-                artist: track.artists[0].name,
-                title: track.name,
-                thumbnail: track.album
-                    ? track.album.images[0].url
-                    : track.artists[0].images
-                    ? track.artists[0].images[0].url
-                    : undefined,
-                isLive: false,
-                type: SongType.SPOTIFY,
-                durationMS: track.duration_ms,
-                url: track.href,
-                requestor: this.getRequestor(interaction)
-            };
-            songs.push(song);
+            if (track) {
+                const song: Song = {
+                    artist: track.artists[0].name,
+                    title: track.name,
+                    thumbnail: track.album
+                        ? track.album.images[0].url
+                        : track.artists[0].images
+                            ? track.artists[0].images[0].url
+                            : undefined,
+                    isLive: false,
+                    type: SongType.SPOTIFY,
+                    durationMS: track.duration_ms,
+                    url: track.href,
+                    requestor: this.getRequestor(interaction)
+                };
+                songs.push(song);
+            }
         }
 
         await interaction.bot.musicPlayer.play(interaction, ...songs);
@@ -103,8 +106,8 @@ class Play {
             thumbnail: track.album
                 ? track.album.images[0].url
                 : track.artists[0].images
-                ? track.artists[0].images[0].url
-                : undefined,
+                    ? track.artists[0].images[0].url
+                    : undefined,
             isLive: false,
             type: SongType.SPOTIFY,
             durationMS: track.duration_ms,
@@ -152,8 +155,8 @@ class Play {
                     thumbnail: track.album
                         ? track.album.images[0].url
                         : track.artists[0].images
-                        ? track.artists[0].images[0].url
-                        : undefined,
+                            ? track.artists[0].images[0].url
+                            : undefined,
                     isLive: false,
                     type: SongType.SPOTIFY,
                     durationMS: track.duration_ms,
@@ -183,7 +186,7 @@ class Play {
         await interaction.bot.musicPlayer.play(interaction, song);
     }
 
-    @args(/^(https?:\/\/)?(w{3}\.)?.*\.((mp(4|3))|mov)/)
+    @args(/^(https?:\/\/)?(w{3}\.)?.*\.((mp(4|3))|mov|aac|m4v|owo|webm|wma)/)
     async playFile({ interaction }: ExecData) {
         const url = interaction.args[0] as string;
         await interaction.bot.musicPlayer.play(interaction, {

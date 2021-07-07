@@ -75,7 +75,16 @@ export type ExecData = {
     slashInteraction?: SlashInteractionEvent;
 };
 
-export function Command(name: string, category: Category, cooldown?: number, ...aliases: string[]) {
+export function Command(name: string | string[], category: Category, cooldown?: number) {
+    const aliases: string[] = [];
+    if (Array.isArray(name)) {
+        if (name.length) {
+            aliases.push(...name.slice(1));
+            name = name.shift()!;
+        } else {
+            throw new Error('Command should have a name!');
+        }
+    }
     return <T extends Constructor>(constructor: T) => {
         const message: MessageMeta[] = Reflect.getMetadata(messageKey, constructor.prototype) || [];
         const bad: MessageMeta[] = Reflect.getMetadata(badKey, constructor.prototype) || [];
@@ -128,7 +137,7 @@ export function Command(name: string, category: Category, cooldown?: number, ...
         }
 
         return class Command extends constructor {
-            readonly name: string = name;
+            readonly name: string = name as string;
             readonly category: Category = category;
             readonly help: string = name + '_help';
             readonly description: string = name + '_description';
@@ -274,11 +283,11 @@ export function args(
         }
         const option: InteractionOption | undefined = name
             ? {
-                  type: type || SlashOptionTypes.string,
-                  name,
-                  description,
-                  required: required || false
-              }
+                type: type || SlashOptionTypes.string,
+                name,
+                description,
+                required: required || false
+            }
             : undefined;
         arr.push({ propertyKey, args: args || [], option });
     };

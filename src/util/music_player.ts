@@ -6,21 +6,26 @@ import SlashInteractionEvent from '../model/interaction/slash_interaction_event'
 import { Music, RepeatType, Song, SongType } from '../model/music';
 import { millisecondsToTime } from './util';
 import ytdl from 'ytdl-core';
-// @ts-ignore
-// import youtube_dl from 'magmaplayer';
-// import ytdl, { search, YoutubeInfo } from 'better-ytdl';
 import ButtonInteractionEvent from '../model/interaction/button_interaction_event';
 import { Readable } from 'stream';
-import { search, YoutubeInfo } from 'better-ytdl';
 import ytsr, { Video } from 'ytsr';
+
+let musicMapStatic: Enmap;
+const DEFAULT_MUSIC = {
+    current: 0,
+    volume: 100,
+    seek: 0,
+    queue: [],
+    repeat: RepeatType.NO_REPEAT
+};
 
 class MusicPlayer {
     public readonly soundcloud: Soundcloud;
-    public readonly musicMap: Enmap;
+    public readonly musicMap: Enmap = musicMapStatic;
 
     constructor(databaseDir: string) {
         this.soundcloud = new Soundcloud();
-        this.musicMap = new Enmap({
+        this.musicMap = musicMapStatic = new Enmap({
             name: 'music',
             dataDir: databaseDir,
             autoFetch: true,
@@ -31,14 +36,8 @@ class MusicPlayer {
     public async play(interaction: MessageInteractionEvent | SlashInteractionEvent, ...songs: Song[]) {
         const conn = await this.connect(interaction);
         if (conn) {
-            const musicSettings: Music = {
-                current: 0,
-                queue: [],
-                repeat: RepeatType.NO_REPEAT
-            };
-
             const guildId = interaction.guild!.id;
-            const music = this.musicMap.ensure(guildId, musicSettings) as Music;
+            const music = this.musicMap.ensure(guildId, DEFAULT_MUSIC) as Music;
             music.queue = [...music.queue, ...songs];
             music.current = music.queue.length < music.current ? 0 : music.current;
             this.musicMap.set(guildId, music);
@@ -46,7 +45,7 @@ class MusicPlayer {
             if (!conn.dispatcher) {
                 await this.nextSong(interaction);
             } else if (songs.length > 1) {
-                interaction.send(
+                await interaction.send(
                     new MessageEmbed()
                         .setTitle('Queued')
                         .setAuthor(`Requested by ${songs[0].requestor.name}`, songs[0].requestor.avatar)
@@ -59,7 +58,7 @@ class MusicPlayer {
                 const song = songs[0];
                 const pos = music.queue.indexOf(song);
                 const durationUntil = music.queue.slice(music.current, pos).reduce((dur, song) => dur += song.durationMS, 0);
-                interaction.send(
+                await interaction.send(
                     new MessageEmbed()
                         .setTitle('Queued')
                         .setAuthor(`Requested by ${song.requestor.name}`, song.requestor.avatar)
@@ -148,11 +147,13 @@ class MusicPlayer {
                     } else {
                         await interaction.edit(embed);
                     }
-                }
+                }                
 
                 if (!connection.dispatcher) {
                     connection
-                        .play(stream)
+                        .play(stream, {
+                            volume: music.volume,
+                        })
                         .on('close', () => {
                             if (music.repeat === RepeatType.NO_REPEAT && music.queue.length === music.current + 3) {
                                 return;
@@ -171,33 +172,16 @@ class MusicPlayer {
                             console.error(...interaction.tag(e));
                             this.skip(interaction);
                         });
+                } else {
+                    await interaction.send('alReady plaYing?!')
                 }
             }
         }
     }
 
     async searchYoutube(query: string, limit: number = 1) {
-        // const filter1 = await ytsr.getFilters(query);
-        // if (filter1) {
-        //     const filter2 = filter1.get('Type');
-        //     if (filter2) {
-        //         const filter3 = filter2.get('Video');
-        //         if (filter3 && filter3.url) {
-        //             const filter4 = await ytsr.getFilters(filter3.url);
-        //             if (filter4) {
-        //                 const filter5 = filter4.get('Features');
-        //                 if (filter5) {
-        //                     const filter6 = filter5.get('Live');
-        //                     if (filter6 && filter6.url) {
-                                // const searchResults = await ytsr(filter6.url, { limit });
-                                const searchResults = await ytsr(query, { limit });                                
-                                return searchResults.items as Video[];
-        //                     }
-        //                 }
-        //             }
-        //         }
-        //     }
-        // }        
+        const searchResults = await ytsr(query, { limit });
+        return searchResults.items as Video[];
     }
 
     async currentlyPlaying(interaction: MessageInteractionEvent | SlashInteractionEvent) {
@@ -229,7 +213,7 @@ class MusicPlayer {
         return false;
     }
 
-    async clear(interaction: MessageInteractionEvent | SlashInteractionEvent, hasToBeInSameVC: boolean = true) {
+    async clear(interaction: MessageInteractionEvent | SlashInteractionEvent) {
         const connection = await this.hasConnection(interaction);
         if (connection && connection.dispatcher) {
             connection.dispatcher.destroy();
@@ -284,6 +268,32 @@ class MusicPlayer {
             await interaction.send(getString('play_no_dm'));
         }
         return false;
+    }
+
+    async setVolume(interaction: MessageInteractionEvent | SlashInteractionEvent, volume: number | string) {
+        if (typeof volume === 'string') {
+            volume = Number.parseInt(volume);
+        }
+        if (!volume) {
+            await interaction.send('not a valid number');
+        } else if (volume < 0) {
+            await interaction.send('volume should be positive');
+        } else {
+            const conn = await this.hasConnection(interaction);
+            if (conn && conn.dispatcher) {
+                conn.dispatcher.setVolume(volume / 100);
+            }
+            if (interaction.guild) {
+                this.musicMap.set(interaction.guild.id, volume / 100, 'volume')
+            }
+            await interaction.send('changed volume to ' + volume + '%');
+        }
+    }
+
+    static get(guidlId: string) {
+        if (musicMapStatic) {
+            return musicMapStatic.ensure(guidlId, DEFAULT_MUSIC) as Music;
+        }
     }
 }
 
